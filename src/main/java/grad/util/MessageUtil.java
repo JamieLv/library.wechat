@@ -85,19 +85,14 @@ public class MessageUtil {
     public static final String EVENT_TYPE_UNSUBSCRIBE = "unsubscribe";  
   
     /** 
-     * 事件类型：CLICK(自定义菜单点击事件) 
-     */  
-    public static final String EVENT_TYPE_CLICK = "CLICK";
+     * 事件类型：CLICK(自定义菜单点击事件)
+     * public static final String EVENT_TYPE_CLICK = "CLICK";
+    */
 
     /**
      * 事件类型：scancode_waitmsg
-     */
-    public static final String EVENT_TYPE_SCANCODE_WAITMSG = "scancode_waitmsg";
-
-    /**
-     *二维码 还伞代码
-     */
-    public static final String RETURN_UMBRELLA = "return_umbrella";
+     * public static final String EVENT_TYPE_SCANCODE_WAITMSG = "scancode_waitmsg";
+*/
 
     /** 
      * 解析微信发来的请求（XML） 
