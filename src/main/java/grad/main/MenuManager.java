@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package grad.message;
+package grad.main;
 
 import grad.pojo.*;
 import grad.util.WeixinUtil;
@@ -53,67 +53,67 @@ public class MenuManager {
      */
     private static Menu getMenu() {
         CommonButton btn11 = new CommonButton();
-        btn11.setName("短驳车");
+        btn11.setName("11");
         btn11.setType("click");
-        btn11.setKey(CommonButton.KEY_BUS);
+        btn11.setKey("11");
 
         CommonButton btn12 = new CommonButton();
-        btn12.setName("我要借伞");
+        btn12.setName("12");
         btn12.setType("click");
-        btn12.setKey(CommonButton.KEY_BORROW_UMBRELLA);
-
-        CommonButton returnUmbrella = new CommonButton();
-        returnUmbrella.setName("我要还伞");
-        returnUmbrella.setType("scancode_waitmsg");
-        returnUmbrella.setKey(CommonButton.KEY_RETURN_UMBRELLA);
+        btn12.setKey("12");
 
         CommonButton btn13 = new CommonButton();
-        btn13.setName("辅修车票");
+        btn13.setName("13");
         btn13.setType("click");
-        btn13.setKey(CommonButton.KEY_SIDE_BUS);
+        btn13.setKey("13");
+
+        CommonButton btn14 = new CommonButton();
+        btn14.setName("扫码");
+        btn14.setType("scancode_waitmsg");
+        btn14.setKey("14");
 
         CommonButton btn21 = new CommonButton();
-        btn21.setName("工作时间");
+        btn21.setName("21");
         btn21.setType("click");
-        btn21.setKey(CommonButton.KEY_WORKTIME);
+        btn21.setKey("21");
 
         CommonButton btn22 = new CommonButton();
-        btn22.setName("联系方式");
+        btn22.setName("22");
         btn22.setType("click");
-        btn22.setKey(CommonButton.KEY_CONTACTS);
+        btn22.setKey("22");
 
-        CommonButton schoolCal = new CommonButton();
-        schoolCal.setName("学校校历");
-        schoolCal.setType("view");
-        schoolCal.setUrl("http://mp.weixin.qq.com/s?__biz=MjM5MTY1NjYyOA==&mid=402636731&idx=1&sn=c365d2ccbd4fa2f66bec6ff8d3c1fed3#rd");
+        CommonButton btn23 = new CommonButton();
+        btn23.setName("百度");
+        btn23.setType("view");
+        btn23.setUrl("http://m.baidu.com");
 
         CommonButton btn31 = new CommonButton();
-        btn31.setName("我要投诉");
+        btn31.setName("31");
         btn31.setType("click");
-        btn31.setKey(CommonButton.KEY_SUE);
+        btn31.setKey("31");
 
         CommonButton btn32 = new CommonButton();
-        btn32.setName("投诉追踪");
+        btn32.setName("32");
         btn32.setType("click");
-        btn32.setKey(CommonButton.KEY_SUE_TRACK);
+        btn32.setKey("32");
         
         CommonButton btn33 = new CommonButton();
-        btn33.setName("校园日常");
+        btn33.setName("官网");
         btn33.setType("view");
-        btn33.setUrl("http://mp.weixin.qq.com/mp/homepage?__biz=MjM5MTY1NjYyOA==&hid=1&sn=362814850d723b6c81cc3d6731c4809d#wechat_redirect");
+        btn33.setUrl("http://sse.tongji.edu.cn/zh");
 
         CommonButton btn34 = new CommonButton();
         btn34.setName("加入我们");
         btn34.setType("click");
-        btn34.setKey(CommonButton.KEY_JOIN_US);
+        btn34.setKey("34");
 
         ComplexButton mainBtn1 = new ComplexButton();
         mainBtn1.setName("我最在意");
-        mainBtn1.setSub_button(new Button[]{btn11, btn12, returnUmbrella, btn13});
+        mainBtn1.setSub_button(new Button[]{btn11, btn12, btn13, btn14});
 
         ComplexButton mainBtn2 = new ComplexButton();
         mainBtn2.setName("我想知道");
-        mainBtn2.setSub_button(new CommonButton[]{btn21, btn22, schoolCal});
+        mainBtn2.setSub_button(new CommonButton[]{btn21, btn22, btn23});
 
         ComplexButton mainBtn3 = new ComplexButton();
         mainBtn3.setName("我有烦恼");

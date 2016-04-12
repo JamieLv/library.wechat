@@ -10,8 +10,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**
+ * 证书信任管理器(用于HTTPS请求)
  *
- * @author smile
+ * Created by Jamie on 4/11/16.
  */
 public class MyX509TrustManager implements X509TrustManager {
 

@@ -100,13 +100,13 @@ public class CoreService {
                 List<Article> articleList = new ArrayList<Article>();
 
                 respContent = getGreeting() + "\n你的权益，我最在意！\n"
-                            + "你的问题我们已经收到，会尽快回复。" +
-                            "查看班车时刻表，请直接回复“时刻表”\n" +
-                            "查看校内机构工作时间，请直接回复“工作时间”\n" +
-                            "谢谢。";
+                        + "你的问题我们已经收到，会尽快回复。" +
+                        "查看班车时刻表，请直接回复“时刻表”\n" +
+                        "查看校内机构工作时间，请直接回复“工作时间”\n" +
+                        "谢谢。";
 
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
+                textMessage.setContent(respContent);
+                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
@@ -145,9 +145,43 @@ public class CoreService {
                 } // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
 
+                } else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) { // 事件KEY值，与创建自定义菜单时指定的KEY值对应
+                    String eventKey = requestMap.get("EventKey");
+
+                    if (eventKey.equals("11")) {
+                        respContent = "11！";
+                    } else if (eventKey.equals("12")) {
+                        respContent = "12！";
+                    } else if (eventKey.equals("13")) {
+                        respContent = "13！";
+                    } else if (eventKey.equals("14")) {
+                        respContent = "14！";
+                    } else if (eventKey.equals("21")) {
+                        respContent = "21！";
+                    } else if (eventKey.equals("22")) {
+                        respContent = "22！";
+                    } else if (eventKey.equals("31")) {
+                        respContent = "31！";
+                    } else if (eventKey.equals("32")) {
+                        respContent = "32！";
+                    } else if (eventKey.equals("34")) {
+                        respContent = "34！";
+                    }
+
+                    textMessage.setContent(respContent);
+                    respMessage = MessageUtil.textMessageToXml(textMessage);
+
+                } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
+                    String scanResult = requestMap.get("ScanResult");
+                    respContent = getGreeting() + scanResult;
+
+                    textMessage.setContent(respContent);
+                    respMessage = MessageUtil.textMessageToXml(textMessage);
                 }
             }
-        } catch (Exception e) {
+
+        }
+         catch (Exception e) {
             e.printStackTrace();
         }
         return respMessage;

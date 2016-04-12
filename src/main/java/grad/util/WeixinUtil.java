@@ -25,7 +25,7 @@ import java.net.URL;
 
 /**
  *
- * @author smile
+ * Created by Jamie on 4/11/16.
  */
 public class WeixinUtil {
 
@@ -43,7 +43,7 @@ public class WeixinUtil {
         JSONObject jsonObject = null;
         StringBuffer buffer = new StringBuffer();
         try {
-            // 创建SSLContext对象，并使用我们指定的信任管理器初始化  
+            // 创建SSLContext对象，并使用我们指定的信任管理器初始化，解决HTTPS请求问题
             TrustManager[] tm = {new MyX509TrustManager()};
             SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
             sslContext.init(null, tm, new java.security.SecureRandom());
@@ -57,7 +57,7 @@ public class WeixinUtil {
             httpUrlConn.setDoOutput(true);
             httpUrlConn.setDoInput(true);
             httpUrlConn.setUseCaches(false);
-            // 设置请求方式（GET/POST）  
+            // 设置请求方式（兼容GET/POST两种方式）
             httpUrlConn.setRequestMethod(requestMethod);
 
             if ("GET".equalsIgnoreCase(requestMethod)) {
