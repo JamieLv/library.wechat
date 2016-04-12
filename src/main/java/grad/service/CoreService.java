@@ -94,7 +94,7 @@ public class CoreService {
 
                 respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
                         + "\n您的留言我们已经收到，并在24小时内回复您\n"
-                        + "我们的微信正在不断完善，您的支持给了我们更多的动力！\n";
+                        + "我们的微信正在不断完善，您的支持给了我们更多的动力！";
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
@@ -121,7 +121,7 @@ public class CoreService {
                     respContent
                             = getGreeting() + "，尊敬的读者:)\n"
                             + "感谢关注图书馆\n"
-                            + "赶紧戳一戳下方按钮，来和我们互动吧！\n";
+                            + "赶紧戳一戳下方按钮，来和我们互动吧！";
 
                 } // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
