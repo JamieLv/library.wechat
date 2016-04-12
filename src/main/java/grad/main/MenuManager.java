@@ -12,7 +12,7 @@ import grad.util.WeixinUtil;
 /**
  * 菜单管理器类
  *
- * @author smile
+ * Created by Jamie on 4/12/16.
  */
 public class MenuManager {
 
@@ -30,14 +30,14 @@ public class MenuManager {
             appSecret = "24895b9d3db3d73f85cfd3eb9e5c59f9";
         }
 
-        // 调用接口获取access_token  
+        // 调用接口获取access_token
         AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
 
         if (null != at) {
-            // 调用接口创建菜单  
+            // 调用接口创建菜单
             int result = WeixinUtil.createMenu(getMenu(), at.getToken());
 
-            // 判断菜单创建结果  
+            // 判断菜单创建结果
             if (0 == result) {
                 System.out.println("菜单创建成功！");
             } else {

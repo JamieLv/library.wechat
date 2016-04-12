@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ *
  * Created by Jamie on 4/11/16.
  */
 public class CoreService {
@@ -33,15 +34,7 @@ public class CoreService {
         return greeting;
     }
 
-    /**
-     * emoji表情转换(hex -> utf-16)
-     *
-     * @param hexEmoji
-     * @return
-     */
-    public static String emoji(int hexEmoji) {
-        return String.valueOf(Character.toChars(hexEmoji));
-    }
+
 
     /**
      * 处理微信发来的请求
@@ -99,35 +92,26 @@ public class CoreService {
 
                 List<Article> articleList = new ArrayList<Article>();
 
-                respContent = getGreeting() + "\n你的权益，我最在意！\n"
-                        + "你的问题我们已经收到，会尽快回复。" +
-                        "查看班车时刻表，请直接回复“时刻表”\n" +
-                        "查看校内机构工作时间，请直接回复“工作时间”\n" +
-                        "谢谢。";
-
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
+                respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
+                        + "\n您的留言我们已经收到，并在24小时内回复您\n"
+                        + "我们的微信正在不断完善，您的支持给了我们更多的动力！\n";
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
                 respContent = "我喜欢你发的图片！";
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
+
             } // 地理位置消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
-                respContent = "同学你发的是地理位置哦！";
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
+                respContent = "你发的是地理位置哦！";
+
             } // 链接消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
-                respContent = "同学你发送的是链接消息哦";
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
+                respContent = "你发送的是链接消息哦！";
+
             } // 音频消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
-                respContent = "同学你发送的是音频消息哦！";
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
+                respContent = "你发送的是音频消息哦！";
+
             } // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
                 // 事件类型
@@ -135,12 +119,9 @@ public class CoreService {
                 // 订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
                     respContent
-                            = getGreeting() + "，朋友:)\n"
-                            + "感谢关注嘉定权益\n"
-                            + "我们的微信一直在不断完善，同时您的支持给了我们更多的动力！"
-                            + "并希望您能对我们的微信平台和日常工作提出宝贵意见与建议。\n";
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
+                            = getGreeting() + "，尊敬的读者:)\n"
+                            + "感谢关注图书馆\n"
+                            + "赶紧戳一戳下方按钮，来和我们互动吧！\n";
 
                 } // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -168,23 +149,31 @@ public class CoreService {
                         respContent = "34！";
                     }
 
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
-
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
                     respContent = getGreeting() + scanResult;
 
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
                 }
             }
+
+            textMessage.setContent(respContent);
+            respMessage = MessageUtil.textMessageToXml(textMessage);
 
         }
          catch (Exception e) {
             e.printStackTrace();
         }
         return respMessage;
+    }
+
+    /**
+     * emoji表情转换(hex -> utf-16)
+     *
+     * @param hexEmoji
+     * @return
+     */
+    public static String emoji(int hexEmoji) {
+        return String.valueOf(Character.toChars(hexEmoji));
     }
 
 
