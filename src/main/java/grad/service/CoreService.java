@@ -93,8 +93,7 @@ public class CoreService {
                 List<Article> articleList = new ArrayList<Article>();
 
                 respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
-                        + "\n您的留言我们已经收到，并在24小时内回复您\n"
-                        + "我们的微信正在不断完善，您的支持给了我们更多的动力！";
+                        + "\n您的留言我们已经收到，并在24小时内回复您。";
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
