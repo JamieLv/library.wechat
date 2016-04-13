@@ -79,7 +79,7 @@ public class MenuManager {
 
         CommonButton btn22 = new CommonButton();
         btn22.setName("我要借伞");
-        btn22.setType("clickscancode_waitmsg");
+        btn22.setType("scancode_waitmsg");
         btn22.setKey(CommonButton.KEY_BORROW_UMBRELLA);
 
         CommonButton btn23 = new CommonButton();
