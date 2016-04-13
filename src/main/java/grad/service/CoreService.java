@@ -35,7 +35,6 @@ public class CoreService {
     }
 
 
-
     /**
      * 处理微信发来的请求
      *
@@ -119,7 +118,7 @@ public class CoreService {
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
                     respContent
                             = getGreeting() + "，尊敬的读者:)\n"
-                            + "感谢关注图书馆\n"
+                            + "感谢关注图书馆！\n"
                             + "赶紧戳一戳下方按钮，来和我们互动吧！";
 
                 } // 取消订阅

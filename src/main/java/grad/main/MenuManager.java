@@ -108,15 +108,15 @@ public class MenuManager {
         btn34.setKey("34");
 
         ComplexButton mainBtn1 = new ComplexButton();
-        mainBtn1.setName("1");
+        mainBtn1.setName("菜单一");
         mainBtn1.setSub_button(new Button[]{btn11, btn12, btn13, btn14});
 
         ComplexButton mainBtn2 = new ComplexButton();
-        mainBtn2.setName("2");
+        mainBtn2.setName("菜单二");
         mainBtn2.setSub_button(new CommonButton[]{btn21, btn22, btn23});
 
         ComplexButton mainBtn3 = new ComplexButton();
-        mainBtn3.setName("3");
+        mainBtn3.setName("菜单三");
         mainBtn3.setSub_button(new Button[]{btn31, btn32, btn33, btn34});
 
         Menu menu = new Menu();
