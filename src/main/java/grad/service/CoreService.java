@@ -3,6 +3,7 @@ package grad.service;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
+import grad.pojo.CommonButton;
 import grad.util.MessageUtil;
 
 
@@ -127,23 +128,23 @@ public class CoreService {
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) { // 事件KEY值，与创建自定义菜单时指定的KEY值对应
                     String eventKey = requestMap.get("EventKey");
 
-                    if (eventKey.equals("11")) {
+                    if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
                         respContent = "11！";
-                    } else if (eventKey.equals("12")) {
+                    } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
                         respContent = "12！";
-                    } else if (eventKey.equals("13")) {
-                        respContent = "13！";
-                    } else if (eventKey.equals("14")) {
+                    } else if (eventKey.equals(CommonButton.KEY_HELP)) {
                         respContent = "14！";
-                    } else if (eventKey.equals("21")) {
+                    } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         respContent = "21！";
-                    } else if (eventKey.equals("22")) {
+                    } else if (eventKey.equals(CommonButton.KEY_BORROW_UMBRELLA)) {
                         respContent = "22！";
-                    } else if (eventKey.equals("31")) {
+                    } else if (eventKey.equals(CommonButton.KEY_NEARBY)) {
+                        respContent = "24！";
+                    } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
                         respContent = "31！";
-                    } else if (eventKey.equals("32")) {
+                    } else if (eventKey.equals(CommonButton.KEY_ADVICE_TRACK)) {
                         respContent = "32！";
-                    } else if (eventKey.equals("34")) {
+                    } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
                         respContent = "34！";
                     }
 

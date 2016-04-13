@@ -53,49 +53,54 @@ public class MenuManager {
      */
     private static Menu getMenu() {
         CommonButton btn11 = new CommonButton();
-        btn11.setName("11");
+        btn11.setName("会员卡");
         btn11.setType("click");
-        btn11.setKey("11");
+        btn11.setKey(CommonButton.KEY_MEMBERSHIP);
 
         CommonButton btn12 = new CommonButton();
-        btn12.setName("12");
+        btn12.setName("我要借书");
         btn12.setType("click");
-        btn12.setKey("12");
+        btn12.setKey(CommonButton.KEY_BORROW_BOOK);
 
         CommonButton btn13 = new CommonButton();
-        btn13.setName("13");
-        btn13.setType("click");
-        btn13.setKey("13");
+        btn13.setName("我要还书");
+        btn13.setType("scancode_waitmsg");
+        btn13.setKey(CommonButton.KEY_RETURN_BOOK);
 
         CommonButton btn14 = new CommonButton();
-        btn14.setName("扫码");
-        btn14.setType("scancode_waitmsg");
-        btn14.setKey("14");
+        btn14.setName("使用帮助");
+        btn14.setType("click");
+        btn14.setKey(CommonButton.KEY_HELP);
 
         CommonButton btn21 = new CommonButton();
-        btn21.setName("21");
+        btn21.setName("图书检索");
         btn21.setType("click");
-        btn21.setKey("21");
+        btn21.setKey(CommonButton.KEY_BOOK);
 
         CommonButton btn22 = new CommonButton();
-        btn22.setName("22");
-        btn22.setType("click");
-        btn22.setKey("22");
+        btn22.setName("我要借伞");
+        btn22.setType("clickscancode_waitmsg");
+        btn22.setKey(CommonButton.KEY_BORROW_UMBRELLA);
 
         CommonButton btn23 = new CommonButton();
-        btn23.setName("百度");
-        btn23.setType("view");
-        btn23.setUrl("http://m.baidu.com");
+        btn23.setName("我要还伞");
+        btn23.setType("click");
+        btn23.setKey(CommonButton.KEY_RETURN_UMBRELLA);
+
+        CommonButton btn24 = new CommonButton();
+        btn24.setName("门店查询");
+        btn24.setType("location_select");
+        btn24.setKey(CommonButton.KEY_NEARBY);
 
         CommonButton btn31 = new CommonButton();
-        btn31.setName("31");
+        btn31.setName("我有意见");
         btn31.setType("click");
-        btn31.setKey("31");
+        btn31.setKey(CommonButton.KEY_ADVICE);
 
         CommonButton btn32 = new CommonButton();
-        btn32.setName("32");
+        btn32.setName("意见追踪");
         btn32.setType("click");
-        btn32.setKey("32");
+        btn32.setKey(CommonButton.KEY_ADVICE_TRACK);
         
         CommonButton btn33 = new CommonButton();
         btn33.setName("官网");
@@ -105,18 +110,18 @@ public class MenuManager {
         CommonButton btn34 = new CommonButton();
         btn34.setName("加入我们");
         btn34.setType("click");
-        btn34.setKey("34");
+        btn34.setKey(CommonButton.KEY_JOIN_US);
 
         ComplexButton mainBtn1 = new ComplexButton();
-        mainBtn1.setName("菜单一");
+        mainBtn1.setName("个人服务");
         mainBtn1.setSub_button(new Button[]{btn11, btn12, btn13, btn14});
 
         ComplexButton mainBtn2 = new ComplexButton();
-        mainBtn2.setName("菜单二");
-        mainBtn2.setSub_button(new CommonButton[]{btn21, btn22, btn23});
+        mainBtn2.setName("图书馆");
+        mainBtn2.setSub_button(new Button[]{btn21, btn22, btn23, btn24});
 
         ComplexButton mainBtn3 = new ComplexButton();
-        mainBtn3.setName("菜单三");
+        mainBtn3.setName("关于我们");
         mainBtn3.setSub_button(new Button[]{btn31, btn32, btn33, btn34});
 
         Menu menu = new Menu();
