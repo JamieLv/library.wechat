@@ -1,7 +1,5 @@
 package grad.service;
 
-import com.sun.javafx.tools.ant.DeployFXTask;
-import com.sun.tools.javac.jvm.Gen;
 import grad.database.Member;
 import grad.message.resp.TemplateData;
 import grad.message.resp.TemplateMessage;
