@@ -101,7 +101,6 @@ public class CoreService {
                     Article articleBOOK = new Article();
                     articleBOOK.setTitle(book.getTitle());
                     articleBOOK.setPicUrl("http://nickli-jdquanyi.daoapp.io/img/logo.png");
-                    articleBOOK.setUrl("http://nickli-jdquanyi.daoapp.io/Bus.jsp");
                     articleList.add(articleBOOK);
 
                     Article articleISBN = new Article();
