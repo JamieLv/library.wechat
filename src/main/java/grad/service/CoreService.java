@@ -1,5 +1,7 @@
 package grad.service;
 
+import grad.database.Book;
+import grad.database.Database;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
@@ -92,8 +94,58 @@ public class CoreService {
 
                 List<Article> articleList = new ArrayList<Article>();
 
+                if (content.startsWith("Search")){
+                    String[] keywords = content.trim().split("\\s+");
+                    Book book = Database.getBook(keywords[1]);
+
+                    Article articleBOOK = new Article();
+                    articleBOOK.setTitle(book.getTitle());
+                    articleBOOK.setPicUrl("http://nickli-jdquanyi.daoapp.io/img/logo.png");
+                    articleBOOK.setUrl("http://nickli-jdquanyi.daoapp.io/Bus.jsp");
+                    articleList.add(articleBOOK);
+
+                    Article articleISBN = new Article();
+                    articleISBN.setTitle("ISBN: " + book.getISBN());
+                    articleList.add(articleISBN);
+
+                    Article articleCATALOG = new Article();
+                    articleCATALOG.setTitle("类别: " + book.getCatalog());
+                    articleList.add(articleCATALOG);
+
+                    Article articleAUTHOR = new Article();
+                    articleAUTHOR.setTitle("作者: " + book.getAuthor());
+                    articleList.add(articleAUTHOR);
+
+                    if (book.getTranslator() != null){
+                        Article articleTRANSLATOR = new Article();
+                        articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
+                        articleList.add(articleTRANSLATOR);
+                    }
+
+                    Article articlePUBLISHER = new Article();
+                    articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
+                    articleList.add(articlePUBLISHER);
+
+                    Article articleISSUETIME = new Article();
+                    articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
+                    articleList.add(articleISSUETIME);
+
+                    Article articlePRICE = new Article();
+                    articlePRICE.setTitle("价格: " + book.getPrice());
+                    articleList.add(articlePRICE);
+
+                    // 设置图文消息个数
+                    newsMessage.setArticleCount(articleList.size());
+                    // 设置图文消息包含的图文集合
+                    newsMessage.setArticles(articleList);
+                    // 将图文消息对象转换成xml字符串
+                    respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                }
+                else {
                 respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
                         + "\n您的留言我们已经收到，并在24小时内回复您。";
+                }
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
@@ -135,7 +187,7 @@ public class CoreService {
                     } else if (eventKey.equals(CommonButton.KEY_HELP)) {
                         respContent = "14！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
-                        respContent = "21！";
+                        respContent = "回复\"Search 书名\"查询您想要的书本!";
                     } else if (eventKey.equals(CommonButton.KEY_BORROW_UMBRELLA)) {
                         respContent = "22！";
                     } else if (eventKey.equals(CommonButton.KEY_NEARBY)) {

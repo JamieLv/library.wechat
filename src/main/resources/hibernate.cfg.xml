@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <!-- Echo all executed SQL to stdout -->
+    <property name="show_sql">true</property>
+    <property name="hbm2ddl.auto">update</property>
+
+    <!--数据库的地址\用户名\密码-->
+    <property name="hibernate.connection.url">jdbc:mysql://10.10.26.58:3306/tgzbQZrEWO7XKPRl</property>
+    <property name="hibernate.connection.username">uzDEVh57wCKtAT0d</property>
+    <property name="hibernate.connection.password">p60aCmPYvyiFJNe31</property>
+
+    <!--数据库的链接池-->
+    <property name="hibernate.connection.provider_class">org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider</property>
+    <property name="hibernate.c3p0.max_size">200</property>
+    <property name="hibernate.c3p0.min_size">5</property>
+    <property name="hibernate.c3p0.acquire_increment">5</property>
+    <property name="hibernate.c3p0.checkoutTimeout">30000</property>
+    <property name="hibernate.c3p0.max_statements">200</property>
+    <property name="hibernate.c3p0.idle_test_period">30</property>
+    <property name="hibernate.c3p0.timeout">120</property>
+
+    <!-- Enable Hibernate's automatic session context management -->
+    <property name="current_session_context_class">thread</property>
+
+    <!-- Disable second level cache -->
+    <property name="cache.provider_class">org.hibernate.cache.internal.NoCachingRegionFactory</property>
+    
+    <!-- Drop and re-create the database schema on startup -->
+    <mapping class="grad.database.Book"/>
+
+  </session-factory>
+</hibernate-configuration>
