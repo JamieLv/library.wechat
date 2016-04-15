@@ -65,5 +65,13 @@ public class MemberService {
         System.out.println("Note to be sent:\n" + jsonNote);
 
         JSONObject jsonObject = WeixinUtil.httpRequest(url, "POST", jsonNote);
+        int result = 0;
+        if (null != jsonObject) {
+            if (0 != jsonObject.getInt("errcode")) {
+                result = jsonObject.getInt("errcode");
+                System.out.println(String.format("错误 errcode:{%s} errmsg:{%s}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg")));
+            }
+        }
+        System.out.println("模板消息发送结果：" + result);
     }
 }
