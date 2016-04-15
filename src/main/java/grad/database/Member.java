@@ -21,6 +21,7 @@ public class Member {
     String RegisterTime;
     String fromUserName;
 
+    public Member(){}
 
     public Member(String Name, String Gender, int Age, String Mobile, String RegisterTime, String fromUserName){
         this.Name = Name;
