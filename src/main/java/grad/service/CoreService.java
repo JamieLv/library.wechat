@@ -99,7 +99,7 @@ public class CoreService {
                     Book book = Database.getBook(keywords[1]);
 
                     Article articleBOOK = new Article();
-                    articleBOOK.setTitle(book.getTitle());
+                    articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
                     articleBOOK.setPicUrl("http://nickli-jdquanyi.daoapp.io/img/logo.png");
                     articleList.add(articleBOOK);
 
@@ -144,23 +144,38 @@ public class CoreService {
                 else {
                 respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
                         + "\n您的留言我们已经收到，并在24小时内回复您。";
+
+                    textMessage.setContent(respContent);
+                    respMessage = MessageUtil.textMessageToXml(textMessage);
                 }
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
                 respContent = "我喜欢你发的图片！";
 
+                textMessage.setContent(respContent);
+                respMessage = MessageUtil.textMessageToXml(textMessage);
+
             } // 地理位置消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
                 respContent = "你发的是地理位置哦！";
+
+                textMessage.setContent(respContent);
+                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 链接消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
                 respContent = "你发送的是链接消息哦！";
 
+                textMessage.setContent(respContent);
+                respMessage = MessageUtil.textMessageToXml(textMessage);
+
             } // 音频消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
                 respContent = "你发送的是音频消息哦！";
+
+                textMessage.setContent(respContent);
+                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
@@ -172,6 +187,9 @@ public class CoreService {
                             = getGreeting() + "，尊敬的读者:)\n"
                             + "感谢关注图书馆！\n"
                             + "赶紧戳一戳下方按钮，来和我们互动吧！";
+
+                    textMessage.setContent(respContent);
+                    respMessage = MessageUtil.textMessageToXml(textMessage);
 
                 } // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -198,16 +216,19 @@ public class CoreService {
                     } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
                         respContent = "34！";
                     }
+                    textMessage.setContent(respContent);
+                    respMessage = MessageUtil.textMessageToXml(textMessage);
 
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
                     respContent = getGreeting() + scanResult;
 
+                    textMessage.setContent(respContent);
+                    respMessage = MessageUtil.textMessageToXml(textMessage);
                 }
             }
 
-            textMessage.setContent(respContent);
-            respMessage = MessageUtil.textMessageToXml(textMessage);
+
 
         }
          catch (Exception e) {
