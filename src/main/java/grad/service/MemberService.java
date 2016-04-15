@@ -26,7 +26,7 @@ public class MemberService {
         MemberInfo.setTemplate_id("Je7Hjl5L67Hy2EMjJBQ5PJIBU-CPG_k3e-tLN3a3k18");
         MemberInfo.setUrl("http://weixin.qq.com/download");
         MemberInfo.setTopcolor("#000000");
-        MemberInfo.setFromUserName(member.getToUserName());
+        MemberInfo.setFromUserName(member.getFromUserName());
 
         Map<String, TemplateData> data = new HashMap<>();
 
