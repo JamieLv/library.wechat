@@ -17,7 +17,7 @@ public class Database {
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from BOOK where Title = '%s'", title));
+        Query query = session.createQuery(String.format("from Book where Title = '%s'", title));
         Book book = null;
         if (query.list().size() > 0) {
             book = (Book) query.list().get(0);
