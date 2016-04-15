@@ -9,6 +9,24 @@ import org.hibernate.Session;
  */
 public class Database {
 
+
+    /*
+    *
+    * 增
+     */
+    public static boolean AddMember(Member member) {
+
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        session.save(member);
+        session.getTransaction().commit();
+
+        return true;
+    }
+
+
+
     /*
      *
      * 查
@@ -25,5 +43,19 @@ public class Database {
         session.getTransaction().commit();
 
         return book;
+    }
+
+    public static Member getMember(String toUserName){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Member where toUserName = '%s'", toUserName));
+        Member member = null;
+        if (query.list().size() > 0) {
+            member = (Member) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return member;
     }
 }

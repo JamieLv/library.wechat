@@ -2,6 +2,7 @@ package grad.service;
 
 import grad.database.Book;
 import grad.database.Database;
+import grad.database.Member;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
@@ -94,7 +95,24 @@ public class CoreService {
 
                 List<Article> articleList = new ArrayList<Article>();
 
-                if (content.startsWith("Search")){
+                if (content.startsWith("Member")) {
+                    String[] keywords = content.trim().split(" ");
+                    try{
+                        // Member 吕嘉铭 男 22 13611774556
+
+                        Date now = new Date();
+                        String pattern = "yyyy-MM-dd";
+                        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
+                        String RegisterTime = SDF.format(now);
+
+                        Member member = new Member(keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, toUserName);
+                        Database.AddMember(member);
+                    }catch (Exception e){
+                        respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 姓名 性别 年龄 手机号";
+
+                    }
+
+                }else if (content.startsWith("Search")){
                     String[] keywords = content.trim().split("\\s+");
                     Book book = Database.getBook(keywords[1]);
 
@@ -115,7 +133,7 @@ public class CoreService {
                     articleAUTHOR.setTitle("作者: " + book.getAuthor());
                     articleList.add(articleAUTHOR);
 
-                    if (book.getTranslator() != null){
+                    if (!book.getTranslator().equals("")){
                         Article articleTRANSLATOR = new Article();
                         articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
                         articleList.add(articleTRANSLATOR);
@@ -140,42 +158,34 @@ public class CoreService {
                     // 将图文消息对象转换成xml字符串
                     respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
+                    return respMessage;
                 }
                 else {
-                respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
-                        + "\n您的留言我们已经收到，并在24小时内回复您。";
+                    respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
+                            + "\n您的留言我们已经收到，并在24小时内回复您。";
 
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
                 }
+
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
                 respContent = "我喜欢你发的图片！";
 
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 地理位置消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
                 respContent = "你发的是地理位置哦！";
 
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 链接消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
                 respContent = "你发送的是链接消息哦！";
 
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 音频消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
                 respContent = "你发送的是音频消息哦！";
 
-                textMessage.setContent(respContent);
-                respMessage = MessageUtil.textMessageToXml(textMessage);
 
             } // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
@@ -188,9 +198,6 @@ public class CoreService {
                             + "感谢关注图书馆！\n"
                             + "赶紧戳一戳下方按钮，来和我们互动吧！";
 
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
-
                 } // 取消订阅
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
 
@@ -198,7 +205,21 @@ public class CoreService {
                     String eventKey = requestMap.get("EventKey");
 
                     if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
-                        respContent = "11！";
+
+                        Member member = Database.getMember(toUserName);
+
+                        if(member == null){
+                            respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册";
+
+                            textMessage.setContent(respContent);
+                            respMessage = MessageUtil.textMessageToXml(textMessage);
+
+                            return respMessage;
+                        }
+                        MemberService.MemberTemplate(member);
+
+                        return "";
+
                     } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
                         respContent = "12！";
                     } else if (eventKey.equals(CommonButton.KEY_HELP)) {
@@ -216,19 +237,18 @@ public class CoreService {
                     } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
                         respContent = "34！";
                     }
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
+
 
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
                     respContent = getGreeting() + scanResult;
 
-                    textMessage.setContent(respContent);
-                    respMessage = MessageUtil.textMessageToXml(textMessage);
+
                 }
             }
 
-
+            textMessage.setContent(respContent);
+            respMessage = MessageUtil.textMessageToXml(textMessage);
 
         }
          catch (Exception e) {

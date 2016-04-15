@@ -1,8 +1,7 @@
-package grad.pojo;
+package grad.message.resp;
 
 /**
- *
- * Created by Jamie on 4/11/16.
+ * Created by Jamie on 4/15/16.
  */
 public class TemplateData {
     private String value;

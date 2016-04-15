@@ -1,12 +1,13 @@
-package grad.pojo;
+package grad.message.resp;
 
 import java.util.Map;
 
+
 /**
- *
- * Created by Jamie on 4/11/16.
+ * Created by Jamie on 4/15/16.
  */
-public class UpdateNoteTemplate {
+public class TemplateMessage {
+
     /**
      * template id
      */
@@ -15,7 +16,7 @@ public class UpdateNoteTemplate {
     /**
      * user openid
      */
-    private String touser;
+    private String toUserName;
 
     /**
      * Note URL
@@ -40,12 +41,12 @@ public class UpdateNoteTemplate {
         this.template_id = template_id;
     }
 
-    public String getTouser() {
-        return touser;
+    public String getToUserName() {
+        return toUserName;
     }
 
-    public void setTouser(String touser) {
-        this.touser = touser;
+    public void setToUserName(String touser) {
+        this.toUserName = touser;
     }
 
     public String getUrl() {
