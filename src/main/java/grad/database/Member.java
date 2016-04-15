@@ -81,11 +81,11 @@ public class Member {
         RegisterTime = registerTime;
     }
 
-    public String getToUserName() {
+    public String getFromUserName() {
         return fromUserName;
     }
 
-    public void setToUserName(String toUserName) {
-        this.fromUserName = toUserName;
+    public void setFromUserName(String fromUserName) {
+        this.fromUserName = fromUserName;
     }
 }
