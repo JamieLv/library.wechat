@@ -45,11 +45,11 @@ public class Database {
         return book;
     }
 
-    public static Member getMember(String toUserName){
+    public static Member getMember(String fromUserName){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Member where toUserName = '%s'", toUserName));
+        Query query = session.createQuery(String.format("from Member where fromUserName = '%s'", fromUserName));
         Member member = null;
         if (query.list().size() > 0) {
             member = (Member) query.list().get(0);

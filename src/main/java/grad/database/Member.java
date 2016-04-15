@@ -19,16 +19,16 @@ public class Member {
     int Age;
     String Mobile;
     String RegisterTime;
-    String toUserName;
+    String fromUserName;
 
 
-    public Member(String Name, String Gender, int Age, String Mobile, String RegisterTime, String toUserName){
+    public Member(String Name, String Gender, int Age, String Mobile, String RegisterTime, String fromUserName){
         this.Name = Name;
         this.Gender = Gender;
         this.Age = Age;
         this.Mobile = Mobile;
         this.RegisterTime = RegisterTime;
-        this.toUserName = toUserName;
+        this.fromUserName = fromUserName;
 
     }
 
@@ -82,10 +82,10 @@ public class Member {
     }
 
     public String getToUserName() {
-        return toUserName;
+        return fromUserName;
     }
 
     public void setToUserName(String toUserName) {
-        this.toUserName = toUserName;
+        this.fromUserName = toUserName;
     }
 }

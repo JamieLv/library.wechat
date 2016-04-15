@@ -16,7 +16,7 @@ public class TemplateMessage {
     /**
      * user openid
      */
-    private String toUserName;
+    private String fromUserName;
 
     /**
      * Note URL
@@ -41,12 +41,12 @@ public class TemplateMessage {
         this.template_id = template_id;
     }
 
-    public String getToUserName() {
-        return toUserName;
+    public String getFromUserName() {
+        return fromUserName;
     }
 
-    public void setToUserName(String touser) {
-        this.toUserName = touser;
+    public void setFromUserName(String touser) {
+        this.fromUserName = touser;
     }
 
     public String getUrl() {

@@ -105,9 +105,9 @@ public class CoreService {
                         SimpleDateFormat SDF = new SimpleDateFormat(pattern);
                         String RegisterTime = SDF.format(now);
 
-                        Member member = new Member(keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, toUserName);
+                        Member member = new Member(keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
                         Database.AddMember(member);
-                    }catch (Exception e){
+                    }catch (NumberFormatException e){
                         respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 姓名 性别 年龄 手机号";
 
                     }
@@ -206,7 +206,7 @@ public class CoreService {
 
                     if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
 
-                        Member member = Database.getMember(toUserName);
+                        Member member = Database.getMember(fromUserName);
 
                         if(member == null){
                             respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册";
