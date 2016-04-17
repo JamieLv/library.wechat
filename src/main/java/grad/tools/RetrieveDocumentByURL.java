@@ -2,7 +2,10 @@ package grad.tools;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import grad.database.Book;
 import grad.database.DouBanBook;
 import grad.servlet.BookXMLParser;
 import org.apache.http.HttpEntity;
@@ -19,7 +22,12 @@ public class RetrieveDocumentByURL {
 
     public static  String Return_BookPicURL(String Book_ISBN) throws ClientProtocolException, IOException{
         DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet get = new HttpGet("http://api.douban.com/book/subject/isbn/" + Book_ISBN);
+
+        Pattern p = Pattern.compile("[0-9\\.]+");
+        Matcher m = p.matcher(Book_ISBN);
+        String Str_ISBN = m.toString();
+
+        HttpGet get = new HttpGet("http://api.douban.com/book/subject/isbn/" + Str_ISBN);
         HttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
         InputStream is = entity.getContent();

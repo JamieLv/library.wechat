@@ -181,6 +181,7 @@ public class CoreService {
                     Article articleBOOK = new Article();
                     articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
                     articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
+                    articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
                     articleList.add(articleBOOK);
 
                     Article articleISBN = new Article();
