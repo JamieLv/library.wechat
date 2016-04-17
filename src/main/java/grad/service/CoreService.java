@@ -284,11 +284,11 @@ public class CoreService {
 
                             textMessage.setContent(respContent);
                             respMessage = MessageUtil.textMessageToXml(textMessage);
-                        }
-
+                        } else { // 成功
                         MemberService.MemberTemplate(member);
 
                         return "";
+                        }
 
                     } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
                         respContent = "12！";
