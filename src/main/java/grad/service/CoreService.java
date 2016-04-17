@@ -177,51 +177,55 @@ public class CoreService {
                 else if (content.startsWith("Search")){ // 检索书本
                     String[] keywords = content.trim().split("\\s+");
                     Book book = Database.getBook(keywords[1]);
+                    if (book == null){
+                        respContent = "此书尚未录入";
+                    } else {
 
-                    Article articleBOOK = new Article();
-                    articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
-                    articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
-                    articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
-                    articleList.add(articleBOOK);
+                        Article articleBOOK = new Article();
+                        articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
+                        articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
+                        articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
+                        articleList.add(articleBOOK);
 
-                    Article articleISBN = new Article();
-                    articleISBN.setTitle("ISBN: " + book.getISBN());
-                    articleList.add(articleISBN);
+                        Article articleISBN = new Article();
+                        articleISBN.setTitle("ISBN: " + book.getISBN());
+                        articleList.add(articleISBN);
 
-                    Article articleCATALOG = new Article();
-                    articleCATALOG.setTitle("类别: " + book.getCatalog());
-                    articleList.add(articleCATALOG);
+                        Article articleCATALOG = new Article();
+                        articleCATALOG.setTitle("类别: " + book.getCatalog());
+                        articleList.add(articleCATALOG);
 
-                    Article articleAUTHOR = new Article();
-                    articleAUTHOR.setTitle("作者: " + book.getAuthor());
-                    articleList.add(articleAUTHOR);
+                        Article articleAUTHOR = new Article();
+                        articleAUTHOR.setTitle("作者: " + book.getAuthor());
+                        articleList.add(articleAUTHOR);
 
-                    if (!book.getTranslator().equals("")){
-                        Article articleTRANSLATOR = new Article();
-                        articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
-                        articleList.add(articleTRANSLATOR);
+                        if (!book.getTranslator().equals("")) {
+                            Article articleTRANSLATOR = new Article();
+                            articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
+                            articleList.add(articleTRANSLATOR);
+                        }
+
+                        Article articlePUBLISHER = new Article();
+                        articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
+                        articleList.add(articlePUBLISHER);
+
+                        Article articleISSUETIME = new Article();
+                        articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
+                        articleList.add(articleISSUETIME);
+
+                        Article articlePRICE = new Article();
+                        articlePRICE.setTitle("价格: " + book.getPrice());
+                        articleList.add(articlePRICE);
+
+                        // 设置图文消息个数
+                        newsMessage.setArticleCount(articleList.size());
+                        // 设置图文消息包含的图文集合
+                        newsMessage.setArticles(articleList);
+                        // 将图文消息对象转换成xml字符串
+                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                        return respMessage;
                     }
-
-                    Article articlePUBLISHER = new Article();
-                    articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
-                    articleList.add(articlePUBLISHER);
-
-                    Article articleISSUETIME = new Article();
-                    articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
-                    articleList.add(articleISSUETIME);
-
-                    Article articlePRICE = new Article();
-                    articlePRICE.setTitle("价格: " + book.getPrice());
-                    articleList.add(articlePRICE);
-
-                    // 设置图文消息个数
-                    newsMessage.setArticleCount(articleList.size());
-                    // 设置图文消息包含的图文集合
-                    newsMessage.setArticles(articleList);
-                    // 将图文消息对象转换成xml字符串
-                    respMessage = MessageUtil.newsMessageToXml(newsMessage);
-
-                    return respMessage;
                 }
                 else {
                     respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)

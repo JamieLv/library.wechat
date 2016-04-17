@@ -23,20 +23,20 @@ public class RetrieveDocumentByURL {
     public static  String Return_BookPicURL(String Book_ISBN) throws ClientProtocolException, IOException{
         DefaultHttpClient client = new DefaultHttpClient();
 
-        Pattern p = Pattern.compile("[^0-9]");
-        Matcher m = p.matcher(Book_ISBN);
-        String Str_ISBN = m.toString();
+//        Pattern p = Pattern.compile("[^0-9]");
+//        Matcher m = p.matcher(Book_ISBN);
+//        String Str_ISBN = m.toString();
 
-        HttpGet get = new HttpGet("http://api.douban.com/book/subject/isbn/" + Str_ISBN);
+        HttpGet get = new HttpGet("http://api.douban.com/book/subject/isbn/" + Book_ISBN);
         HttpResponse response = client.execute(get);
         HttpEntity entity = response.getEntity();
         InputStream is = entity.getContent();
         DouBanBook book = new BookXMLParser(is).getBook();
-        System.out.println("title:->" + book.getTitle());
-        System.out.println("summary:->"+ book.getSummary());
-        System.out.println("price:-->" + book.getPrice());
-        System.out.println("author:-->" + book.getAuthor());
-        System.out.println("ImagePath:-->" + book.getImagePath());
+//        System.out.println("title:->" + book.getTitle());
+//        System.out.println("summary:->"+ book.getSummary());
+//        System.out.println("price:-->" + book.getPrice());
+//        System.out.println("author:-->" + book.getAuthor());
+//        System.out.println("ImagePath:-->" + book.getImagePath());
         return book.getImagePath();
     }
 
