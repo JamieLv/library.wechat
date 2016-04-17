@@ -16,6 +16,8 @@ import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static grad.tools.RetrieveDocumentByURL.Return_BookPicURL;
+
 /**
  *
  * Created by Jamie on 4/11/16.
@@ -178,7 +180,7 @@ public class CoreService {
 
                     Article articleBOOK = new Article();
                     articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
-                    articleBOOK.setPicUrl("http://nickli-jdquanyi.daoapp.io/img/logo.png");
+                    articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
                     articleList.add(articleBOOK);
 
                     Article articleISBN = new Article();

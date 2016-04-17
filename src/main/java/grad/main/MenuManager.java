@@ -8,10 +8,6 @@ package grad.main;
 import grad.pojo.*;
 import grad.util.WeixinUtil;
 
-import java.util.Calendar;
-
-import static grad.service.CoreService.getGreeting;
-
 
 /**
  * 菜单管理器类
@@ -45,7 +41,7 @@ public class MenuManager {
 
             // 判断菜单创建结果
             if (0 == result) {
-                System.out.println("菜单创建成功！");
+                System.out.println("菜单创建成功！" + SearchPic.Search("Android群英传"));
             } else {
                 System.out.println("菜单创建失败，错误码：" + result);
             }
