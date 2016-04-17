@@ -7,10 +7,12 @@ import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
 import grad.pojo.CommonButton;
+import grad.tools.SendMsg_webchinese;
 import grad.util.MessageUtil;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -95,26 +97,83 @@ public class CoreService {
 
                 List<Article> articleList = new ArrayList<Article>();
 
-                if (content.startsWith("Member")) {
+                if (content.startsWith("Member")) { // Member 吕嘉铭 男 22 13611774556
                     String[] keywords = content.trim().split(" ");
                     try{
-                        // Member 吕嘉铭 男 22 13611774556
 
                         Date now = new Date();
                         String pattern = "yyyy-MM-dd";
                         SimpleDateFormat SDF = new SimpleDateFormat(pattern);
                         String RegisterTime = SDF.format(now);
 
-                        Member member = new Member(keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
-                        Database.AddMember(member);
+//                        Member member = new Member(
+//                                keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
+//                        Database.AddMember(member);
 
 
-                    }catch (NumberFormatException e){
+                        int tag = Database.MemberExist(fromUserName);
+
+                        if (tag == 0){  // 第一次注册
+                            Member member = new Member(
+                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
+                            Database.AddMember(member);
+
+                            int yzm = Database.getMember_id(fromUserName);
+                            SendMsg_webchinese sendMsg = new SendMsg_webchinese();
+                            sendMsg.send(keywords[4], yzm);
+                            respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
+                        } else if (tag == 1){ // 用户已登记，手机验证未通过
+                            Database.UpdateMobile(fromUserName, keywords[4]);
+                            int yzm = Database.getMember_id(fromUserName);
+                            SendMsg_webchinese sendMsg = new SendMsg_webchinese();
+                            sendMsg.send(keywords[4], yzm);
+                            respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
+                        } else if (tag ==2){ // 已登记，手机验证通过
+                            respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
+                        }
+
+                    }catch (NumberFormatException e){ // Member开头但格式有误
                         respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 姓名 性别 年龄 手机号";
-
                     }
+                }
 
-                }else if (content.startsWith("Search")){
+                else if (content.startsWith("yzm")){ // yzm 1
+
+                    String[] keywords = content.trim().split(" ");
+
+                    if (keywords.length == 2){
+                        String str_yzm = keywords[1];
+                        int i_yzm = Integer.parseInt(str_yzm); // 获取验证码并转换成原型
+                        int tag = Database.MemberExist(fromUserName);
+
+                        if (tag == 0){
+                            respContent = "尊敬的读者，您还没有输入您的基本信息吧！\n"
+                                    + "请严格按照这个格式进行回复： \n"
+                                    + "Member 姓名 性别 年龄 手机号\n"
+                                    + "60秒内将会收到有验证码的短信。\n"
+                                    + "到时请将验证码回复给微信平台，谢谢配合。";
+                        } else if (tag == 1){
+                            if (i_yzm == Database.getMember_id(fromUserName)){
+                                Database.UpdateMember_Verification(fromUserName, true);
+                                respContent = "恭喜你验证成功！可以点击菜单中的【会员卡】了解个人动态!";
+                            } else {
+                                respContent = "尊敬的读者，验证码输入有误，请仔细核对！\n"
+                                        + "或者再次按照以下格式进行回复： \n"
+                                        + "Member 姓名 性别 年龄 手机号\n"
+                                        + "60秒内将会收到有验证码的短信。\n"
+                                        + "到时请将验证码回复给微信平台，谢谢配合。";
+                            }
+                        }
+                        else { // 验证已通过
+                            respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
+                        }
+                    }
+                    else{
+                        respContent =  "验证码格式错误，请仿照格式: yzm 1回复，谢谢配合。";
+                    }
+                }
+
+                else if (content.startsWith("Search")){ // 检索书本
                     String[] keywords = content.trim().split("\\s+");
                     Book book = Database.getBook(keywords[1]);
 

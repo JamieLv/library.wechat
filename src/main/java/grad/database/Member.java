@@ -20,6 +20,7 @@ public class Member {
     String Mobile;
     String RegisterTime;
     String fromUserName;
+    Boolean Member_Verification;
 
     public Member(){}
 
@@ -89,4 +90,9 @@ public class Member {
     public void setFromUserName(String fromUserName) {
         this.fromUserName = fromUserName;
     }
+
+    public Boolean getMember_Verification() { return Member_Verification; }
+
+    public void setMember_Verification(Boolean member_Verification) { Member_Verification = member_Verification; }
+
 }
