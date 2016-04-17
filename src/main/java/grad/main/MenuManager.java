@@ -41,7 +41,7 @@ public class MenuManager {
 
             // 判断菜单创建结果
             if (0 == result) {
-                System.out.println("菜单创建成功！" + SearchPic.Search("Android群英传"));
+                System.out.println("菜单创建成功！");
             } else {
                 System.out.println("菜单创建失败，错误码：" + result);
             }
