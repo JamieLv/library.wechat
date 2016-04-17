@@ -23,7 +23,7 @@ public class RetrieveDocumentByURL {
     public static  String Return_BookPicURL(String Book_ISBN) throws ClientProtocolException, IOException{
         DefaultHttpClient client = new DefaultHttpClient();
 
-        Pattern p = Pattern.compile("[0-9\\.]+");
+        Pattern p = Pattern.compile("[^0-9]");
         Matcher m = p.matcher(Book_ISBN);
         String Str_ISBN = m.toString();
 
