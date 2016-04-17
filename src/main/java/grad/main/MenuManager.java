@@ -8,6 +8,10 @@ package grad.main;
 import grad.pojo.*;
 import grad.util.WeixinUtil;
 
+import java.util.Calendar;
+
+import static grad.service.CoreService.getGreeting;
+
 
 /**
  * 菜单管理器类
@@ -21,6 +25,8 @@ public class MenuManager {
         boolean STAGE = true;
         String appId;
         String appSecret;
+
+
 
         if (STAGE) {
             appId = "wxe13392d6482304c4";

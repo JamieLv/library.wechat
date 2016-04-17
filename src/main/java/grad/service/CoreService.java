@@ -23,7 +23,7 @@ import java.util.*;
 public class CoreService {
 
     public static String getGreeting() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         String greeting;
         if (hour >= 6 && hour < 8) {
@@ -110,7 +110,6 @@ public class CoreService {
 //                                keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
 //                        Database.AddMember(member);
 
-
                         int tag = Database.MemberExist(fromUserName);
 
                         if (tag == 0){  // 第一次注册
@@ -128,7 +127,7 @@ public class CoreService {
                             SendMsg_webchinese sendMsg = new SendMsg_webchinese();
                             sendMsg.send(keywords[4], yzm);
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
-                        } else if (tag ==2){ // 已登记，手机验证通过
+                        } else if (tag == 2){ // 已登记，手机验证通过
                             respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
                         }
 
@@ -269,14 +268,24 @@ public class CoreService {
 
                         Member member = Database.getMember(fromUserName);
 
-                        if(member == null){
+                        if(member == null){ // 用户尚未登记
                             respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册";
 
                             textMessage.setContent(respContent);
                             respMessage = MessageUtil.textMessageToXml(textMessage);
 
                             return respMessage;
+                        } else if(member.getMember_Verification() == false){ // 用户已登记，手机验证未通过
+                            respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1\n"
+                                    + "或者再次按照以下格式进行回复： \n"
+                                    + "Member 姓名 性别 年龄 手机号\n"
+                                    + "60秒内将会收到有验证码的短信。\n"
+                                    + "到时请将验证码回复给微信平台，谢谢配合。";
+
+                            textMessage.setContent(respContent);
+                            respMessage = MessageUtil.textMessageToXml(textMessage);
                         }
+
                         MemberService.MemberTemplate(member);
 
                         return "";

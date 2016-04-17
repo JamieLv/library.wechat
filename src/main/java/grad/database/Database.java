@@ -28,11 +28,10 @@ public class Database {
         session.getTransaction().commit();
 
         for(Member m :member_list) {
-            if(m.getFromUserName().equals(fromUserName)){
-                exist = 1; // 存在于名单中
-            }
-            if(m.getFromUserName().equals(fromUserName) && m.getMember_Verification()) {
+            if(m.getFromUserName().equals(fromUserName) && m.getMember_Verification()){
                 exist = 2; // 存在于名单中且通过验证
+            } else if(m.getFromUserName().equals(fromUserName)) {
+                exist = 1; // 存在于名单中
             }
         }
         return  exist;
