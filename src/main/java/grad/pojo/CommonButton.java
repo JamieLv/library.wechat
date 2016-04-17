@@ -19,8 +19,8 @@ public class CommonButton extends Button {
     public static final String KEY_HELP = "KEY_HELP";
 
     public static final String KEY_BOOK = "KEY_BOOK";
-    public static final String KEY_BORROW_UMBRELLA = "KEY_BORROW_UMBRELLA";
-    public static final String KEY_RETURN_UMBRELLA = "KEY_RETURN_UMBRELLA";
+    public static final String KEY_RESERVE_ROOM = "KEY_RESERVE_ROOM";
+    public static final String KEY_BOOK_RECOMMAND = "KEY_BOOK_RECOMMAND";
     public static final String KEY_NEARBY = "KEY_NEARBY";
 
     public static final String KEY_ADVICE = "KEY_ADVICE";

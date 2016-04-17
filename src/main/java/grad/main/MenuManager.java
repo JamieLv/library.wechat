@@ -80,14 +80,14 @@ public class MenuManager {
         btn21.setKey(CommonButton.KEY_BOOK);
 
         CommonButton btn22 = new CommonButton();
-        btn22.setName("我要借伞");
-        btn22.setType("scancode_waitmsg");
-        btn22.setKey(CommonButton.KEY_BORROW_UMBRELLA);
+        btn22.setName("阅览室预约");
+        btn22.setType("click");
+        btn22.setKey(CommonButton.KEY_RESERVE_ROOM);
 
         CommonButton btn23 = new CommonButton();
-        btn23.setName("我要还伞");
+        btn23.setName("图书推荐");
         btn23.setType("click");
-        btn23.setKey(CommonButton.KEY_RETURN_UMBRELLA);
+        btn23.setKey(CommonButton.KEY_BOOK_RECOMMAND);
 
         CommonButton btn24 = new CommonButton();
         btn24.setName("门店查询");

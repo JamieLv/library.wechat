@@ -51,7 +51,6 @@ public class CoreService {
      */
     public static String processRequest(HttpServletRequest request) {
         String respMessage = null;
-        //Database db = new Database();
         String currentTime;
         //获得当前时间
         //格式如下： 20160411-11:12:43
@@ -303,8 +302,10 @@ public class CoreService {
                         respContent = "14！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         respContent = "回复\"Search 书名\"查询您想要的书本!";
-                    } else if (eventKey.equals(CommonButton.KEY_BORROW_UMBRELLA)) {
+                    } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
                         respContent = "22！";
+                    } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMAND)) {
+                        respContent = "23！";
                     } else if (eventKey.equals(CommonButton.KEY_NEARBY)) {
                         respContent = "24！";
                     } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
