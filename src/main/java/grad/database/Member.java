@@ -24,13 +24,14 @@ public class Member {
 
     public Member(){}
 
-    public Member(String Name, String Gender, int Age, String Mobile, String RegisterTime, String fromUserName){
+    public Member(String Name, String Gender, int Age, String Mobile, String RegisterTime, String fromUserName, Boolean Member_Verification){
         this.Name = Name;
         this.Gender = Gender;
         this.Age = Age;
         this.Mobile = Mobile;
         this.RegisterTime = RegisterTime;
         this.fromUserName = fromUserName;
+        this.Member_Verification = Member_Verification;
 
     }
 

@@ -115,7 +115,7 @@ public class CoreService {
 
                         if (tag == 0){  // 第一次注册
                             Member member = new Member(
-                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
+                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName, false);
                             Database.AddMember(member);
 
                             int yzm = Database.getMember_id(fromUserName);
