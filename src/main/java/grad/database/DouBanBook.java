@@ -142,13 +142,13 @@ public class DouBanBook implements Serializable {
         this.author = author;
     }
 
-//    public String getTranslator() {
-//        return translator;
-//    }
-//
-//    public void setTranslator(String translator) {
-//        this.translator = translator;
-//    }
+    public String getTranslator() {
+        return translator;
+    }
+
+    public void setTranslator(String translator) {
+        this.translator = translator;
+    }
 
     /**
      * @return the price

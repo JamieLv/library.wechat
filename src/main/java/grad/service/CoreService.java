@@ -67,11 +67,11 @@ public class CoreService {
             articleAUTHOR.setTitle("作者: " + book.getAuthor());
             articleList.add(articleAUTHOR);
 
-//            if (!book.getTranslator().equals("")) {
-//                Article articleTRANSLATOR = new Article();
-//                articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
-//                articleList.add(articleTRANSLATOR);
-//            }
+            if (book.getTranslator() != null) {
+                Article articleTRANSLATOR = new Article();
+                articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
+                articleList.add(articleTRANSLATOR);
+            }
 
             Article articlePUBLISHER = new Article();
             articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
@@ -242,7 +242,7 @@ public class CoreService {
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
                         Book book = new Book(
-                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), " ",
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
                                 new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                         Database.AddBook(book);
 
