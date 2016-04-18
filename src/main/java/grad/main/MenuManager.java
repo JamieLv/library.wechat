@@ -87,7 +87,7 @@ public class MenuManager {
         CommonButton btn23 = new CommonButton();
         btn23.setName("图书推荐");
         btn23.setType("click");
-        btn23.setKey(CommonButton.KEY_BOOK_RECOMMAND);
+        btn23.setKey(CommonButton.KEY_BOOK_RECOMMEND);
 
         CommonButton btn24 = new CommonButton();
         btn24.setName("门店查询");

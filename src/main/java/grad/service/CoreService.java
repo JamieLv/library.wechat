@@ -95,9 +95,10 @@ public class CoreService {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
         calendar.setTime(date);
         calendar.add(Calendar.DATE, addDays);
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
-        String str_calendar = SDF.format(calendar);
+        String str_calendar = calendar.toString();
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
+//        String str_calendar = SDF.format(date);
         return str_calendar;
     }
 
@@ -133,10 +134,10 @@ public class CoreService {
             // 时间
             String createTime = requestMap.get("CreateTime");
             // 日期
-            Date now = new Date();
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat SDF = new SimpleDateFormat(pattern);
-            String CurrentDate = SDF.format(now);
+//            Date now = new Date();
+//            String pattern = "yyyy-MM-dd";
+//            SimpleDateFormat SDF = new SimpleDateFormat(pattern);
+//            String CurrentDate = SDF.format(now);
 
             // 默认回复文本消息
             TextMessage textMessage = new TextMessage();
@@ -341,7 +342,7 @@ public class CoreService {
                         respContent = "回复\"Search 书名\"查询您想要的书本!";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
                         respContent = "22！";
-                    } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMAND)) {
+                    } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
                         respContent = "23！";
                     } else if (eventKey.equals(CommonButton.KEY_NEARBY)) {
                         respContent = "24！";
