@@ -8,7 +8,7 @@ import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
 import grad.pojo.CommonButton;
-import grad.tools.SendMsg_webchinese;
+import grad.tools.*;
 import grad.util.MessageUtil;
 
 
@@ -17,7 +17,7 @@ import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static grad.tools.RetrieveDocumentByURL.Return_BookInofo;
+import static grad.tools.RetrieveDocumentByURL.Return_BookInfo;
 import static grad.tools.RetrieveDocumentByURL.Return_BookPicURL;
 
 /**
@@ -234,14 +234,14 @@ public class CoreService {
                     String ADD_ISBN = keywords[1];
 
                     if (Database.getBookbyISBN(ADD_ISBN).equals(null)) {
-                        DouBanBook new_book = Return_BookInofo(ADD_ISBN);
+                        DouBanBook new_book = Return_BookInfo(ADD_ISBN);
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
                         Book book = new Book(
-                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getBinding(), new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                         Database.AddBook(book);
 
-                        respContent = "添加成功" + new_book.getTitle() + new_book.getBinding();
+                        respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor() + new_book.getBinding();
                     } else {
                         respContent = "此书已录入";
                     }

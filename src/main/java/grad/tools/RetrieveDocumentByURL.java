@@ -40,7 +40,7 @@ public class RetrieveDocumentByURL {
         return book.getImagePath();
     }
 
-    public static DouBanBook Return_BookInofo(String Book_ISBN) throws ClientProtocolException, IOException{
+    public static DouBanBook Return_BookInfo(String Book_ISBN) throws ClientProtocolException, IOException{
         DefaultHttpClient client = new DefaultHttpClient();
 
         HttpGet get = new HttpGet("http://api.douban.com/book/subject/isbn/" + Book_ISBN);
