@@ -25,12 +25,12 @@ public class Book {
 
     public Book(){}
 
-    public Book(String ISBN, String Title, String Catalog, String Author, String Publisher, String IssueTime, String Price){
+    public Book(String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price){
         this.ISBN = ISBN;
         this.Title = Title;
         this.Catalog = Catalog;
         this.Author = Author;
-//        this.Translator = Translator;
+        this.Translator = Translator;
         this.Publisher = Publisher;
         this.IssueTime = IssueTime;
         this.Price = Price;

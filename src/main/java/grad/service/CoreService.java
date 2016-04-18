@@ -239,7 +239,7 @@ public class CoreService {
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
                         Book book = new Book(
-                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), "Translator", new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                         Database.AddBook(book);
 
                         respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor() + new_book.getBinding();
