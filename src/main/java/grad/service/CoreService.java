@@ -1,9 +1,6 @@
 package grad.service;
 
-import grad.database.Book;
-import grad.database.Database;
-import grad.database.DouBanBook;
-import grad.database.Member;
+import grad.database.*;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
@@ -46,47 +43,51 @@ public class CoreService {
 
     public static List<Article> SearchBookDisplay(String Search_Book_Title) throws IOException {
 
-        List<Article> articleList = new ArrayList<Article>();
+        List<Article> articleList = new ArrayList<>();
         Book book = Database.getBook(Search_Book_Title);
+//        Book_State book_state = Database.getBook_StatebyISBN(book.getISBN());
 
-            Article articleBOOK = new Article();
-            articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
-            articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
-            articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
-            articleList.add(articleBOOK);
+        Article articleBOOK = new Article();
+        articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
+        articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
+        articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
+        articleList.add(articleBOOK);
 
-            Article articleISBN = new Article();
-            articleISBN.setTitle("ISBN: " + book.getISBN());
-            articleList.add(articleISBN);
+        Article articleISBN = new Article();
+        articleISBN.setTitle("ISBN: " + book.getISBN());
+        articleList.add(articleISBN);
 
-            Article articleCATALOG = new Article();
-            articleCATALOG.setTitle("类别: " + book.getCatalog());
-            articleList.add(articleCATALOG);
+        Article articleCATALOG = new Article();
+        articleCATALOG.setTitle("类别: " + book.getCatalog());
+        articleList.add(articleCATALOG);
 
-            Article articleAUTHOR = new Article();
-            articleAUTHOR.setTitle("作者: " + book.getAuthor());
-            articleList.add(articleAUTHOR);
+        Article articleAUTHOR = new Article();
+        articleAUTHOR.setTitle("作者: " + book.getAuthor());
+        articleList.add(articleAUTHOR);
 
-            if (book.getTranslator() != null) {
-                Article articleTRANSLATOR = new Article();
-                articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
-                articleList.add(articleTRANSLATOR);
-            }
+        if (book.getTranslator() != null) {
+            Article articleTRANSLATOR = new Article();
+            articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
+            articleList.add(articleTRANSLATOR);
+        }
 
-            Article articlePUBLISHER = new Article();
-            articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
-            articleList.add(articlePUBLISHER);
+        Article articlePUBLISHER = new Article();
+        articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
+        articleList.add(articlePUBLISHER);
 
-            Article articleISSUETIME = new Article();
-            articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
-            articleList.add(articleISSUETIME);
+        Article articleISSUETIME = new Article();
+        articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
+        articleList.add(articleISSUETIME);
 
-            Article articlePRICE = new Article();
-            articlePRICE.setTitle("价格: " + book.getPrice());
-            articleList.add(articlePRICE);
+//        Article articlePRICE = new Article();
+//        articlePRICE.setTitle("价格: " + book.getPrice());
+//        articleList.add(articlePRICE);
+
+//        Article articleBOOKSTATEMENT = new Article();
+//        articleBOOKSTATEMENT.setTitle("存书状态: " + book_state.getLibrary_Name());
+//        articleList.add(articleBOOKSTATEMENT);
 
             return articleList;
-
     }
 
 
@@ -158,15 +159,15 @@ public class CoreService {
                         if (tag == 0){  // 第一次注册
                             Member member = new Member(
                                     keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName, false);
-                            Database.AddMember(member);
+                            Database.Add(member);
 
-                            int yzm = Database.getMember_id(fromUserName);
+                            int yzm = Database.getMember(fromUserName).getMember_id();
                             SendMsg_webchinese sendMsg = new SendMsg_webchinese();
                             sendMsg.send(keywords[4], yzm);
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
                         } else if (tag == 1){ // 用户已登记，手机验证未通过
                             Database.UpdateMobile(fromUserName, keywords[4]);
-                            int yzm = Database.getMember_id(fromUserName);
+                            int yzm = Database.getMember(fromUserName).getMember_id();
                             SendMsg_webchinese sendMsg = new SendMsg_webchinese();
                             sendMsg.send(keywords[4], yzm);
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
@@ -193,7 +194,7 @@ public class CoreService {
                                     + "60秒内将会收到有验证码的短信。\n"
                                     + "到时请将验证码回复给微信平台，谢谢配合。";
                         } else if (tag == 1){
-                            if (i_yzm == Database.getMember_id(fromUserName)){
+                            if (i_yzm == Database.getMember(fromUserName).getMember_id()){
                                 Database.UpdateMember_Verification(fromUserName, true);
                                 respContent = "恭喜你验证成功！可以点击菜单中的【会员卡】了解个人动态!";
                             } else {
@@ -231,22 +232,26 @@ public class CoreService {
                         return respMessage;
                     }
                 } else if (content.startsWith("Add") || content.startsWith("add")) {
-                    // add 9781278973602
+                    // add 9781278973602 2
 
                     String[] keywords = content.trim().split(" ");
                     String ADD_ISBN = keywords[1];
+                    int Library_id = Integer.parseInt(keywords[2]);
 
                     if (Database.getBookbyISBN(ADD_ISBN) == null) {
 
                         DouBanBook new_book = Return_BookInfo(ADD_ISBN);
 
-                        //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
+                        // String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
                         Book book = new Book(
                                 ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
                                 new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
-                        Database.AddBook(book);
+                        Database.Add(book);
+                        // String Title, int Library_id, String Library_Name, String Statement, String Borrower
+                        Book_State book_state = new Book_State(new_book.getTitle(), ADD_ISBN, Library_id, Database.getLibrary_Name(Library_id), "归还", null);
+                        Database.Add(book_state);
 
-                        respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor();
+                        respContent = "添加成功" + book.getTitle() + book.getAuthor() + book_state.getLibrary_Name();
                     } else {
                         respContent = "此书已录入";
                     }

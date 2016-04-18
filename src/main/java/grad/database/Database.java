@@ -5,6 +5,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Jamie on 4/15/16.
@@ -43,36 +44,47 @@ public class Database {
     * 增
      */
 
-    // 增加会员
-    public static boolean AddMember(Member member){
 
+    // 增加一条数据
+    public static boolean Add(Object obj){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        session.save(member);
+        session.save(obj);
         session.getTransaction().commit();
 
         return true;
     }
 
-    // 增加新书
-    public static boolean AddBook(Book book){
-
-
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        session.save(book);
-        session.getTransaction().commit();
-
-        return true;
-    }
+//
+//    // 增加新书
+//    public static boolean AddBook(Book book){
+//
+//        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//        session.beginTransaction();
+//        session.save(book);
+//        session.getTransaction().commit();
+//
+//        return true;
+//    }
+//
+//    // 增加新书状态
+//    public static boolean AddBook_Statement(Book_State book_state){
+//
+//        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//        session.beginTransaction();
+//        session.save(book_state);
+//        session.getTransaction().commit();
+//
+//        return true;
+//    }
 
     /*
      *
      * 改
      */
     public static boolean UpdateMobile(String fromUserName, String Mobile){
-        int Member_id = getMember_id(fromUserName);
+        int Member_id = getMember(fromUserName).getMember_id();
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Member member = (Member)session.get(Member.class, Member_id);
@@ -83,7 +95,7 @@ public class Database {
     }
 
     public static boolean UpdateMember_Verification(String fromUserName, boolean verify){
-        int Member_id = getMember_id(fromUserName);
+        int Member_id = getMember(fromUserName).getMember_id();
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Member member = (Member)session.get(Member.class, Member_id);
@@ -92,7 +104,6 @@ public class Database {
 
         return true;
     }
-
 
 
     /*
@@ -129,6 +140,20 @@ public class Database {
         return book;
     }
 
+    public static Book_State getBook_StatebyISBN(String ISBN){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Book_State where ISBN = '%s'", ISBN));
+        Book_State book_state = null;
+        if (query.list().size() > 0) {
+            book_state = (Book_State) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return book_state;
+    }
+
     // 查会员
     public static Member getMember(String fromUserName){
 
@@ -145,22 +170,36 @@ public class Database {
     }
 
     // 查会员ID
-    public static int getMember_id(String  fromUserName){
-        int Member_id = 0;
+//    public static int getMember_id(String fromUserName){
+//        int Member_id = 0;
+//
+//        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//        session.beginTransaction();
+//        Query query = session.createQuery("from Member");
+//        List<Member> member_list = query.list();
+//        session.getTransaction().commit();
+//
+//        for(Member m: member_list) {
+//            if(m.getFromUserName().equals(fromUserName)){
+//                Member_id = m.getMember_id();
+//                break;
+//            }
+//        }
+//        return  Member_id;
+//    }
 
+    // 查图书馆名字
+    public static String getLibrary_Name(int Library_id){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery("from Member");
-        List<Member> member_list = query.list();
+        Query query = session.createQuery(String.format("from Library where Library_id = '%s'", Library_id));
+        Library library  = null;
+        if (query.list().size() > 0) {
+            library = (Library) query.list().get(0);
+        }
         session.getTransaction().commit();
 
-        for(Member m: member_list) {
-            if(m.getFromUserName().equals(fromUserName)){
-                Member_id = m.getMember_id();
-                break;
-            }
-        }
-        return  Member_id;
+        return library.getLibrary_Name();
     }
 
 }
