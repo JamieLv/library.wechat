@@ -67,11 +67,11 @@ public class CoreService {
             articleAUTHOR.setTitle("作者: " + book.getAuthor());
             articleList.add(articleAUTHOR);
 
-            if (!book.getTranslator().equals("")) {
-                Article articleTRANSLATOR = new Article();
-                articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
-                articleList.add(articleTRANSLATOR);
-            }
+//            if (!book.getTranslator().equals("")) {
+//                Article articleTRANSLATOR = new Article();
+//                articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
+//                articleList.add(articleTRANSLATOR);
+//            }
 
             Article articlePUBLISHER = new Article();
             articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
@@ -88,7 +88,6 @@ public class CoreService {
             return articleList;
 
     }
-
 
 
     /**
@@ -154,11 +153,6 @@ public class CoreService {
                         String pattern = "yyyy-MM-dd";
                         SimpleDateFormat SDF = new SimpleDateFormat(pattern);
                         String RegisterTime = SDF.format(now);
-
-//                        Member member = new Member(
-//                                keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName);
-//                        Database.AddMember(member);
-
                         int tag = Database.MemberExist(fromUserName);
 
                         if (tag == 0){  // 第一次注册
@@ -179,14 +173,12 @@ public class CoreService {
                         } else if (tag == 2){ // 已登记，手机验证通过
                             respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
                         }
-
                     }catch (NumberFormatException e){ // Member开头但格式有误
                         respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
                     }
                 }
 
                 else if (content.startsWith("yzm")){ // yzm 1
-
                     String[] keywords = content.trim().split(" ");
 
                     if (keywords.length == 2){
@@ -250,23 +242,20 @@ public class CoreService {
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
                         Book book = new Book(
-                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), "Translator",
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
                                 new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                         Database.AddBook(book);
 
-                        respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor() + new_book.getTranslator();
-
+                        respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor();
                     } else {
                         respContent = "此书已录入";
                     }
-
                 }
+
                 else {
                     respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
                             + "\n您的留言我们已经收到，并在24小时内回复您。";
-
                 }
-
 
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
@@ -312,23 +301,15 @@ public class CoreService {
                         if(member == null){ // 用户尚未登记
                             respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册";
 
-                            textMessage.setContent(respContent);
-                            respMessage = MessageUtil.textMessageToXml(textMessage);
-
-                            return respMessage;
                         } else if(member.getMember_Verification() == false){ // 用户已登记，手机验证未通过
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1\n"
                                     + "或者再次按照以下格式进行回复： \n"
                                     + "Member 姓名 性别 年龄 手机号\n"
                                     + "60秒内将会收到有验证码的短信。\n"
                                     + "到时请将验证码回复给微信平台，谢谢配合。";
-
-                            textMessage.setContent(respContent);
-                            respMessage = MessageUtil.textMessageToXml(textMessage);
                         } else { // 成功
-                        MemberService.MemberTemplate(member);
-
-                        return "";
+                            MemberService.MemberTemplate(member);
+                            return "";
                         }
 
                     } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
@@ -351,18 +332,15 @@ public class CoreService {
                         respContent = "34！";
                     }
 
-
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
                     respContent = getGreeting() + scanResult;
-
 
                 }
             }
 
             textMessage.setContent(respContent);
             respMessage = MessageUtil.textMessageToXml(textMessage);
-
         }
          catch (Exception e) {
             e.printStackTrace();
