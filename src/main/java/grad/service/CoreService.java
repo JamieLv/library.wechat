@@ -333,8 +333,8 @@ public class CoreService {
                             return "";
                         }
 
-                    } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
-                        respContent = "12！";
+                    } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
+                        respContent = "13！";
                     } else if (eventKey.equals(CommonButton.KEY_HELP)) {
                         respContent = "14！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
@@ -362,10 +362,10 @@ public class CoreService {
 //                        Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement)
                         Member_Record new_borrow_record = new Member_Record(
                                 Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
-                                CurrentDate, getDate(14), 1);
+                                getDate(0), getDate(14), 1);
                         Database.Add(new_borrow_record);
 
-                        respContent = CurrentDate + getDate(14);
+                        respContent = getDate(0) + getDate(14);
 
                     } else {
                         respContent = getGreeting() + scanResult;

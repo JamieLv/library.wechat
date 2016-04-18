@@ -61,12 +61,12 @@ public class MenuManager {
 
         CommonButton btn12 = new CommonButton();
         btn12.setName("我要借书");
-        btn12.setType("click");
+        btn12.setType("scancode_waitmsg");
         btn12.setKey(CommonButton.KEY_BORROW_BOOK);
 
         CommonButton btn13 = new CommonButton();
         btn13.setName("我要还书");
-        btn13.setType("scancode_waitmsg");
+        btn13.setType("click");
         btn13.setKey(CommonButton.KEY_RETURN_BOOK);
 
         CommonButton btn14 = new CommonButton();
