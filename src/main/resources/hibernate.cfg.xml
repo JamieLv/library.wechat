@@ -30,8 +30,11 @@
     <property name="cache.provider_class">org.hibernate.cache.internal.NoCachingRegionFactory</property>
     
     <!-- Drop and re-create the database schema on startup -->
-      <mapping class="grad.database.Book"/>
-      <mapping class="grad.database.Member"/>
+    <mapping class="grad.database.Book"/>
+    <mapping class="grad.database.Member"/>
+    <mapping class="grad.database.Library"/>
+    <mapping class="grad.database.Book_State"/>
+    <mapping class="grad.database.Member_Record"/>
 
 
 

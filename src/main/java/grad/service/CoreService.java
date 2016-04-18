@@ -233,27 +233,31 @@ public class CoreService {
                     }
                 } else if (content.startsWith("Add") || content.startsWith("add")) {
                     // add 9781278973602 2
-
                     String[] keywords = content.trim().split(" ");
-                    String ADD_ISBN = keywords[1];
-                    int Library_id = Integer.parseInt(keywords[2]);
+                    if (keywords.length == 3) {
+                        String ADD_ISBN = keywords[1];
+                        int Library_id = Integer.parseInt(keywords[2]);
 
-                    if (Database.getBookbyISBN(ADD_ISBN) == null) {
+                        if (Database.getBookbyISBN(ADD_ISBN) == null) {
 
-                        DouBanBook new_book = Return_BookInfo(ADD_ISBN);
+                            DouBanBook new_book = Return_BookInfo(ADD_ISBN);
 
-                        // String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
-                        Book book = new Book(
-                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
-                                new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
-                        Database.Add(book);
-                        // String Title, int Library_id, String Library_Name, String Statement, String Borrower
-                        Book_State book_state = new Book_State(new_book.getTitle(), ADD_ISBN, Library_id, Database.getLibrary_Name(Library_id), "归还", null);
-                        Database.Add(book_state);
+                            // String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
+                            Book book = new Book(
+                                    ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
+                                    new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
+                            Database.Add(book);
+                            // String Title, int Library_id, String Library_Name, String Statement, String Borrower
+                            Book_State book_state = new Book_State(new_book.getTitle(), ADD_ISBN, Library_id, Database.getLibrary_Name(Library_id), "归还", null);
+                            Database.Add(book_state);
 
-                        respContent = "添加成功" + book.getTitle() + book.getAuthor() + book_state.getLibrary_Name();
-                    } else {
-                        respContent = "此书已录入";
+                            respContent = "添加成功" + book.getTitle() + book.getAuthor() + book_state.getLibrary_Name();
+                        } else {
+                            respContent = "此书已录入";
+                        }
+                    }
+                    else {
+                        respContent = "输入格式有误";
                     }
                 }
 
