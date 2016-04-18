@@ -90,6 +90,17 @@ public class CoreService {
             return articleList;
     }
 
+    public static String getDate(int addDays) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, addDays);
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
+        String str_calendar = SDF.format(calendar);
+        return str_calendar;
+    }
+
 
     /**
      * 处理微信发来的请求
@@ -121,6 +132,11 @@ public class CoreService {
             String msgType = requestMap.get("MsgType");
             // 时间
             String createTime = requestMap.get("CreateTime");
+            // 日期
+            Date now = new Date();
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat SDF = new SimpleDateFormat(pattern);
+            String CurrentDate = SDF.format(now);
 
             // 默认回复文本消息
             TextMessage textMessage = new TextMessage();
@@ -150,15 +166,11 @@ public class CoreService {
                     String[] keywords = content.trim().split(" ");
                     try{
 
-                        Date now = new Date();
-                        String pattern = "yyyy-MM-dd";
-                        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
-                        String RegisterTime = SDF.format(now);
                         int tag = Database.MemberExist(fromUserName);
 
                         if (tag == 0){  // 第一次注册
                             Member member = new Member(
-                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], RegisterTime, fromUserName, false);
+                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], getDate(0), fromUserName, false);
                             Database.Add(member);
 
                             int yzm = Database.getMember(fromUserName).getMember_id();
@@ -247,11 +259,11 @@ public class CoreService {
                                     ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
                                     new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                             Database.Add(book);
-                            // String Title, int Library_id, String Library_Name, String Statement, String Borrower
-                            Book_State book_state = new Book_State(new_book.getTitle(), ADD_ISBN, Library_id, Database.getLibrary_Name(Library_id), "归还", null);
+                            // int Book_id, String ISBN, String Title, int Library_id, String Library_Name, String Statement, String Borrower
+                            Book_State book_state = new Book_State(book.getBook_id(), ADD_ISBN, book.getTitle(), Library_id, Database.getLibrary_Name(Library_id), "归还", null);
                             Database.Add(book_state);
 
-                            respContent = "添加成功" + book.getTitle() + book.getAuthor() + book_state.getLibrary_Name();
+                            respContent = "添加成功" + book.getBook_id() + book.getTitle() + book.getAuthor() + book_state.getLibrary_Name();
                         } else {
                             respContent = "此书已录入";
                         }
@@ -343,7 +355,21 @@ public class CoreService {
 
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
-                    respContent = getGreeting() + scanResult;
+                    if (scanResult.startsWith("Book_Library_Info")){ // Book_Library_Info 5 剪刀石头布 1 艾尔法图书馆
+                        String[] Book_Library_Info = scanResult.trim().split(" ");
+                        int Borrow_Book_id = Integer.parseInt(Book_Library_Info[1]);
+//                        int Borrow_Book_Library_id = Integer.parseInt(Book_Library_Info[3]);
+//                        Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement)
+                        Member_Record new_borrow_record = new Member_Record(
+                                Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
+                                CurrentDate, getDate(14), 1);
+                        Database.Add(new_borrow_record);
+
+                        respContent = CurrentDate + getDate(14);
+
+                    } else {
+                        respContent = getGreeting() + scanResult;
+                    }
 
                 }
             }

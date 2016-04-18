@@ -23,7 +23,8 @@ public class Book_State {
 
     public Book_State(){}
 
-    public Book_State(String ISBN, String Title, int Library_id, String Library_Name, String Statement, String Borrower){
+    public Book_State(int Book_id, String ISBN, String Title, int Library_id, String Library_Name, String Statement, String Borrower){
+        this.Book_id = Book_id;
         this.ISBN = ISBN;
         this.Title = Title;
         this.Library_id = Library_id;

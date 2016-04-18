@@ -140,6 +140,20 @@ public class Database {
         return book;
     }
 
+    public static Book getBookbyBook_id(int Book_id){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Book where Book_id = '%s'", Book_id));
+        Book book = null;
+        if (query.list().size() > 0) {
+            book = (Book) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return book;
+    }
+
     public static Book_State getBook_StatebyISBN(String ISBN){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
