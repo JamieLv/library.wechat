@@ -95,10 +95,10 @@ public class CoreService {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
         calendar.setTime(date);
         calendar.add(Calendar.DATE, addDays);
-        String str_calendar = calendar.toString();
-//        String pattern = "yyyy-MM-dd";
-//        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
-//        String str_calendar = SDF.format(date);
+//        String str_calendar = calendar.toString();
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
+        String str_calendar = SDF.format(calendar.getTime());
         return str_calendar;
     }
 
