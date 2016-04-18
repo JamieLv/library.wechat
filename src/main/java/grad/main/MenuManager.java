@@ -6,7 +6,6 @@
 package grad.main;
 
 import grad.pojo.*;
-import grad.service.CoreService;
 import grad.util.WeixinUtil;
 
 
@@ -42,7 +41,7 @@ public class MenuManager {
 
             // 判断菜单创建结果
             if (0 == result) {
-                System.out.println("菜单创建成功！" + CoreService.getDate(14));
+                System.out.println("菜单创建成功！");
             } else {
                 System.out.println("菜单创建失败，错误码：" + result);
             }
