@@ -135,7 +135,7 @@ public class CoreService {
                         }
 
                     }catch (NumberFormatException e){ // Member开头但格式有误
-                        respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 姓名 性别 年龄 手机号";
+                        respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
                     }
                 }
 
@@ -233,7 +233,8 @@ public class CoreService {
                     String[] keywords = content.trim().split(" ");
                     String ADD_ISBN = keywords[1];
 
-                    if (Database.getBookbyISBN(ADD_ISBN).equals(null)) {
+                    if (Database.getBookbyISBN(ADD_ISBN) == null) {
+
                         DouBanBook new_book = Return_BookInfo(ADD_ISBN);
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
@@ -242,6 +243,7 @@ public class CoreService {
                         Database.AddBook(book);
 
                         respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor() + new_book.getBinding();
+
                     } else {
                         respContent = "此书已录入";
                     }
