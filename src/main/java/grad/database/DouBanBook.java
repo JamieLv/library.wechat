@@ -20,6 +20,8 @@ public class DouBanBook implements Serializable {
 
     private String author;
 
+    private String translator;
+
     private String price;
 
     private String binding;
@@ -138,6 +140,14 @@ public class DouBanBook implements Serializable {
      */
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getTranslator() {
+        return translator;
+    }
+
+    public void setTranslator(String translator) {
+        this.translator = translator;
     }
 
     /**

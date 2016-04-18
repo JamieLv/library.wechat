@@ -13,7 +13,7 @@ import grad.util.MessageUtil;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -43,6 +43,52 @@ public class CoreService {
         }
         return greeting;
     }
+
+    public static List<Article> SearchBookDisplay(String Search_Book_Title) throws IOException {
+
+        List<Article> articleList = new ArrayList<Article>();
+        Book book = Database.getBook(Search_Book_Title);
+
+            Article articleBOOK = new Article();
+            articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
+            articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
+            articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
+            articleList.add(articleBOOK);
+
+            Article articleISBN = new Article();
+            articleISBN.setTitle("ISBN: " + book.getISBN());
+            articleList.add(articleISBN);
+
+            Article articleCATALOG = new Article();
+            articleCATALOG.setTitle("类别: " + book.getCatalog());
+            articleList.add(articleCATALOG);
+
+            Article articleAUTHOR = new Article();
+            articleAUTHOR.setTitle("作者: " + book.getAuthor());
+            articleList.add(articleAUTHOR);
+
+            if (!book.getTranslator().equals("")) {
+                Article articleTRANSLATOR = new Article();
+                articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
+                articleList.add(articleTRANSLATOR);
+            }
+
+            Article articlePUBLISHER = new Article();
+            articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
+            articleList.add(articlePUBLISHER);
+
+            Article articleISSUETIME = new Article();
+            articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
+            articleList.add(articleISSUETIME);
+
+            Article articlePRICE = new Article();
+            articlePRICE.setTitle("价格: " + book.getPrice());
+            articleList.add(articlePRICE);
+
+            return articleList;
+
+    }
+
 
 
     /**
@@ -98,7 +144,7 @@ public class CoreService {
                 //拿到用户发来的信息 去除用户回复信息的前后空格
                 String content = requestMap.get("Content").trim();
 
-                List<Article> articleList = new ArrayList<Article>();
+                List<Article> articleList;
 
                 if (content.startsWith("Member")) { // Member 吕嘉铭 男 22 13611774556
                     String[] keywords = content.trim().split(" ");
@@ -181,42 +227,7 @@ public class CoreService {
                     if (book == null){
                         respContent = "此书尚未录入";
                     } else {
-
-                        Article articleBOOK = new Article();
-                        articleBOOK.setTitle("书名: 《" + book.getTitle() + "》");
-                        articleBOOK.setPicUrl(Return_BookPicURL(book.getISBN()));
-                        articleBOOK.setUrl(Return_BookPicURL(book.getISBN()));
-                        articleList.add(articleBOOK);
-
-                        Article articleISBN = new Article();
-                        articleISBN.setTitle("ISBN: " + book.getISBN());
-                        articleList.add(articleISBN);
-
-                        Article articleCATALOG = new Article();
-                        articleCATALOG.setTitle("类别: " + book.getCatalog());
-                        articleList.add(articleCATALOG);
-
-                        Article articleAUTHOR = new Article();
-                        articleAUTHOR.setTitle("作者: " + book.getAuthor());
-                        articleList.add(articleAUTHOR);
-
-                        if (!book.getTranslator().equals("")) {
-                            Article articleTRANSLATOR = new Article();
-                            articleTRANSLATOR.setTitle("译者: " + book.getTranslator());
-                            articleList.add(articleTRANSLATOR);
-                        }
-
-                        Article articlePUBLISHER = new Article();
-                        articlePUBLISHER.setTitle("出版商: " + book.getPublisher());
-                        articleList.add(articlePUBLISHER);
-
-                        Article articleISSUETIME = new Article();
-                        articleISSUETIME.setTitle("发行时间: " + book.getIssueTime());
-                        articleList.add(articleISSUETIME);
-
-                        Article articlePRICE = new Article();
-                        articlePRICE.setTitle("价格: " + book.getPrice());
-                        articleList.add(articlePRICE);
+                        articleList = SearchBookDisplay(keywords[1]);
 
                         // 设置图文消息个数
                         newsMessage.setArticleCount(articleList.size());
@@ -239,10 +250,11 @@ public class CoreService {
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
                         Book book = new Book(
-                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), "Translator", new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
+                                new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                         Database.AddBook(book);
 
-                        respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor() + new_book.getBinding();
+                        respContent = "添加成功" + new_book.getTitle() + new_book.getAuthor() + new_book.getTranslator();
 
                     } else {
                         respContent = "此书已录入";
