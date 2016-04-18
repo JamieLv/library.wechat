@@ -40,6 +40,22 @@ public class RetrieveDocumentByURL {
         return book.getImagePath();
     }
 
+    public static DouBanBook Return_BookInofo(String Book_ISBN) throws ClientProtocolException, IOException{
+        DefaultHttpClient client = new DefaultHttpClient();
+
+        HttpGet get = new HttpGet("http://api.douban.com/book/subject/isbn/" + Book_ISBN);
+        HttpResponse response = client.execute(get);
+        HttpEntity entity = response.getEntity();
+        InputStream is = entity.getContent();
+        DouBanBook book = new BookXMLParser(is).getBook();
+//        System.out.println("title:->" + book.getTitle());
+//        System.out.println("summary:->"+ book.getSummary());
+//        System.out.println("price:-->" + book.getPrice());
+//        System.out.println("author:-->" + book.getAuthor());
+//        System.out.println("ImagePath:-->" + book.getImagePath());
+       return book;
+    }
+
 //    public static void main(String[] args) throws ClientProtocolException, IOException {
 //        new RetrieveDocumentByURL("http://api.douban.com/book/subject/isbn/9787308083256");
 //    }

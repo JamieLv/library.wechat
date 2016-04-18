@@ -2,6 +2,7 @@ package grad.service;
 
 import grad.database.Book;
 import grad.database.Database;
+import grad.database.DouBanBook;
 import grad.database.Member;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
@@ -16,6 +17,7 @@ import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static grad.tools.RetrieveDocumentByURL.Return_BookInofo;
 import static grad.tools.RetrieveDocumentByURL.Return_BookPicURL;
 
 /**
@@ -173,7 +175,7 @@ public class CoreService {
                     }
                 }
 
-                else if (content.startsWith("Search")){ // 检索书本
+                else if (content.startsWith("Search") || content.startsWith("search")){ // 检索书本
                     String[] keywords = content.trim().split("\\s+");
                     Book book = Database.getBook(keywords[1]);
                     if (book == null){
@@ -225,6 +227,25 @@ public class CoreService {
 
                         return respMessage;
                     }
+                } else if (content.startsWith("Add") || content.startsWith("add")) {
+                    // add 9781278973602
+
+                    String[] keywords = content.trim().split(" ");
+                    String ADD_ISBN = keywords[1];
+
+                    if (Database.getBook(ADD_ISBN).equals(null)) {
+                        DouBanBook new_book = Return_BookInofo(ADD_ISBN);
+
+                        //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
+                        Book book = new Book(
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getBinding(), new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
+                        Database.AddBook(book);
+
+                        respContent = "添加成功" + new_book.getTitle() + new_book.getBinding();
+                    } else {
+                        respContent = "此书已录入";
+                    }
+
                 }
                 else {
                     respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)

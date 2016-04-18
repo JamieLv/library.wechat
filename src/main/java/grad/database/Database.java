@@ -55,6 +55,18 @@ public class Database {
         return true;
     }
 
+    // 增加新书
+    public static boolean AddBook(Book book){
+
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        session.save(book);
+        session.getTransaction().commit();
+
+        return true;
+    }
+
     /*
      *
      * 改
