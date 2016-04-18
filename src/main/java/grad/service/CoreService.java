@@ -10,6 +10,7 @@ import grad.util.MessageUtil;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -353,22 +354,25 @@ public class CoreService {
 
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
-                    if (scanResult.startsWith("Book_Library_Info")){ // Book_Library_Info 5 剪刀石头布 1 艾尔法图书馆
-                        String[] Book_Library_Info = scanResult.trim().split(" ");
-                        int Borrow_Book_id = Integer.parseInt(Book_Library_Info[1]);
+                    try{
+                        if (scanResult.startsWith("Book_Library_Info")){ // Book_Library_Info 5 剪刀石头布 1 艾尔法图书馆
+                            String[] Book_Library_Info = scanResult.trim().split(" ");
+                            int Borrow_Book_id = Integer.parseInt(Book_Library_Info[1]);
 //                        int Borrow_Book_Library_id = Integer.parseInt(Book_Library_Info[3]);
 //                        Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement)
-                        Member_Record new_borrow_record = new Member_Record(
-                                Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
-                                getDate(0), getDate(14), 1);
-                        Database.Add(new_borrow_record);
+                            Member_Record new_borrow_record = new Member_Record(
+                                    Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
+                                    getDate(0), getDate(14), 1);
+                            Database.Add(new_borrow_record);
 
-                        respContent = getDate(0) + getDate(14);
+                            respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + getDate(0) + "借至" + getDate(14);
 
-                    } else {
-                        respContent = getGreeting() + scanResult;
+                        } else {
+                            respContent = getGreeting() + scanResult;
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-
                 }
             }
 
