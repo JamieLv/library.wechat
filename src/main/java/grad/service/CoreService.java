@@ -233,7 +233,7 @@ public class CoreService {
                     String[] keywords = content.trim().split(" ");
                     String ADD_ISBN = keywords[1];
 
-                    if (Database.getBook(ADD_ISBN).equals(null)) {
+                    if (Database.getBookbyISBN(ADD_ISBN).equals(null)) {
                         DouBanBook new_book = Return_BookInofo(ADD_ISBN);
 
                         //String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price

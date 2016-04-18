@@ -115,6 +115,20 @@ public class Database {
         return book;
     }
 
+    public static Book getBookbyISBN(String ISBN){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Book where ISBN = '%s'", ISBN));
+        Book book = null;
+        if (query.list().size() > 0) {
+            book = (Book) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return book;
+    }
+
     // 查会员
     public static Member getMember(String fromUserName){
 
