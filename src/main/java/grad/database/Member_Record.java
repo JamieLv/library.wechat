@@ -18,16 +18,18 @@ public class Member_Record {
     String Borrow_Time;
     String Return_Time;
     int Borrow_Statement;
+    String Borrower;
 
     public Member_Record(){}
 
-    public Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement){
+    public Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement, String Borrower){
         this.Member_id = Member_id;
         this.Book_id = Book_id;
         this.Borrow_Catalog = Borrow_Catalog;
         this.Borrow_Time = Borrow_Time;
         this.Return_Time = Return_Time;
         this.Borrow_Statement = Borrow_Statement;
+        this.Borrower = Borrower;
 
     }
 
@@ -79,4 +81,8 @@ public class Member_Record {
     public void setBorrow_Statement(int borrow_Statement) {
         Borrow_Statement = borrow_Statement;
     }
+
+    public String getBorrower() {return Borrower;}
+
+    public void setBorrower(String borrower) {Borrower = borrower;}
 }

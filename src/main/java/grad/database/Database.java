@@ -105,6 +105,21 @@ public class Database {
         return true;
     }
 
+    public static boolean UpdateMember_Record(String fromUserName,  String request){
+        String Borrower = fromUserName;
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Member_Record member_record = session.get(Member_Record.class, Borrower);
+        Book_State book_state = session.get(Book_State.class, Borrower);
+        if (request.contentEquals("Return_Book")){
+            member_record.setBorrow_Statement(0);
+        } else if (request.startsWith("Book_Library_Info")) {
+            member_record.setBorrow_Statement(2);
+        }
+
+        return true;
+    }
+
 
     /*
      *
@@ -112,7 +127,7 @@ public class Database {
      */
 
     // 查书本
-    public static Book getBook(String title){
+    public static Book getBookbyTitle(String title){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
@@ -214,6 +229,20 @@ public class Database {
         session.getTransaction().commit();
 
         return library.getLibrary_Name();
+    }
+
+    // 查借书状态/记录
+    public static Member_Record getMember_Record(int Book_id, String Borrower){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Member where Book_id = '%s' and Borrower = '%s'", Book_id, Borrower));
+        Member_Record member_record = null;
+        if (query.list().size() > 0) {
+            member_record = (Member_Record) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return member_record;
     }
 
 }

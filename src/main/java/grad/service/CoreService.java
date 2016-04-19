@@ -45,7 +45,7 @@ public class CoreService {
     public static List<Article> SearchBookDisplay(String Search_Book_Title) throws IOException {
 
         List<Article> articleList = new ArrayList<>();
-        Book book = Database.getBook(Search_Book_Title);
+        Book book = Database.getBookbyTitle(Search_Book_Title);
 //        Book_State book_state = Database.getBook_StatebyISBN(book.getISBN());
 
         Article articleBOOK = new Article();
@@ -227,7 +227,7 @@ public class CoreService {
 
                 else if (content.startsWith("Search") || content.startsWith("search")){ // 检索书本
                     String[] keywords = content.trim().split("\\s+");
-                    Book book = Database.getBook(keywords[1]);
+                    Book book = Database.getBookbyTitle(keywords[1]);
                     if (book == null){
                         respContent = "此书尚未录入";
                     } else {
@@ -359,15 +359,24 @@ public class CoreService {
                             String[] Book_Library_Info = scanResult.trim().split(" ");
                             int Borrow_Book_id = Integer.parseInt(Book_Library_Info[1]);
 //                        int Borrow_Book_Library_id = Integer.parseInt(Book_Library_Info[3]);
-//                        Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement)
-                            Member_Record new_borrow_record = new Member_Record(
-                                    Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
-                                    getDate(0), getDate(14), 1);
-                            Database.Add(new_borrow_record);
+//                        Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement, String Borrower)
+                            if (Database.getMember_Record(Borrow_Book_id, fromUserName) == null
+                                    || Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 0) { // 这个用户没有借过这本书, 或者已经归还
+                                Member_Record new_borrow_record = new Member_Record(
+                                        Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
+                                        getDate(0), getDate(14), 1, fromUserName);
+                                Database.Add(new_borrow_record);
+                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + getDate(0) + "借至" + getDate(14);
+                            } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
+                                Database.UpdateMember_Record(fromUserName, scanResult);
+                            } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
+                                respContent = "您已续借过，请于" + Database.getMember_Record(Borrow_Book_id, fromUserName).getReturn_Time() + "还书，谢谢";
+                            }
 
-                            respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + getDate(0) + "借至" + getDate(14);
-
-                        } else {
+                        } else if (scanResult.contentEquals("Return_Book")){ // 还书
+                            Database.UpdateMember_Record(fromUserName, scanResult);
+                        }
+                        else {
                             respContent = getGreeting() + scanResult;
                         }
                     }catch (Exception e){
