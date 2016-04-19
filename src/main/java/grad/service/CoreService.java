@@ -397,17 +397,29 @@ public class CoreService {
                                         Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
                                         getDate(0), getDate(14), 1, fromUserName);
                                 Database.Add(new_borrow_record);
-                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
-                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
-                                        "借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
+
+                                BorrowService.BorrowTemplate(Borrow_Book_id);
+                                return "";
+
+//                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
+//                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
+//                                        "借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
                             } else if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
                                 Database.UpdateMember_Record(Borrow_Book_id, scanResult);
                                 Database.UpdateMember_Record_Return_Time(Borrow_Book_id);
-                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
-                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
-                                        "借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
+
+                                BorrowService.BorrowTemplate(Borrow_Book_id);
+                                return "";
+
+//                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
+//                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
+//                                        "续借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
                             } else if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
-                                respContent = "您已续借过，请于" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time() + "还书，谢谢";
+                                BorrowService.BorrowTemplate(Borrow_Book_id);
+                                return "";
+//                                respContent = "您已续借过，请于" +
+//                                        Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time() +
+//                                        "还书，谢谢";
                             }
 
                         } else if (scanResult.contentEquals("Return_Book")){ // 还书
