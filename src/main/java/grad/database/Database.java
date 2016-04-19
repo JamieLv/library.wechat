@@ -48,7 +48,6 @@ public class Database {
 
     // 增加一条数据
     public static boolean Add(Object obj){
-
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.save(obj);
@@ -56,6 +55,16 @@ public class Database {
 
         return true;
     }
+
+//
+//    public static boolean AddBorrow_Display(Borrow_Display borrow_display){
+//        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+//        session.beginTransaction();
+//        session.save(borrow_display);
+//        session.getTransaction().commit();
+//
+//        return true;
+//    }
 
 //
 //    // 增加新书

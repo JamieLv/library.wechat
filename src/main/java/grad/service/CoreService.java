@@ -1,7 +1,6 @@
 package grad.service;
 
 import grad.database.*;
-import grad.message.req.LocationMessage;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
@@ -11,7 +10,6 @@ import grad.util.MessageUtil;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -181,8 +179,6 @@ public class CoreService {
                 //拿到用户发来的信息 去除用户回复信息的前后空格
                 String content = requestMap.get("Content").trim();
 
-
-
                 if (content.startsWith("Member")) { // Member 吕嘉铭 男 22 13611774556
                     String[] keywords = content.trim().split(" ");
                     try{
@@ -265,33 +261,37 @@ public class CoreService {
                         return respMessage;
                     }
                 } else if (content.startsWith("Add") || content.startsWith("add")) {
-                    // add 9781278973602 2
-                    String[] keywords = content.trim().split(" ");
-                    if (keywords.length == 3) {
-                        String ADD_ISBN = keywords[1];
-                        int Library_id = Integer.parseInt(keywords[2]);
+                    try { // add 9781278973602 2
+                        String[] keywords = content.trim().split(" ");
+                        if (keywords.length == 3) {
+                            String ADD_ISBN = keywords[1];
+                            int Library_id = Integer.parseInt(keywords[2]);
 
-                        if (Database.getBookbyISBN(ADD_ISBN) == null) {
-
-                            DouBanBook new_book = Return_BookInfo(ADD_ISBN);
+                            // if (Database.getBookbyISBN(ADD_ISBN) == null) {
+                                DouBanBook new_book = Return_BookInfo(ADD_ISBN);
+                                String[] Add_Book_Catalog = new_book.getTags().split("/");
+                                String Book_Catalog = Add_Book_Catalog[0] + " " + Add_Book_Catalog[1] + " " + Add_Book_Catalog[2];
 
                             // String ISBN, String Title, String Catalog, String Author, String Translator, String Publisher, String IssueTime, String Price
-                            Book book = new Book(
-                                    ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(), new_book.getTranslator(),
-                                    new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
-                            Database.Add(book);
+                                Book book = new Book(
+                                        ADD_ISBN, new_book.getTitle(), Book_Catalog, new_book.getAuthor(), new_book.getTranslator(),
+                                        new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
+                                Database.Add(book);
                             // int Book_id, String ISBN, String Title, int Library_id, String Library_Name, String Statement, String Borrower
-                            Book_State book_state = new Book_State(book.getBook_id(), ADD_ISBN, book.getTitle(), Library_id, Database.getLibrary_Name(Library_id), "归还", null);
-                            Database.Add(book_state);
+                                Book_State book_state = new Book_State(book.getBook_id(), ADD_ISBN, book.getTitle(), Library_id, Database.getLibrary_Name(Library_id), "归还", null);
+                                Database.Add(book_state);
 
-                            respContent = "添加成功" + book.getBook_id() + book.getTitle() + book.getAuthor() + book_state.getLibrary_Name();
+                                respContent = "添加成功" + book.getBook_id() + " " + book.getTitle() + " " + book.getAuthor() + " " + book_state.getLibrary_Name();
+                           // } else {
+                             //   respContent = "此书已录入";}
+
                         } else {
-                            respContent = "此书已录入";
+                            respContent = "输入格式有误";
                         }
+                    } catch (Exception e){
+                        e.printStackTrace();
                     }
-                    else {
-                        respContent = "输入格式有误";
-                    }
+
                 }
 
                 else {
