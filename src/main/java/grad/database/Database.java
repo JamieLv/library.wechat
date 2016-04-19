@@ -109,7 +109,7 @@ public class Database {
         String Borrower = fromUserName;
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Member_Record member_record = (Member_Record)session.get(Member_Record.class, getMember(Borrower).getMember_id());
+        Member_Record member_record = (Member_Record)session.get(Member_Record.class, Borrower);
 //        Book_State book_state = session.get(Book_State.class, Borrower);
         if (request.contentEquals("Return_Book")){
             member_record.setBorrow_Statement(0);

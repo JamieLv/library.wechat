@@ -88,7 +88,26 @@ public class CoreService {
 //        articleBOOKSTATEMENT.setTitle("存书状态: " + book_state.getLibrary_Name());
 //        articleList.add(articleBOOKSTATEMENT);
 
-            return articleList;
+        return articleList;
+    }
+
+    public static List<Article> MemberRecordDisplay(String fromUserName) throws IOException {
+        List<Article> articleList = new ArrayList<>();
+        Member_Record member_record = Database.getMember_Record(5, fromUserName);
+
+        Article articleNews = new Article();
+        articleNews.setTitle("借阅记录");
+        articleList.add(articleNews);
+
+        Article articleBorrow1 = new Article();
+        articleBorrow1.setTitle(Database.getBookbyBook_id(member_record.getBook_id()).getTitle() + "\n"
+                + member_record.getBorrow_Time() + "\n"
+                + member_record.getReturn_Time()
+        );
+        articleBorrow1.setPicUrl(Return_BookPicURL(Database.getBookbyBook_id(member_record.getBook_id()).getISBN()));
+        articleList.add(articleBorrow1);
+
+        return articleList;
     }
 
     public static String getDate(int addDays) {
@@ -153,13 +172,15 @@ public class CoreService {
             newsMessage.setCreateTime(new Date().getTime());
             newsMessage.setFuncFlag(0);
 
+            List<Article> articleList;
+
 
             // 文本消息
             if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
                 //拿到用户发来的信息 去除用户回复信息的前后空格
                 String content = requestMap.get("Content").trim();
 
-                List<Article> articleList;
+
 
                 if (content.startsWith("Member")) { // Member 吕嘉铭 男 22 13611774556
                     String[] keywords = content.trim().split(" ");
@@ -333,7 +354,17 @@ public class CoreService {
                         }
 
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
-                        respContent = "13！";
+                        articleList = MemberRecordDisplay(fromUserName);
+
+                        // 设置图文消息个数
+                        newsMessage.setArticleCount(articleList.size());
+                        // 设置图文消息包含的图文集合
+                        newsMessage.setArticles(articleList);
+                        // 将图文消息对象转换成xml字符串
+                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                        return respMessage;
+                        
                     } else if (eventKey.equals(CommonButton.KEY_HELP)) {
                         respContent = "14！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
