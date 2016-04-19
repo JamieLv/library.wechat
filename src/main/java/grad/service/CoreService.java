@@ -278,7 +278,7 @@ public class CoreService {
                                         new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice());
                                 Database.Add(book);
                             // int Book_id, String ISBN, String Title, int Library_id, String Library_Name, String Statement, String Borrower
-                                Book_State book_state = new Book_State(book.getBook_id(), ADD_ISBN, book.getTitle(), Library_id, Database.getLibrary_Name(Library_id), "归还", null);
+                                Book_State book_state = new Book_State(ADD_ISBN, book.getTitle(), Library_id, Database.getLibrary_Name(Library_id), "归还", null);
                                 Database.Add(book_state);
 
                                 respContent = "添加成功" + book.getBook_id() + " " + book.getTitle() + " " + book.getAuthor() + " " + book_state.getLibrary_Name();
