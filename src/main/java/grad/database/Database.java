@@ -113,7 +113,6 @@ public class Database {
         if (request.contentEquals("Return_Book")){
             member_record.setBorrow_Statement(0);
         } else if (request.startsWith("Book_Library_Info")) {
-            member_record.setReturn_Time("");
             member_record.setBorrow_Statement(2);
         }
         session.getTransaction().commit();

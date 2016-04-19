@@ -5,8 +5,14 @@
  */
 package grad.main;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import grad.pojo.*;
 import grad.util.WeixinUtil;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -16,7 +22,7 @@ import grad.util.WeixinUtil;
  */
 public class MenuManager {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 
         boolean STAGE = true;
         String appId;
