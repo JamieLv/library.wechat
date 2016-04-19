@@ -307,7 +307,7 @@ public class CoreService {
             } // 地理位置消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
 
-                String location = requestMap.get("Location").trim();
+                String location = requestMap.get("location").trim();
 
                 respContent = "收到" + location;
 
