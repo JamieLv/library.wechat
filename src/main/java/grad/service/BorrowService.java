@@ -35,7 +35,7 @@ public class BorrowService {
                 accessToken;
 
         TemplateMessage BorrowInfo = new TemplateMessage();
-        BorrowInfo.setTemplate_id("TiqVqHdHFIqmyjO9ByAGM3HALbw4LQ8mcTI6h5zUaMI");
+        BorrowInfo.setTemplate_id("51Rs2tIHdSDp7i0vI72U8SiJgct5dGYlK9QOo_wZ3bA");
 //        MemberInfo.setUrl("http://weixin.qq.com/download");
         BorrowInfo.setTopcolor("#000000");
         BorrowInfo.setTouser(Database.getMember_Record(Borrow_Book_id).getBorrower());
@@ -48,10 +48,10 @@ public class BorrowService {
         Title.setColor("#FF0000");
         data.put("Title", Title);
 
-        TemplateData Borrower = new TemplateData();
-        Borrower.setValue(member_record.getBorrower());
-        Borrower.setColor("#FF0000");
-        data.put("Borrower", Borrower);
+        TemplateData Member_id = new TemplateData();
+        Member_id.setValue(String.valueOf(member_record.getMember_id()));
+        Member_id.setColor("#FF0000");
+        data.put("Member_id", Member_id);
 
         TemplateData BorrowTime = new TemplateData();
         BorrowTime.setValue(member_record.getBorrow_Time());
