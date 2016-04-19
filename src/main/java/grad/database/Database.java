@@ -4,8 +4,9 @@ import grad.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import java.util.List;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Jamie on 4/15/16.
@@ -105,18 +106,38 @@ public class Database {
         return true;
     }
 
-    public static boolean UpdateMember_Record(int Borrow_Book_id,  String request){
-//        String Borrower = fromUserName;
+    public static boolean UpdateMember_Record(int Borrow_Book_id, String request){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Member_Record member_record = (Member_Record)session.get(Member_Record.class, Borrow_Book_id);
-//        Book_State book_state = session.get(Book_State.class, Borrower);
         if (request.contentEquals("Return_Book")){
             member_record.setBorrow_Statement(0);
         } else if (request.startsWith("Book_Library_Info")) {
+            member_record.setReturn_Time("");
             member_record.setBorrow_Statement(2);
         }
         session.getTransaction().commit();
+
+        return true;
+    }
+
+    public static boolean UpdateMember_Record_Return_Time(int Borrow_Book_id) throws ParseException {
+
+        String Return_Time = getMember_Record(Borrow_Book_id).getReturn_Time();
+
+        SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = SDF.parse(Return_Time);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 14);
+
+        String New_Return_Time = SDF.format(calendar.getTime());
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Member_Record member_record = (Member_Record)session.get(Member_Record.class, Borrow_Book_id);
+        member_record.setReturn_Time(New_Return_Time);
 
         return true;
     }
@@ -233,10 +254,23 @@ public class Database {
     }
 
     // 查借书状态/记录
-    public static Member_Record getMember_Record(int Book_id, String Borrower){
+    public static Member_Record getMember_Record(int Book_id){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Member_Record where Book_id = '%s' and Borrower = '%s'", Book_id, Borrower));
+        Query query = session.createQuery(String.format("from Member_Record where Book_id = '%s'", Book_id));
+        Member_Record member_record = null;
+        if (query.list().size() > 0) {
+            member_record = (Member_Record) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return member_record;
+    }
+
+    public static Member_Record getMember_RecordbyUser(int Book_id, String fromUserName){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Member_Record where Book_id = '%s' and Borrower = '%s'", Book_id, fromUserName));
         Member_Record member_record = null;
         if (query.list().size() > 0) {
             member_record = (Member_Record) query.list().get(0);

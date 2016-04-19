@@ -93,7 +93,7 @@ public class CoreService {
 
     public static List<Article> MemberRecordDisplay(String fromUserName) throws IOException {
         List<Article> articleList = new ArrayList<>();
-        Member_Record member_record = Database.getMember_Record(5, fromUserName);
+        Member_Record member_record = Database.getMember_Record(5);
 
         Article articleNews = new Article();
         articleNews.setTitle("借阅记录");
@@ -391,19 +391,23 @@ public class CoreService {
                             int Borrow_Book_id = Integer.parseInt(Book_Library_Info[1]);
 //                        int Borrow_Book_Library_id = Integer.parseInt(Book_Library_Info[3]);
 //                        Member_Record(int Member_id, int Book_id, String Borrow_Catalog, String Borrow_Time, String Return_Time, int Borrow_Statement, String Borrower)
-                            if (Database.getMember_Record(Borrow_Book_id, fromUserName) == null
-                                    || Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 0) { // 这个用户没有借过这本书, 或者已经归还
+                            if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName) == null
+                                    || Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 0) { // 这个用户没有借过这本书, 或者已经归还
                                 Member_Record new_borrow_record = new Member_Record(
                                         Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
                                         getDate(0), getDate(14), 1, fromUserName);
                                 Database.Add(new_borrow_record);
-                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + getDate(0) + "借至" + getDate(14);
-                            } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
+                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
+                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
+                                        "借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
+                            } else if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
                                 Database.UpdateMember_Record(Borrow_Book_id, scanResult);
-                                Database.getMember_Record(Borrow_Book_id, fromUserName).setReturn_Time(getDate(7));
-                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Time() + "借至" + getDate(7);
-                            } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
-                                respContent = "您已续借过，请于" + Database.getMember_Record(Borrow_Book_id, fromUserName).getReturn_Time() + "还书，谢谢";
+                                Database.UpdateMember_Record_Return_Time(Borrow_Book_id);
+                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
+                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
+                                        "借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
+                            } else if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
+                                respContent = "您已续借过，请于" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time() + "还书，谢谢";
                             }
 
                         } else if (scanResult.contentEquals("Return_Book")){ // 还书
