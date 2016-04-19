@@ -235,7 +235,7 @@ public class Database {
     public static Member_Record getMember_Record(int Book_id, String Borrower){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Member where Book_id = '%s' and Borrower = '%s'", Book_id, Borrower));
+        Query query = session.createQuery(String.format("from Member_Record where Book_id = '%s' and Borrower = '%s'", Book_id, Borrower));
         Member_Record member_record = null;
         if (query.list().size() > 0) {
             member_record = (Member_Record) query.list().get(0);
