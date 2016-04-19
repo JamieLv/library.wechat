@@ -20,6 +20,13 @@ public class LocationMessage extends BaseMessage {
     private String Scale;
     //地理位置的信息
     private String Label;
+//
+//    public LocationMessage getLocation(String Location_X, String Location_Y, String Scale, String Label) {
+//        this.Location_X = Location_X;
+//        this.Location_Y = Location_Y;
+//        this.Scale = Scale;
+//        this.Label = Label;
+//    }
 
     public void setLocation_X(String Location_X) {
         this.Location_X = Location_X;

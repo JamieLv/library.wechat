@@ -1,6 +1,7 @@
 package grad.service;
 
 import grad.database.*;
+import grad.message.req.LocationMessage;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
@@ -164,7 +165,7 @@ public class CoreService {
             textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
             textMessage.setFuncFlag(0);
 
-            //创建图文信息
+            // 创建图文信息
             NewsMessage newsMessage = new NewsMessage();
             newsMessage.setToUserName(fromUserName);
             newsMessage.setFromUserName(toUserName);
@@ -305,9 +306,12 @@ public class CoreService {
 
             } // 地理位置消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
-                respContent = "你发的是地理位置哦！";
 
+                String location = requestMap.get("location");
 
+                respContent = location;
+
+                
             } // 链接消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
                 respContent = "你发送的是链接消息哦！";
@@ -373,8 +377,6 @@ public class CoreService {
                         respContent = "22！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
                         respContent = "23！";
-                    } else if (eventKey.equals(CommonButton.KEY_NEARBY)) {
-                        respContent = "24！";
                     } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
                         respContent = "31！";
                     } else if (eventKey.equals(CommonButton.KEY_ADVICE_TRACK)) {
@@ -397,30 +399,21 @@ public class CoreService {
                                         Database.getMember(fromUserName).getMember_id(), Borrow_Book_id, Database.getBookbyBook_id(Borrow_Book_id).getCatalog(),
                                         getDate(0), getDate(14), 1, fromUserName);
                                 Database.Add(new_borrow_record);
-
-                                BorrowService.BorrowTemplate(Borrow_Book_id);
-                                return "";
-
 //                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
 //                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
 //                                        "借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
                             } else if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
                                 Database.UpdateMember_Record(Borrow_Book_id, scanResult);
                                 Database.UpdateMember_Record_Return_Time(Borrow_Book_id);
-
-                                BorrowService.BorrowTemplate(Borrow_Book_id);
-                                return "";
-
 //                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() +
 //                                        "可从" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Time() +
 //                                        "续借至" + Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time();
-                            } else if (Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
-                                BorrowService.BorrowTemplate(Borrow_Book_id);
-                                return "";
+                            } // 这个用户借了这本书, 且续借过
 //                                respContent = "您已续借过，请于" +
 //                                        Database.getMember_RecordbyUser(Borrow_Book_id, fromUserName).getReturn_Time() +
 //                                        "还书，谢谢";
-                            }
+                            BorrowService.BorrowTemplate(Borrow_Book_id);
+                            return "";
 
                         } else if (scanResult.contentEquals("Return_Book")){ // 还书
 

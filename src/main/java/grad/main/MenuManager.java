@@ -29,7 +29,6 @@ public class MenuManager {
         String appSecret;
 
 
-
         if (STAGE) {
             appId = "wxe13392d6482304c4";
             appSecret = "41b6c04d9ac9819c779a186e0d6908ab";
