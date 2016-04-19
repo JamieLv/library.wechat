@@ -309,9 +309,9 @@ public class CoreService {
 
                 String location = requestMap.get("location");
 
-                respContent = location;
+                respContent = "收到";
 
-                
+
             } // 链接消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
                 respContent = "你发送的是链接消息哦！";
