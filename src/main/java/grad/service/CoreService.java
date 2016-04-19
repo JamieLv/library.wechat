@@ -364,7 +364,7 @@ public class CoreService {
                         respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                         return respMessage;
-                        
+
                     } else if (eventKey.equals(CommonButton.KEY_HELP)) {
                         respContent = "14！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
@@ -399,7 +399,7 @@ public class CoreService {
                                 Database.Add(new_borrow_record);
                                 respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + getDate(0) + "借至" + getDate(14);
                             } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
-                                Database.UpdateMember_Record(fromUserName, scanResult);
+                                Database.UpdateMember_Record(Borrow_Book_id, scanResult);
                                 Database.getMember_Record(Borrow_Book_id, fromUserName).setReturn_Time(getDate(7));
                                 respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Time() + "借至" + getDate(7);
                             } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
@@ -407,7 +407,7 @@ public class CoreService {
                             }
 
                         } else if (scanResult.contentEquals("Return_Book")){ // 还书
-                            Database.UpdateMember_Record(fromUserName, scanResult);
+
                         }
                         else {
                             respContent = getGreeting() + scanResult;

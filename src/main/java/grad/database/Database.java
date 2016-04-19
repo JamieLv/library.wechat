@@ -105,11 +105,11 @@ public class Database {
         return true;
     }
 
-    public static boolean UpdateMember_Record(String fromUserName,  String request){
-        String Borrower = fromUserName;
+    public static boolean UpdateMember_Record(int Borrow_Book_id,  String request){
+//        String Borrower = fromUserName;
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Member_Record member_record = (Member_Record)session.get(Member_Record.class, Borrower);
+        Member_Record member_record = (Member_Record)session.get(Member_Record.class, Borrow_Book_id);
 //        Book_State book_state = session.get(Book_State.class, Borrower);
         if (request.contentEquals("Return_Book")){
             member_record.setBorrow_Statement(0);
