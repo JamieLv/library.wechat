@@ -369,6 +369,8 @@ public class CoreService {
                                 respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + getDate(0) + "借至" + getDate(14);
                             } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 1){ // 这个用户借了这本书, 但是没有续借过
                                 Database.UpdateMember_Record(fromUserName, scanResult);
+                                Database.getMember_Record(Borrow_Book_id, fromUserName).setReturn_Time(getDate(7));
+                                respContent = Database.getBookbyBook_id(Borrow_Book_id).getTitle() + "可从" + Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Time() + "借至" + getDate(7);
                             } else if (Database.getMember_Record(Borrow_Book_id, fromUserName).getBorrow_Statement() == 2){ // 这个用户借了这本书, 且续借过
                                 respContent = "您已续借过，请于" + Database.getMember_Record(Borrow_Book_id, fromUserName).getReturn_Time() + "还书，谢谢";
                             }
