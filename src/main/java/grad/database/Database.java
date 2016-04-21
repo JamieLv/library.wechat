@@ -103,14 +103,13 @@ public class Database {
         if (request.contentEquals("Return_Book")){
             for (;getBook_StatebyBook_id(Book_ID) != null; Book_ID++){
                 if (getBook_StatebyBook_id(Book_ID).getBook_Borrower_ID() == Book_Borrower_ID){
-                    Session session2 = HibernateUtil.getSessionFactory().getCurrentSession();
-                    session2.beginTransaction();
+                    session.beginTransaction();
                     book_state.setBook_Borrow_Time(null);
                     book_state.setBook_Return_Time(null);
                     book_state.setBook_Statement("归还");
                     book_state.setBook_Statement_ID(0);
                     book_state.setBook_Borrower_ID(0);
-                    session2.getTransaction().commit();
+                    session.getTransaction().commit();
                 }
 //                session.getTransaction().commit();
             }
