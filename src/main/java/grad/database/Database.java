@@ -97,13 +97,13 @@ public class Database {
 
     // 更新书本借阅情况
     public static boolean UpdateBook_State(int Book_ID, String request, int Book_Borrower_ID) throws ParseException {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Book_State book_state = session.get(Book_State.class, Book_ID);
+
         if (request.contentEquals("Return_Book")){
             for (;getBook_StatebyBook_id(Book_ID) != null; Book_ID++){
                 if (getBook_StatebyBook_id(Book_ID).getBook_Borrower_ID() == Book_Borrower_ID){
+                    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
                     session.beginTransaction();
+                    Book_State book_state = session.get(Book_State.class, Book_ID);
                     book_state.setBook_Borrow_Time(null);
                     book_state.setBook_Return_Time(null);
                     book_state.setBook_Statement("归还");
@@ -114,6 +114,9 @@ public class Database {
 //                session.getTransaction().commit();
             }
         } else if (request.startsWith("Book_Info")) {
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Book_State book_state = session.get(Book_State.class, Book_ID);
             if (book_state.getBook_Statement().equals("归还")) { // 书未被借, 用户发出借书请求
                 book_state.setBook_Borrow_Time(getDate(0));
                 book_state.setBook_Return_Time(getDate(30));
