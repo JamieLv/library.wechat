@@ -1,6 +1,7 @@
 package grad.database;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -14,6 +15,7 @@ public class Library_Info {
     int Library_ID;
     String Library_Name;
 
+    @Id
     public int getLibrary_ID() {
         return Library_ID;
     }
