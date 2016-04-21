@@ -388,13 +388,13 @@ public class CoreService {
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
                     try{
+                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
                         /*
                          * 借书
                          */
                         if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
                             String[] Book_State_Info = scanResult.trim().split(" ");
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-                            int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
                             // int Borrow_Member_ID = db.getMember_Info(fromUserName).getMember_ID();
                             // int Borrow_Statement = db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Statement_ID();
                             // int Borrow_Book_ID, int Borrow_Member_ID
@@ -407,10 +407,9 @@ public class CoreService {
                          * 还书
                          */
                         else if (scanResult.contentEquals("Return_Book")){ // 还书
-
-                            // Object Record[][] = [int Record_id][Book book];
-
-
+                            int Borrow_Book_Index = 1;
+                            db.UpdateBook_State(Borrow_Book_Index, scanResult, Book_Borrower_ID);
+                            respContent = "归还成功";
                         }
                         else {
                             respContent = getGreeting() + scanResult;
