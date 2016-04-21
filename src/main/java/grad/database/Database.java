@@ -111,7 +111,6 @@ public class Database {
                     book_state.setBook_Borrower_ID(0);
                     session.getTransaction().commit();
                 }
-//                session.getTransaction().commit();
             }
         } else if (request.startsWith("Book_Info")) {
             Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -149,7 +148,7 @@ public class Database {
                     && borrow_record.getBorrow_Member_ID() == Borrow_Member_ID){
                 Session session = HibernateUtil.getSessionFactory().getCurrentSession();
                 session.beginTransaction();
-                borrow_record.setBorrow_Statement_ID(borrow_record.getBorrow_Book_ID() + 1);
+                borrow_record.setBorrow_Statement_ID(borrow_record.getBorrow_Statement_ID()+1);
                 session.getTransaction().commit();
             }
         }
