@@ -289,7 +289,7 @@ public class CoreService {
                                     ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
                                     new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), Library_id, "归还");
                             Database.Add(book_state);
-                            articleList = SearchBookDisplay(keywords[1]);
+                            articleList = SearchBookDisplay(ADD_ISBN);
 
                             // 设置图文消息个数
                             newsMessage.setArticleCount(articleList.size());

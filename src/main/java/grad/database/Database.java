@@ -102,6 +102,7 @@ public class Database {
         Book_State book_state = session.get(Book_State.class, Book_ID);
         if (request.contentEquals("Return_Book")){
             book_state.setBook_Statement("归还");
+            session.getTransaction().commit();
         } else if (request.startsWith("Book_Info")) {
             if (book_state.getBook_Statement().equals("归还")) { // 书未被借, 用户发出借书请求
                 book_state.setBook_Borrow_Time(getDate(0));
@@ -121,7 +122,7 @@ public class Database {
                 book_state.setBook_Statement_ID(book_state.getBook_Statement_ID()+1);
             }
         }
-        session.getTransaction().commit();
+        
         return true;
     }
 
