@@ -108,6 +108,7 @@ public class Database {
                     book_state.setBook_Statement("归还");
                     book_state.setBook_Statement_ID(0);
                     book_state.setBook_Borrower_ID(0);
+                    session.getTransaction().commit();
                 }
 //                session.getTransaction().commit();
             }
