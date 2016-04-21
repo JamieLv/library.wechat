@@ -109,7 +109,7 @@ public class Database {
                     book_state.setBook_Statement_ID(0);
                     book_state.setBook_Borrower_ID(0);
                 }
-                session.getTransaction().commit();
+//                session.getTransaction().commit();
             }
         } else if (request.startsWith("Book_Info")) {
             if (book_state.getBook_Statement().equals("归还")) { // 书未被借, 用户发出借书请求
