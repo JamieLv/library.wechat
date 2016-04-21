@@ -408,11 +408,12 @@ public class CoreService {
                         if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
                             String[] Book_State_Info = scanResult.trim().split(" ");
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+                            int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
                             // int Borrow_Member_ID = db.getMember_Info(fromUserName).getMember_ID();
                             // int Borrow_Statement = db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Statement_ID();
                             // int Borrow_Book_ID, int Borrow_Member_ID
-                            Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, db.getMember_Info(fromUserName).getMember_ID(), 1);
-                            db.UpdateBook_State(Borrow_Book_ID, scanResult, fromUserName);
+                            Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
+                            db.UpdateBook_State(Borrow_Book_ID, scanResult, Book_Borrower_ID);
                             db.Add(new_borrow_record);
                             BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                             return "";

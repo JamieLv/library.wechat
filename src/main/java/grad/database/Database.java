@@ -96,7 +96,7 @@ public class Database {
     }
 
     // 更新书本借阅情况
-    public static boolean UpdateBook_State(int Book_ID, String request, String fromUserName) throws ParseException {
+    public static boolean UpdateBook_State(int Book_ID, String request, int Book_Borrower_ID) throws ParseException {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Book_State book_state = session.get(Book_State.class, Book_ID);
@@ -109,8 +109,8 @@ public class Database {
                 book_state.setBook_Return_Time(getDate(30));
                 book_state.setBook_Statement("于" + getDate(30) + "归还");
                 book_state.setBook_Statement_ID(1);
-                book_state.setBook_Borrower_ID(Database.getMember_Info(fromUserName).getMember_ID());
-            } else if (book_state.getBook_Borrower_ID() == Database.getMember_Info(fromUserName).getMember_ID()) { // 用户已经借过书
+                book_state.setBook_Borrower_ID(Book_Borrower_ID);
+            } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID) { // 用户已经借过书
                 String Return_Time = book_state.getBook_Return_Time();
                 SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = SDF.parse(Return_Time);
@@ -122,7 +122,7 @@ public class Database {
                 book_state.setBook_Statement_ID(book_state.getBook_Statement_ID()+1);
             }
         }
-        
+
         return true;
     }
 
@@ -210,7 +210,7 @@ public class Database {
     public static Borrow_Record getBorrow_RecordbyRecord_ID(int Record_ID){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Borrow_Record where Return_ID = '%s'", Record_ID));
+        Query query = session.createQuery(String.format("from Borrow_Record where Record_ID = '%s'", Record_ID));
         Borrow_Record borrow_record = null;
         if (query.list().size() > 0) {
             borrow_record = (Borrow_Record) query.list().get(0);
