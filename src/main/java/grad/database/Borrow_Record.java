@@ -15,12 +15,14 @@ public class Borrow_Record {
     int Record_ID;
     int Borrow_Book_ID;
     int Borrow_Member_ID;
+    int Borrow_Statement_ID;
 
     public Borrow_Record(){}
 
-    public Borrow_Record(int Borrow_Book_ID, int Borrow_Member_ID){
+    public Borrow_Record(int Borrow_Book_ID, int Borrow_Member_ID, int Borrow_Statement_ID){
         this.Borrow_Book_ID = Borrow_Book_ID;
         this.Borrow_Member_ID = Borrow_Member_ID;
+        this.Borrow_Statement_ID = Borrow_Statement_ID;
     }
 
     @Id
@@ -48,4 +50,11 @@ public class Borrow_Record {
         Borrow_Book_ID = borrow_Book_ID;
     }
 
+    public int getBorrow_Statement_ID() {
+        return Borrow_Statement_ID;
+    }
+
+    public void setBorrow_Statement_ID(int borrow_Statement_ID) {
+        Borrow_Statement_ID = borrow_Statement_ID;
+    }
 }
