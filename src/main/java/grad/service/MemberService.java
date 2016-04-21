@@ -1,6 +1,6 @@
 package grad.service;
 
-import grad.database.Member;
+import grad.database.Member_Info;
 import grad.message.resp.TemplateData;
 import grad.message.resp.TemplateMessage;
 import grad.util.WeixinUtil;
@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by Jamie on 4/15/16.
  */
 public class MemberService {
-    public static void MemberTemplate(Member member){
+    public static void MemberTemplate(Member_Info member_info){
         String appId = "wxe13392d6482304c4";
         String appSecret = "41b6c04d9ac9819c779a186e0d6908ab";
         String accessToken = WeixinUtil.
@@ -26,37 +26,37 @@ public class MemberService {
         MemberInfo.setTemplate_id("Je7Hjl5L67Hy2EMjJBQ5PJIBU-CPG_k3e-tLN3a3k18");
         MemberInfo.setUrl("http://weixin.qq.com/download");
         MemberInfo.setTopcolor("#000000");
-        MemberInfo.setTouser(member.getFromUserName());
+        MemberInfo.setTouser(member_info.getMember_fromUserName());
 
         Map<String, TemplateData> data = new HashMap<>();
 
         TemplateData Member_id = new TemplateData();
-        Member_id.setValue(String.valueOf(member.getMember_id()));
+        Member_id.setValue(String.valueOf(member_info.getMember_ID()));
         Member_id.setColor("#FF0000");
         data.put("Member_id", Member_id);
 
         TemplateData Name = new TemplateData();
-        Name.setValue(member.getName());
+        Name.setValue(member_info.getMember_Name());
         Name.setColor("#FF0000");
         data.put("Name", Name);
 
         TemplateData Gender = new TemplateData();
-        Gender.setValue(member.getGender());
+        Gender.setValue(member_info.getMember_Gender());
         Gender.setColor("#FF0000");
         data.put("Gender", Gender);
 
         TemplateData Age = new TemplateData();
-        Age.setValue(String.valueOf(member.getAge()));
+        Age.setValue(String.valueOf(member_info.getMember_Age()));
         Age.setColor("#FF0000");
         data.put("Age", Age);
 
         TemplateData Mobile = new TemplateData();
-        Mobile.setValue(member.getMobile());
+        Mobile.setValue(member_info.getMember_Mobile());
         Mobile.setColor("#FF0000");
         data.put("Mobile", Mobile);
 
         TemplateData RegisterTime = new TemplateData();
-        RegisterTime.setValue(member.getRegisterTime());
+        RegisterTime.setValue(member_info.getMember_RegisterTime());
         RegisterTime.setColor("#FF0000");
         data.put("RegisterTime", RegisterTime);
 

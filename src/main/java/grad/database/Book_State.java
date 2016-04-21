@@ -14,23 +14,33 @@ import javax.persistence.Table;
 public class Book_State {
 
     int Book_id;
-    String ISBN;
-    String Title;
-    int Library_id;
-    String Library_Name;
-    String Statement;
-    String Borrower;
+    String Book_ISBN;
+    String Book_Title;
+    String Book_Category;
+    String Book_Author;
+    String Book_Publisher;
+    String Book_PubTime;
+    String Book_Price;
+    int Book_inLibrary_id;
+    String Book_Borrow_Time;
+    String Book_Return_Time;
+    String Book_Statement;
+    int Book_Statement_ID;
+    String Book_Borrower_ID;
 
-    public Book_State(){}
+    public Book_State() {
+    }
 
-    public Book_State( String ISBN, String Title, int Library_id, String Library_Name, String Statement, String Borrower){
-        this.ISBN = ISBN;
-        this.Title = Title;
-        this.Library_id = Library_id;
-        this.Library_Name = Library_Name;
-        this.Statement = Statement;
-        this.Borrower = Borrower;
-
+    public Book_State(String Book_ISBN, String Book_Title, String Book_Category, String Book_Author, String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement) {
+        this.Book_ISBN = Book_ISBN;
+        this.Book_Title = Book_Title;
+        this.Book_Category = Book_Category;
+        this.Book_Author = Book_Author;
+        this.Book_Publisher = Book_Publisher;
+        this.Book_PubTime = Book_PubTime;
+        this.Book_Price = Book_Price;
+        this.Book_inLibrary_id = Book_inLibrary_id;
+        this.Book_Statement = Book_Statement;
     }
 
     @Id
@@ -42,51 +52,108 @@ public class Book_State {
         Book_id = book_id;
     }
 
-    public String getISBN() {
-        return ISBN;
+    public String getBook_ISBN() {
+        return Book_ISBN;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setBook_ISBN(String book_ISBN) {
+        Book_ISBN = book_ISBN;
     }
 
-    public String getTitle() {
-        return Title;
+    public String getBook_Title() {
+        return Book_Title;
     }
 
-    public void setTitle(String title) {
-        Title = title;
+    public void setBook_Title(String book_Title) {
+        Book_Title = book_Title;
     }
 
-    public int getLibrary_id() {
-        return Library_id;
+    public String getBook_Category() {
+        return Book_Category;
     }
 
-    public void setLibrary_id(int library_id) {
-        Library_id = library_id;
+    public void setBook_Category(String book_Category) {
+        Book_Category = book_Category;
     }
 
-    public String getLibrary_Name() {
-        return Library_Name;
+    public String getBook_Author() {
+        return Book_Author;
     }
 
-    public void setLibrary_Name(String library_Name) {
-        Library_Name = library_Name;
+    public void setBook_Author(String book_Author) {
+        Book_Author = book_Author;
     }
 
-    public String getStatement() {
-        return Statement;
+    public String getBook_Publisher() {
+        return Book_Publisher;
     }
 
-    public void setStatement(String statement) {
-        Statement = statement;
+    public void setBook_Publisher(String book_Publisher) {
+        Book_Publisher = book_Publisher;
     }
 
-    public String getBorrower() {
-        return Borrower;
+    public String getBook_PubTime() {
+        return Book_PubTime;
     }
 
-    public void setBorrower(String borrower) {
-        Borrower = borrower;
+    public void setBook_PubTime(String book_PubTime) {
+        Book_PubTime = book_PubTime;
     }
+
+    public String getBook_Price() {
+        return Book_Price;
+    }
+
+    public void setBook_Price(String book_Price) {
+        Book_Price = book_Price;
+    }
+
+    public int getBook_inLibrary_id() {
+        return Book_inLibrary_id;
+    }
+
+    public void setBook_inLibrary_id(int book_inLibrary_id) {
+        Book_inLibrary_id = book_inLibrary_id;
+    }
+
+    public String getBook_Borrow_Time() {
+        return Book_Borrow_Time;
+    }
+
+    public void setBook_Borrow_Time(String book_Borrow_Time) {
+        Book_Borrow_Time = book_Borrow_Time;
+    }
+
+    public String getBook_Return_Time() {
+        return Book_Return_Time;
+    }
+
+    public void setBook_Return_Time(String book_Return_Time) {
+        Book_Return_Time = book_Return_Time;
+    }
+
+    public String getBook_Statement() {
+        return Book_Statement;
+    }
+
+    public void setBook_Statement(String book_Statement) {
+        Book_Statement = book_Statement;
+    }
+
+    public int getBook_Statement_ID() {
+        return Book_Statement_ID;
+    }
+
+    public void setBook_Statement_ID(int book_Statement_ID) {
+        Book_Statement_ID = book_Statement_ID;
+    }
+
+    public String getBook_Borrower_ID() {
+        return Book_Borrower_ID;
+    }
+
+    public void setBook_Borrower_ID(String book_Borrower_ID) {
+        Book_Borrower_ID = book_Borrower_ID;
+    }
+
 }

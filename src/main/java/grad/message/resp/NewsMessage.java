@@ -34,7 +34,5 @@ public class NewsMessage extends BaseMessage {
     public List<Article> getArticles() {
         return Articles;
     }
-    
-    
-    
+
 }

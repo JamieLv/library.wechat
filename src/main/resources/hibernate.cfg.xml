@@ -9,9 +9,9 @@
     <property name="hbm2ddl.auto">update</property>
 
     <!--数据库的地址\用户名\密码-->
-    <property name="hibernate.connection.url">jdbc:mysql://10.10.26.58:3306/tgzbQZrEWO7XKPRl</property>
-    <property name="hibernate.connection.username">uzDEVh57wCKtAT0d</property>
-    <property name="hibernate.connection.password">p60aCmPYvyiFJNe31</property>
+    <property name="hibernate.connection.url">jdbc:mysql://10.10.26.58:3306/DAEGibCB1JT7caRj</property>
+    <property name="hibernate.connection.username">u6sxHvic3bYTrRjX</property>
+    <property name="hibernate.connection.password">pCxwgO8AYam4R9tZu</property>
 
     <!--数据库的链接池-->
     <property name="hibernate.connection.provider_class">org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider</property>
@@ -30,11 +30,10 @@
     <property name="cache.provider_class">org.hibernate.cache.internal.NoCachingRegionFactory</property>
     
     <!-- Drop and re-create the database schema on startup -->
-    <mapping class="grad.database.Book"/>
-    <mapping class="grad.database.Member"/>
-    <mapping class="grad.database.Library"/>
     <mapping class="grad.database.Book_State"/>
-    <mapping class="grad.database.Member_Record"/>
+    <mapping class="grad.database.Member_Info"/>
+    <mapping class="grad.database.Library_Info"/>
+    <mapping class="grad.database.Borrow_Record"/>
 
 
 

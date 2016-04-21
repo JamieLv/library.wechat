@@ -2,10 +2,7 @@ package grad.tools;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import grad.database.Book;
 import grad.database.DouBanBook;
 import grad.servlet.BookXMLParser;
 import org.apache.http.HttpEntity;

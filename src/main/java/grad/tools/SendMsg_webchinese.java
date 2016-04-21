@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class SendMsg_webchinese {
 
-    public void send(String telephone, int id) throws HttpException, IOException {
+    public void send(String mobile, int id) throws HttpException, IOException {
         HttpClient client = new HttpClient();
         PostMethod post = new PostMethod("http://gbk.sms.webchinese.cn");
         // PostMethod post = new PostMethod("http://sms.webchinese.cn/web_api/");
@@ -21,7 +21,7 @@ public class SendMsg_webchinese {
                 "application/x-www-form-urlencoded;charset=gbk");// 在头文件中设置转码
         NameValuePair[] data = { new NameValuePair("Uid", "jdquanyi"),// 注册的用户名
                 new NameValuePair("Key", "82594d54b061255b1d6d"),// 注册成功后，登录网站后得到的密钥
-                new NameValuePair("smsMob", telephone),// 手机号码
+                new NameValuePair("smsMob", mobile),// 手机号码
                 new NameValuePair("smsText", "尊敬的读者您好，您的验证码为：yzm " + id) };// 短信内容
         post.setRequestBody(data);
 

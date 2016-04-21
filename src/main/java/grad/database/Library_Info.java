@@ -1,27 +1,25 @@
 package grad.database;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by Jamie on 4/18/16.
+ * Created by Jamie on 4/20/16.
  */
 
 @Entity
-@Table(name = "LIBRARY")
+@Table(name = "LIBRARY_INFO")
 
-public class Library {
-    int Library_id;
+public class Library_Info {
+    int Library_ID;
     String Library_Name;
 
-    @Id
-    public int getLibrary_id() {
-        return Library_id;
+    public int getLibrary_ID() {
+        return Library_ID;
     }
 
-    public void setLibrary_id(int library_id) {
-        Library_id = library_id;
+    public void setLibrary_ID(int library_ID) {
+        Library_ID = library_ID;
     }
 
     public String getLibrary_Name() {

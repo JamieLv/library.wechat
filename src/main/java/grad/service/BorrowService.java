@@ -1,7 +1,6 @@
 package grad.service;
 
 import grad.database.Database;
-import grad.database.Member_Record;
 import grad.message.resp.TemplateData;
 import grad.message.resp.TemplateMessage;
 import grad.util.WeixinUtil;
