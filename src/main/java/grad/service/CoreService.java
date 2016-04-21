@@ -154,11 +154,6 @@ public class CoreService {
             String msgType = requestMap.get("MsgType");
             // 时间
             String createTime = requestMap.get("CreateTime");
-            // 日期
-//            Date now = new Date();
-//            String pattern = "yyyy-MM-dd";
-//            SimpleDateFormat SDF = new SimpleDateFormat(pattern);
-//            String CurrentDate = SDF.format(now);
 
             // 默认回复文本消息
             TextMessage textMessage = new TextMessage();

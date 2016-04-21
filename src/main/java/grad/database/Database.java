@@ -139,7 +139,7 @@ public class Database {
                 session.getTransaction().commit();
             }
         }
-        if (Record_Index == 0){
+        if (Record_Index == 1){
             Borrow_Record borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
             Add(borrow_record);
         }
