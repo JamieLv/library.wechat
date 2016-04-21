@@ -108,7 +108,8 @@ public class Database {
                 book_state.setBook_Return_Time(getDate(30));
                 book_state.setBook_Statement("于" + getDate(30) + "归还");
                 book_state.setBook_Statement_ID(1);
-            } else if (book_state.getBook_Borrower_ID().equals(fromUserName)) { // 用户已经借过书
+                book_state.setBook_Borrower_ID(Database.getMember_Info(fromUserName).getMember_ID());
+            } else if (book_state.getBook_Borrower_ID() == Database.getMember_Info(fromUserName).getMember_ID()) { // 用户已经借过书
                 String Return_Time = book_state.getBook_Return_Time();
                 SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = SDF.parse(Return_Time);

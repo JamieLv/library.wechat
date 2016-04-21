@@ -26,7 +26,7 @@ public class Book_State {
     String Book_Return_Time;
     String Book_Statement;
     int Book_Statement_ID;
-    String Book_Borrower_ID;
+    int Book_Borrower_ID;
 
     public Book_State() {
     }
@@ -148,12 +148,11 @@ public class Book_State {
         Book_Statement_ID = book_Statement_ID;
     }
 
-    public String getBook_Borrower_ID() {
+    public int getBook_Borrower_ID() {
         return Book_Borrower_ID;
     }
 
-    public void setBook_Borrower_ID(String book_Borrower_ID) {
+    public void setBook_Borrower_ID(int book_Borrower_ID) {
         Book_Borrower_ID = book_Borrower_ID;
     }
-
 }
