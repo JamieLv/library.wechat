@@ -412,9 +412,8 @@ public class CoreService {
                             // int Borrow_Member_ID = db.getMember_Info(fromUserName).getMember_ID();
                             // int Borrow_Statement = db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Statement_ID();
                             // int Borrow_Book_ID, int Borrow_Member_ID
-                            Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
                             db.UpdateBook_State(Borrow_Book_ID, scanResult, Book_Borrower_ID);
-                            db.Add(new_borrow_record);
+                            db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
                             BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                             return "";
                         }

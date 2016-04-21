@@ -110,7 +110,7 @@ public class Database {
                 book_state.setBook_Statement("于" + getDate(30) + "归还");
                 book_state.setBook_Statement_ID(1);
                 book_state.setBook_Borrower_ID(Book_Borrower_ID);
-            } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID) { // 用户已经借过书
+            } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID) { // 用户已经借过这本书
                 String Return_Time = book_state.getBook_Return_Time();
                 SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = SDF.parse(Return_Time);
@@ -118,11 +118,31 @@ public class Database {
                 calendar.setTime(date);
                 calendar.add(Calendar.DATE, 14);
                 String New_Return_Time = SDF.format(calendar.getTime());
+                book_state.setBook_Return_Time(New_Return_Time);
                 book_state.setBook_Statement("于" + New_Return_Time + "归还");
                 book_state.setBook_Statement_ID(book_state.getBook_Statement_ID()+1);
             }
         }
+        return true;
+    }
 
+    // 更新借阅记录/次数
+    public static boolean UpdateBorrow_Record(int Borrow_Book_ID, int Borrow_Member_ID){
+        int Record_Index = 0;
+        for (;getBorrow_RecordbyRecord_ID(Record_Index) != null; Record_Index++){
+            Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
+            if (borrow_record.getBorrow_Book_ID() == Borrow_Book_ID
+                    && borrow_record.getBorrow_Member_ID() == Borrow_Member_ID){
+                Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+                session.beginTransaction();
+                borrow_record.setBorrow_Statement_ID(borrow_record.getBorrow_Book_ID() + 1);
+                session.getTransaction().commit();
+            }
+        }
+        if (Record_Index == 0){
+            Borrow_Record borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
+            Add(borrow_record);
+        }
         return true;
     }
 
