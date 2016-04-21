@@ -128,7 +128,7 @@ public class Database {
 
     // 更新借阅记录/次数
     public static boolean UpdateBorrow_Record(int Borrow_Book_ID, int Borrow_Member_ID){
-        int Record_Index = 0;
+        int Record_Index = 1;
         for (;getBorrow_RecordbyRecord_ID(Record_Index) != null; Record_Index++){
             Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
             if (borrow_record.getBorrow_Book_ID() == Borrow_Book_ID

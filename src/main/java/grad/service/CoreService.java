@@ -99,16 +99,16 @@ public class CoreService {
         Article articleBorrowRecord = new Article();
         articleBorrowRecord.setTitle("借阅记录");
         articleList.add(articleBorrowRecord);
-        for (int Record_ID = 1; Record_ID <= 100; Record_ID++){
-            Borrow_Record borrow_record = Database.getBorrow_RecordbyRecord_ID(Record_ID);
+        int Record_ID = 1;
+        Borrow_Record borrow_record = Database.getBorrow_RecordbyRecord_ID(Record_ID);
+        for (; Database.getBorrow_RecordbyRecord_ID(Record_ID) != null; Record_ID++){
             for (;borrow_record != null && Borrow_Book_Index <= 100; Borrow_Book_Index++){
                 Book_State book_state = Database.getBook_StatebyBook_id(Borrow_Book_Index);
                 if (book_state != null){
-                    String Borrow_Book_Title = Database.getBook_StatebyBook_id(Borrow_Book_Index).getBook_Title();
-                    String Borrow_Book_ISBN = Database.getBook_StatebyBook_id(Borrow_Book_Index).getBook_ISBN();
-                    String Book_Borrow_Time = Database.getBook_StatebyBook_id(Borrow_Book_Index).getBook_Borrow_Time();
-                    String Book_Return_Time = Database.getBook_StatebyBook_id(Borrow_Book_Index).getBook_Return_Time();
-
+                    String Borrow_Book_Title = book_state.getBook_Title();
+                    String Borrow_Book_ISBN = book_state.getBook_ISBN();
+                    String Book_Borrow_Time = book_state.getBook_Borrow_Time();
+                    String Book_Return_Time = book_state.getBook_Return_Time();
 
                     Article articleBorrowRecordInput = new Article();
                     articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
@@ -120,15 +120,6 @@ public class CoreService {
             }
         }
         return articleList;
-    }
-
-    public static String getDate(int addDays) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-        calendar.add(Calendar.DATE, addDays);
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat SDF = new SimpleDateFormat(pattern);
-        String str_calendar = SDF.format(calendar.getTime());
-        return str_calendar;
     }
 
 
@@ -201,7 +192,7 @@ public class CoreService {
                         if (tag == 0){  // 第一次注册
                             // String Member_Name, String Member_Gender, int Member_Age, String Member_Mobile, String Member_RegisterTime, String Member_fromUserName, Boolean Member_Verification
                             Member_Info member_info = new Member_Info(
-                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], getDate(0), fromUserName, false);
+                                    keywords[1], keywords[2], Integer.parseInt(keywords[3]), keywords[4], db.getDate(0), fromUserName, false);
                             Database.Add(member_info);
 
                             int yzm = Database.getMember_Info(fromUserName).getMember_ID();
