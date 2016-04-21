@@ -282,13 +282,23 @@ public class CoreService {
                             int Library_id = Integer.parseInt(keywords[2]);
 
                             // if (Database.getBookbyISBN(ADD_ISBN) == null) {
-                                DouBanBook new_book = Return_BookInfo(ADD_ISBN);
+                            DouBanBook new_book = Return_BookInfo(ADD_ISBN);
                             //String Book_ISBN, String Book_Title, String Book_Category, String Book_Author,
                             //String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement
-                                Book_State book_state = new Book_State(
-                                        ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
-                                        new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), Library_id, "归还");
-                                Database.Add(book_state);
+                            Book_State book_state = new Book_State(
+                                    ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
+                                    new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), Library_id, "归还");
+                            Database.Add(book_state);
+                            articleList = SearchBookDisplay(keywords[1]);
+
+                            // 设置图文消息个数
+                            newsMessage.setArticleCount(articleList.size());
+                            // 设置图文消息包含的图文集合
+                            newsMessage.setArticles(articleList);
+                            // 将图文消息对象转换成xml字符串
+                            respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                            return respMessage;
                         } else {
                             respContent = "输入格式有误";
                         }
