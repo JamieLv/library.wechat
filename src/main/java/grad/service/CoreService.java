@@ -116,7 +116,7 @@ public class CoreService {
                 articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
                         + "借阅时间: " + Book_Borrow_Time + "\n"
                         + "归还时间: " + Book_Return_Time);
-                articleBorrowRecord.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
+                articleBorrowRecordInput.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
                 articleList.add(articleBorrowRecordInput);
             }
 //            for (; Borrow_Book_Index <= 100; Borrow_Book_Index++){
