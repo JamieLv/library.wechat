@@ -5,6 +5,7 @@ import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
 import grad.pojo.CommonButton;
+import grad.servlet.BaiduMapAPI;
 import grad.tools.*;
 import grad.util.MessageUtil;
 
@@ -323,14 +324,14 @@ public class CoreService {
             } // 地理位置消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
 
-                String location = requestMap.get("location");
-
                 String Location_X = requestMap.get("Location_X");
                 String Location_Y = requestMap.get("Location_Y");
-                String Label = requestMap.get("Label");
+                String Scale = requestMap.get("Scale");
+                Map<String, String> json = BaiduMapAPI.testPost(Location_X, Location_Y);
 
 
-                respContent = "收到" + location + Location_X + Label;
+                respContent = "收到" + Location_X + Location_Y + "\n"
+                        + json.get("address");
 
 
             } // 链接消息
