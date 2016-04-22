@@ -268,28 +268,4 @@ public class Database {
         return borrow_record;
     }
 
-//    public static List<Borrow_Record> getBorrow_RecordbyUser(String fromUserName){
-//        int Borrow_Member_ID = Integer.parseInt(fromUserName);
-//        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-//        session.beginTransaction();
-//        Query query = session.createQuery(String.format("from Borrow_Record where Borrow_Member_ID", Borrow_Member_ID));
-//        List<Borrow_Record> borrow_record_list = query.list();
-//        session.getTransaction().commit();
-//
-//        return borrow_record_list;
-//    }
-
-    public static Borrow_Record getBorrow_RecordbyUser(String fromUserName){
-        int Borrow_Member_ID = Integer.parseInt(fromUserName);
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createQuery(String.format("from Borrow_Record where Borrow_Member_ID", Borrow_Member_ID));
-        Borrow_Record borrow_record = null;
-        if (query.list().size() > 0) {
-            borrow_record = (Borrow_Record) query.list().get(0);
-        }
-        session.getTransaction().commit();
-
-        return borrow_record;
-    }
 }

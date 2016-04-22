@@ -93,7 +93,6 @@ public class CoreService {
 
     public static List<Article> MemberRecordDisplay(String fromUserName) throws IOException {
         List<Article> articleList = new ArrayList<>();
-        int Borrow_Book_Index = 1;
 //        int Record_ID = Database.getBorrow_Record(Borrow_Book_Index, Database.getMember_Info(fromUserName).getMember_ID()).getRecord_ID();
 //        Borrow_Record borrow_record = Database.getBorrow_Record()_Record(5);
 
@@ -326,7 +325,12 @@ public class CoreService {
 
                 String location = requestMap.get("location");
 
-                respContent = "收到" + location;
+                String Location_X = requestMap.get("Location_X");
+                String Location_Y = requestMap.get("Location_Y");
+                String Label = requestMap.get("Label");
+
+
+                respContent = "收到" + location + Location_X + Label;
 
 
             } // 链接消息
