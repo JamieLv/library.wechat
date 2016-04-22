@@ -142,8 +142,9 @@ public class Database {
     // 更新借阅记录/次数
     public static boolean UpdateBorrow_Record(int Borrow_Book_ID, int Borrow_Member_ID){
         int Record_Index = 1;
-        for (;getBorrow_RecordbyRecord_ID(Record_Index) != null; Record_Index++){
-            Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
+        Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
+        for (;borrow_record != null; Record_Index++){
+            //Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
             if (borrow_record.getBorrow_Book_ID() == Borrow_Book_ID
                     && borrow_record.getBorrow_Member_ID() == Borrow_Member_ID){
                 Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -153,7 +154,7 @@ public class Database {
             }
         }
         if (Record_Index == 1){
-            Borrow_Record borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
+            borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
             Add(borrow_record);
         }
         return true;
