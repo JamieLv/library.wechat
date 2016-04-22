@@ -101,23 +101,39 @@ public class CoreService {
         articleList.add(articleBorrowRecord);
         int Record_ID = 1;
         Borrow_Record borrow_record = Database.getBorrow_RecordbyRecord_ID(Record_ID);
-        for (; Database.getBorrow_RecordbyRecord_ID(Record_ID) != null; Record_ID++){
-            for (;borrow_record != null && Borrow_Book_Index <= 100; Borrow_Book_Index++){
-                Book_State book_state = Database.getBook_StatebyBook_id(Borrow_Book_Index);
-                if (book_state != null){
-                    String Borrow_Book_Title = book_state.getBook_Title();
-                    String Borrow_Book_ISBN = book_state.getBook_ISBN();
-                    String Book_Borrow_Time = book_state.getBook_Borrow_Time();
-                    String Book_Return_Time = book_state.getBook_Return_Time();
+        Member_Info member_info = Database.getMember_Info(fromUserName);
+        for (; borrow_record != null; Record_ID++, borrow_record = Database.getBorrow_RecordbyRecord_ID(Record_ID)){
+            if (borrow_record.getBorrow_Member_ID() == member_info.getMember_ID()){
+                int Borrow_Book_ID = borrow_record.getBorrow_Book_ID();
+                Book_State book_state = Database.getBook_StatebyBook_id(Borrow_Book_ID);
+                String Borrow_Book_Title = book_state.getBook_Title();
+                String Borrow_Book_ISBN = book_state.getBook_ISBN();
+                String Book_Borrow_Time = book_state.getBook_Borrow_Time();
+                String Book_Return_Time = book_state.getBook_Return_Time();
 
-                    Article articleBorrowRecordInput = new Article();
-                    articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
-                            + "借阅时间: " + Book_Borrow_Time + "\n"
-                            + "归还时间: " + Book_Return_Time);
-                    articleBorrowRecord.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
-                    articleList.add(articleBorrowRecordInput);
-                }
+                Article articleBorrowRecordInput = new Article();
+                articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
+                        + "借阅时间: " + Book_Borrow_Time + "\n"
+                        + "归还时间: " + Book_Return_Time);
+                articleBorrowRecord.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
+                articleList.add(articleBorrowRecordInput);
             }
+//            for (; Borrow_Book_Index <= 100; Borrow_Book_Index++){
+//                Book_State book_state = Database.getBook_StatebyBook_id(Borrow_Book_Index);
+//                if (book_state != null){
+//                    String Borrow_Book_Title = book_state.getBook_Title();
+//                    String Borrow_Book_ISBN = book_state.getBook_ISBN();
+//                    String Book_Borrow_Time = book_state.getBook_Borrow_Time();
+//                    String Book_Return_Time = book_state.getBook_Return_Time();
+//
+//                    Article articleBorrowRecordInput = new Article();
+//                    articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
+//                            + "借阅时间: " + Book_Borrow_Time + "\n"
+//                            + "归还时间: " + Book_Return_Time);
+//                    articleBorrowRecord.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
+//                    articleList.add(articleBorrowRecordInput);
+//                }
+//            }
         }
         return articleList;
     }
