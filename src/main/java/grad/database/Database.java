@@ -147,15 +147,16 @@ public class Database {
             //Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
             if (getBorrow_RecordbyRecord_ID(Record_Index).getBorrow_Book_ID() == Borrow_Book_ID
                     && getBorrow_RecordbyRecord_ID(Record_Index).getBorrow_Member_ID() == Borrow_Member_ID){
+                Borrow_Record update_borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
                 Session session = HibernateUtil.getSessionFactory().getCurrentSession();
                 session.beginTransaction();
-                getBorrow_RecordbyRecord_ID(Record_Index).setBorrow_Statement_ID(2);
+                update_borrow_record.setBorrow_Statement_ID(2);
                 session.getTransaction().commit();
             }
         }
         if (Record_Index == 1){
-            Borrow_Record borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
-            Add(borrow_record);
+            Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
+            Add(new_borrow_record);
         }
         return true;
     }
