@@ -10,6 +10,7 @@ import grad.util.MessageUtil;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.soap.Addressing;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -415,7 +416,12 @@ public class CoreService {
                             // int Borrow_Statement = db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Statement_ID();
                             // int Borrow_Book_ID, int Borrow_Member_ID
                             db.UpdateBook_State(Borrow_Book_ID, scanResult, Book_Borrower_ID);
-                            db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
+                            if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)){
+                                db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
+                            } else {
+                                Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
+                                db.Add(new_borrow_record);
+                            }
                             BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                             return "";
                         }

@@ -39,7 +39,7 @@ public class Database {
         List<Member_Info> member_info_list = query.list();
         session.getTransaction().commit();
 
-        for(Member_Info member_info :member_info_list) {
+        for(Member_Info member_info: member_info_list) {
             if(member_info.getMember_fromUserName().equals(Member_fromUserName) && member_info.getMember_Verification()){
                 exist = 2; // 存在于名单中且通过验证
             } else if(member_info.getMember_fromUserName().equals(Member_fromUserName)) {
@@ -47,6 +47,24 @@ public class Database {
             }
         }
         return  exist;
+    }
+
+    // 判断用户是否借阅过该书
+    public static boolean Borrow_RecordExist(int Borrow_Book_ID, int Book_Borrower_ID){
+        boolean exist = false;
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Borrow_Record");
+        List<Borrow_Record> borrow_recordList = query.list();
+        session.getTransaction().commit();
+
+        for(Borrow_Record borrow_record: borrow_recordList){
+            if(borrow_record.getBorrow_Book_ID() == Borrow_Book_ID && borrow_record.getBorrow_Member_ID() == Book_Borrower_ID){
+                exist = true;
+                break;
+            }
+        }
+        return exist;
     }
 
 
@@ -141,23 +159,18 @@ public class Database {
 
     // 更新借阅记录/次数
     public static boolean UpdateBorrow_Record(int Borrow_Book_ID, int Borrow_Member_ID){
-        int Record_Index = 1;
-//        Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
-        for (;getBorrow_RecordbyRecord_ID(Record_Index) != null; Record_Index++){
-            //Borrow_Record borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
-            if (getBorrow_RecordbyRecord_ID(Record_Index).getBorrow_Book_ID() == Borrow_Book_ID
-                    && getBorrow_RecordbyRecord_ID(Record_Index).getBorrow_Member_ID() == Borrow_Member_ID){
-                Borrow_Record update_borrow_record = getBorrow_RecordbyRecord_ID(Record_Index);
-                Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-                session.beginTransaction();
-                update_borrow_record.setBorrow_Statement_ID(2);
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Borrow_Record");
+        List<Borrow_Record> borrow_recordList = query.list();
+        for (Borrow_Record borrow_record: borrow_recordList) {
+            if (borrow_record.getBorrow_Book_ID() == Borrow_Book_ID && borrow_record.getBorrow_Member_ID() == Borrow_Member_ID) {
+                borrow_record.setBorrow_Statement_ID(borrow_record.getBorrow_Statement_ID()+1);
                 session.getTransaction().commit();
+                break;
             }
         }
-        if (Record_Index == 1){
-            Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Borrow_Member_ID, 1);
-            Add(new_borrow_record);
-        }
+
         return true;
     }
 
