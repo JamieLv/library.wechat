@@ -8,6 +8,7 @@ import grad.pojo.CommonButton;
 import grad.servlet.BaiduMapAPI;
 import grad.tools.*;
 import grad.util.MessageUtil;
+import net.sf.json.JSONObject;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -139,6 +140,26 @@ public class CoreService {
         return articleList;
     }
 
+    public static List<Article> NearbyLibrary(String Location_X, String Location_Y) throws IOException {
+        List<Article> articleList = new ArrayList<>();
+
+        Article articleNearbyLibrary = new Article();
+        articleNearbyLibrary.setTitle("附近的图书馆");
+        articleList.add(articleNearbyLibrary);
+        List<JSONObject> resultsList = BaiduMapAPI.getLibraryfrom(Location_X, Location_Y);
+        for (JSONObject LibraryInfo: resultsList){
+            Article articleLibraryInfo = new Article();
+            articleLibraryInfo.setTitle("名字: " + LibraryInfo.get("name") +
+                    "地址: " + LibraryInfo.get("address"));
+            if (LibraryInfo.get("telephone") != null){
+                articleLibraryInfo.setTitle(articleLibraryInfo.getTitle() +
+                    "电话: " + LibraryInfo.get("telephone"));
+            }
+            articleList.add(articleLibraryInfo);
+        }
+
+        return articleList;
+    }
 
     /**
      * 处理微信发来的请求
