@@ -150,10 +150,10 @@ public class CoreService {
         for (JSONObject LibraryInfo: resultsList){
             Article articleLibraryInfo = new Article();
             articleLibraryInfo.setTitle("名字: " + LibraryInfo.get("name") +
-                    "地址: " + LibraryInfo.get("address"));
+                    "\n地址: " + LibraryInfo.get("address"));
             if (LibraryInfo.get("telephone") != null){
                 articleLibraryInfo.setTitle(articleLibraryInfo.getTitle() +
-                    "电话: " + LibraryInfo.get("telephone"));
+                    "\n电话: " + LibraryInfo.get("telephone"));
             }
             articleList.add(articleLibraryInfo);
         }
