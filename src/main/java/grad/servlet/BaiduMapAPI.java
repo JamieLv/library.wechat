@@ -60,7 +60,7 @@ public class BaiduMapAPI {
             int addStart = str.indexOf("city\":");
             int addEnd = str.indexOf("\",\"direction");
             if(addStart > 0 && addEnd > 0) {
-                String city = str.substring(addStart+6, addEnd);
+                String city = str.substring(addStart+7, addEnd);
                 map = new HashMap<String,String>();
                 map.put("city", city);
                 return map;
@@ -160,6 +160,7 @@ public class BaiduMapAPI {
         for (JSONObject tmpObj: resultsList){
             System.out.println(tmpObj.get("name"));
         }
+        System.out.println(testPost("39.915", "116.404").get("city"));
 //        Map<String, String> json = BaiduMapAPI.getLibraryfrom("1","1");
 //        String library_detail = json.get("1");
 //        System.out.println("library :" + json.get("1"));
