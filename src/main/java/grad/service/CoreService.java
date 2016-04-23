@@ -156,7 +156,7 @@ public class CoreService {
                     "\n电话: " + LibraryInfo.get("telephone"));
             }
             //http://api.map.baidu.com/direction?origin=latlng:34.264642646862,108.95108518068|name:我家&destination=大雁塔&mode=driving&region=西安&output=html //调起百度PC或Web地图，展示“西安市”从（lat:34.264642646862,lng:108.95108518068 ）“我家”到“大雁塔”的驾车路线。
-            articleLibraryInfo.setUrl("http://map.baidu.com/mobile/webapp/search/search/qt=walk" +
+            articleLibraryInfo.setUrl("http://api.map.baidu.com/direction?" +
                     "origin=latlng:" + Location_X + "," + Location_Y +
                     "&destination=" + LibraryInfo.get("name") +
                     "&mode=walking&output=html");
