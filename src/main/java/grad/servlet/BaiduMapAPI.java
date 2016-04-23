@@ -57,12 +57,12 @@ public class BaiduMapAPI {
         System.out.println(str);
         Map<String,String> map = null;
         if(StringUtils.isNotEmpty(str)) {
-            int addStart = str.indexOf("formatted_address\":");
-            int addEnd = str.indexOf("\",\"business");
+            int addStart = str.indexOf("city\":");
+            int addEnd = str.indexOf("\",\"direction");
             if(addStart > 0 && addEnd > 0) {
-                String address = str.substring(addStart+20, addEnd);
+                String city = str.substring(addStart+6, addEnd);
                 map = new HashMap<String,String>();
-                map.put("address", address);
+                map.put("city", city);
                 return map;
             }
         }

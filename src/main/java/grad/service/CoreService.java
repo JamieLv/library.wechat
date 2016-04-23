@@ -159,6 +159,7 @@ public class CoreService {
             articleLibraryInfo.setUrl("http://api.map.baidu.com/direction?" +
                     "origin=latlng:" + Location_X + "," + Location_Y +
                     "&destination=" + LibraryInfo.get("name") +
+                    "&region=" + BaiduMapAPI.testPost(Location_X, Location_Y).get("city") +
                     "&mode=walking&output=html");
             articleList.add(articleLibraryInfo);
         }
