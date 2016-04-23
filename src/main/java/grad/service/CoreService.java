@@ -155,6 +155,10 @@ public class CoreService {
                 articleLibraryInfo.setTitle(articleLibraryInfo.getTitle() +
                     "\n电话: " + LibraryInfo.get("telephone"));
             }
+            articleLibraryInfo.setUrl("http://map.baidu.com/mobile/webapp/search/search/qt=walk" +
+                    "&sn=" + Location_X + "," + Location_Y +
+                    "&en=" + LibraryInfo.get("lat") + "," + LibraryInfo.get("lng") +
+                    "&sc=289&ec=289/");
             articleList.add(articleLibraryInfo);
         }
 
