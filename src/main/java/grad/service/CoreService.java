@@ -142,6 +142,7 @@ public class CoreService {
 
     public static List<Article> NearbyLibrary(String Location_X, String Location_Y) throws IOException {
         List<Article> articleList = new ArrayList<>();
+        String region = BaiduMapAPI.testPost(Location_X, Location_Y).get("city");
 
         Article articleNearbyLibrary = new Article();
         articleNearbyLibrary.setTitle("附近的图书馆");
@@ -159,7 +160,7 @@ public class CoreService {
             articleLibraryInfo.setUrl("http://api.map.baidu.com/direction?" +
                     "origin=latlng:" + Location_X + "," + Location_Y +
                     "&destination=" + LibraryInfo.get("name") +
-                    "&region=" + BaiduMapAPI.testPost(Location_X, Location_Y).get("city") +
+                    "&region=" + region +
                     "&mode=walking&output=html");
             articleList.add(articleLibraryInfo);
         }
