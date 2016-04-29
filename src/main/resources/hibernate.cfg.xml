@@ -34,6 +34,7 @@
     <mapping class="grad.database.Member_Info"/>
     <mapping class="grad.database.Library_Info"/>
     <mapping class="grad.database.Borrow_Record"/>
+    <mapping class="grad.database.Worker_Info"/>
 
 
 
