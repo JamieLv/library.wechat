@@ -18,9 +18,6 @@ import java.io.PrintWriter;
 
 /**
  * 核心请求处理类
- *
- * @author liufeng
- * @date 2013-05-18
  */
 public class CoreServlet extends HttpServlet {
     private static final long serialVersionUID = 4440739483644821986L;

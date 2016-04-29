@@ -11,21 +11,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
-
- * 请求校验工具类
  *
+ * 请求校验工具类
  */
 public class SignUtil {
     // 与接口配置信息中的Token要一致
     private static String token = "graduation2016";
 
     /**
-     * 验证签名
      *
-     * @param signature
-     * @param timestamp
-     * @param nonce
-     * @return
+     * 验证签名
      */
     public static boolean checkSignature(String signature, String timestamp, String nonce) {
         String[] arr = new String[] { token, timestamp, nonce };
@@ -53,10 +48,8 @@ public class SignUtil {
     }
 
     /**
-     * 将字节数组转换为十六进制字符串
      *
-     * @param byteArray
-     * @return
+     * 将字节数组转换为十六进制字符串
      */
     private static String byteToStr(byte[] byteArray) {
         String strDigest = "";
@@ -67,10 +60,8 @@ public class SignUtil {
     }
 
     /**
-     * 将字节转换为十六进制字符串
      *
-     * @param mByte
-     * @return
+     * 将字节转换为十六进制字符串
      */
     private static String byteToHexStr(byte mByte) {
         char[] Digit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };

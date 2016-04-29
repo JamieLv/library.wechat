@@ -13,6 +13,7 @@ package grad.pojo;
 public class Menu {
 
     private Button[] button;
+    private MatchRule matchrule;
 
     public Button[] getButton() {
         return button;

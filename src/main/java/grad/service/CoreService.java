@@ -1,6 +1,7 @@
 package grad.service;
 
 import grad.database.*;
+import grad.main.TagManager;
 import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
@@ -168,12 +169,6 @@ public class CoreService {
         return articleList;
     }
 
-    /**
-     * 处理微信发来的请求
-     *
-     * @param request
-     * @return
-     */
     public static String processRequest(HttpServletRequest request) {
         String respMessage = null;
         Database db = new Database();
@@ -188,6 +183,7 @@ public class CoreService {
             // 默认返回的文本消息内容
             String respContent = "请求处理异常，请稍候尝试！";
 
+            // 处理微信发来请求
             // xml请求解析
             Map<String, String> requestMap = MessageUtil.parseXml(request);
 
@@ -270,6 +266,8 @@ public class CoreService {
                         } else if (tag == 1){
                             if (i_yzm == Database.getMember_Info(fromUserName).getMember_ID()){
                                 Database.UpdateMember_Verification(fromUserName, true);
+                                // 用户分组
+                                TagManager.batchtagging(fromUserName, "Member");
                                 respContent = "恭喜你验证成功！可以点击菜单中的【会员卡】了解个人动态!";
                             } else {
                                 respContent = "尊敬的读者，验证码输入有误，请仔细核对！\n"
@@ -285,6 +283,21 @@ public class CoreService {
                     }
                     else{
                         respContent =  "验证码格式错误，请仿照格式: yzm 1回复，谢谢配合。";
+                    }
+                }
+
+                else if (content.startsWith("Worker")){ // Worker 1 吕嘉铭
+                    String[] keywords = content.trim().split(" ");
+                    int tag = db.WorkerExist(keywords[1], keywords[2], fromUserName);
+
+                    if (tag == 0) {
+                        respContent = "您的员工号不符，请重新核实，谢谢配合。";
+                    } else if (tag == 1) {
+                        db.UpdateWorker_Verification(keywords[2], fromUserName);
+                        TagManager.batchtagging(fromUserName, keywords[0]);
+                        respContent = "成功与员工账号绑定，现能使用工作人员功能。";
+                    } else if (tag == 2) {
+                        respContent = "您的员工信息已录入，谢谢配合。";
                     }
                 }
 
@@ -333,8 +346,8 @@ public class CoreService {
                         } else {
                             respContent = "输入格式有误";
                         }
-                    } catch (Exception e){
-                        e.printStackTrace();
+                    } catch (NumberFormatException e){ // Member开头但格式有误
+                        respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
                     }
 
                 }
@@ -402,6 +415,7 @@ public class CoreService {
                     if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
 
                         Member_Info member_info = Database.getMember_Info(fromUserName);
+                        Worker_Info worker_info = Database.getWoker_InfobyfromUserName(fromUserName);
 
                         if(member_info == null){ // 用户尚未登记
                             respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册";
@@ -412,7 +426,10 @@ public class CoreService {
                                     + "Member 姓名 性别 年龄 手机号\n"
                                     + "60秒内将会收到有验证码的短信。\n"
                                     + "到时请将验证码回复给微信平台，谢谢配合。";
-                        } else { // 成功
+                        } else if(worker_info != null){
+
+                        }
+                        else { // 成功
                             MemberService.MemberTemplate(member_info);
                             return "";
                         }

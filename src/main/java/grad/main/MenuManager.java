@@ -5,14 +5,10 @@
  */
 package grad.main;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import grad.pojo.*;
 import grad.util.WeixinUtil;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 
 /**
@@ -40,12 +36,12 @@ public class MenuManager {
         // 调用接口获取access_token
         AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
 
-        if (null != at) {
+        if (at != null) {
             // 调用接口创建菜单
             int result = WeixinUtil.createMenu(getMenu(), at.getToken());
 
             // 判断菜单创建结果
-            if (0 == result) {
+            if (result == 0) {
                 System.out.println("菜单创建成功！");
             } else {
                 System.out.println("菜单创建失败，错误码：" + result);

@@ -23,7 +23,8 @@ public class Member_Info {
 
     public Member_Info(){}
 
-    public Member_Info(String Member_Name, String Member_Gender, int Member_Age, String Member_Mobile, String Member_RegisterTime, String Member_fromUserName, Boolean Member_Verification){
+    public Member_Info(String Member_Name, String Member_Gender, int Member_Age, String Member_Mobile,
+                       String Member_RegisterTime, String Member_fromUserName, Boolean Member_Verification){
         this.Member_Name = Member_Name;
         this.Member_Gender = Member_Gender;
         this.Member_Age = Member_Age;

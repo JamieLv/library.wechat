@@ -36,14 +36,35 @@ public class Database {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery("from Member_Info");
-        List<Member_Info> member_info_list = query.list();
+        List<Member_Info> member_infoList = query.list();
         session.getTransaction().commit();
 
-        for(Member_Info member_info: member_info_list) {
+        for(Member_Info member_info: member_infoList) {
             if(member_info.getMember_fromUserName().equals(Member_fromUserName) && member_info.getMember_Verification()){
                 exist = 2; // 存在于名单中且通过验证
             } else if(member_info.getMember_fromUserName().equals(Member_fromUserName)) {
                 exist = 1; // 存在于名单中
+            }
+        }
+        return  exist;
+    }
+
+    // 判断工作人员是否存在
+    public static int WorkerExist(String Worker_ID, String Worker_Name, String Worker_fromUserName){
+        int exist = 0; // 没有存在在名单中
+        int ID = Integer.parseInt(Worker_ID);
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Worker_Info");
+        List<Worker_Info> worker_infoList = query.list();
+        session.getTransaction().commit();
+
+        for(Worker_Info worker_info: worker_infoList) {
+            if(worker_info.getWorker_fromUserName().equals(Worker_fromUserName) && worker_info.getWorker_Verification()){
+                exist = 2;
+            } else if(getWoker_Info(Worker_Name).getWorker_ID() == ID){
+                exist = 1;
             }
         }
         return  exist;
@@ -108,6 +129,19 @@ public class Database {
         session.beginTransaction();
         Member_Info member_info = session.get(Member_Info.class, Member_ID);
         member_info.setMember_Verification(verify);
+        session.getTransaction().commit();
+
+        return true;
+    }
+
+    // 更新工作人员验证状态
+    public static boolean UpdateWorker_Verification(String Worker_Name, String Worker_fromUserName){
+        int Worker_ID = getWoker_Info(Worker_Name).getWorker_ID();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Worker_Info worker_info = session.get(Worker_Info.class, Worker_ID);
+        worker_info.setWorker_fromUserName(Worker_fromUserName);
+        worker_info.setWorker_Verification(true);
         session.getTransaction().commit();
 
         return true;
@@ -180,26 +214,11 @@ public class Database {
      */
 
     // 查书本
-
     public static Book_State getBook_StatebyBook_id(int Book_id){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery(String.format("from Book_State where Book_id = '%s'", Book_id));
-        Book_State book_state = null;
-        if (query.list().size() > 0) {
-            book_state = (Book_State) query.list().get(0);
-        }
-        session.getTransaction().commit();
-
-        return book_state;
-    }
-
-    public static Book_State getBook_StatebyBook_ISBN(int Book_ISBN){
-
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createQuery(String.format("from Book_State where Book_ISBN = '%s'", Book_ISBN));
         Book_State book_state = null;
         if (query.list().size() > 0) {
             book_state = (Book_State) query.list().get(0);
@@ -238,6 +257,33 @@ public class Database {
         session.getTransaction().commit();
 
         return member_info;
+    }
+
+    // 查工作人员
+    public static Worker_Info getWoker_Info(String Worker_Name){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Worker_Info where Woker_Name = '%s'", Worker_Name));
+        Worker_Info worker_info = null;
+        if (query.list().size() > 0) {
+            worker_info = (Worker_Info) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return worker_info;
+    }
+
+    public static Worker_Info getWoker_InfobyfromUserName(String Worker_fromUserName){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Worker_Info where Worker_fromUserName = '%s'", Worker_fromUserName));
+        Worker_Info worker_info = null;
+        if (query.list().size() > 0) {
+            worker_info = (Worker_Info) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return worker_info;
     }
 
 

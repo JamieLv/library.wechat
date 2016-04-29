@@ -126,9 +126,6 @@ public class WeixinUtil {
         return accessToken;
     }
 
-    // 菜单创建（POST） 限100（次/天）  
-    public static String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
-
     /**
      * 创建菜单
      *
@@ -140,7 +137,7 @@ public class WeixinUtil {
         int result = 0;
 
         // 拼装创建菜单的url  
-        String url = menu_create_url.replace("ACCESS_TOKEN", accessToken);
+        String url =  "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + accessToken;
         // 将菜单对象转换成json字符串  
         String jsonMenu = JSONObject.fromObject(menu).toString();
         // 调用接口创建菜单  
@@ -154,6 +151,104 @@ public class WeixinUtil {
                 System.out.println("创建菜单失败 errCode:" + errCode + " errMsg:" + errMsg);
             }
         }
+        return result;
+    }
+
+    /**
+     * 创建群组
+     */
+    public static int createTag(String accessToken){
+        int result = 0;
+        String post = "\n" +
+                "{\n" +
+                "\"tag\":{\n" +
+                "\"name\":\"职工\"}\n" +
+                "}";
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/create?access_token=" + accessToken;
+        String jsonGroup = JSONObject.fromObject(post).toString();
+        JSONObject jsonObject = httpRequest(url, "POST", jsonGroup);
+
+        System.out.println("WeixinManager.createGroup()"+jsonObject.toString());
+
+        return result;
+    }
+
+    public static int getAllTag(String accessToken){
+        int result = 0;
+
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token=" + accessToken;
+        JSONObject jsonObject = httpRequest(url, "GET", null);
+
+        System.out.println("WeixinManager.getGroup()"+jsonObject.toString());
+
+        return result;
+    }
+
+    public static int deleteTag(String accessToken){
+        int result = 0;
+        String post = "\n" +
+                "{\n" +
+                "\"tagid\":101,\n" +
+                "}";
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=" + accessToken;
+        String jsonGroup = JSONObject.fromObject(post).toString();
+        JSONObject jsonObject = httpRequest(url, "POST", jsonGroup);
+
+        System.out.println("WeixinManager.deleteGroup()"+jsonObject.toString());
+
+        return result;
+    }
+
+    public static int updateTag(String accessToken){
+        int result = 0;
+        String post = "\n" +
+                "{\n" +
+                "\"tag\":{\n" +
+                "\"id\":101,\n" +
+                "\"name\":\"职工\"\n" +
+                "}}";
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/update?access_token=" + accessToken;
+        String jsonGroup = JSONObject.fromObject(post).toString();
+        JSONObject jsonObject = httpRequest(url, "POST", jsonGroup);
+
+        System.out.println("WeixinManager.updateGroup()"+jsonObject.toString());
+
+        return result;
+    }
+
+    public static int batchReaderTag(String accessToken, String fromUserName){
+        int result = 0;
+        String post = "\n" +
+                "{\n" +
+                "\"openid_list\":[\n" +
+                "\"" + fromUserName + "\"\n" +
+                "],\n" +
+                "\"tagid\":100\n" +
+                "}";
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=" + accessToken;
+        String jsonGroup = JSONObject.fromObject(post).toString();
+        JSONObject jsonObject = httpRequest(url, "POST", jsonGroup);
+
+        System.out.println("WeixinManager.batchreadertag()"+jsonObject.toString());
+
+        return result;
+    }
+
+
+    public static int batchWorkerTag(String accessToken, String fromUserName){
+        int result = 0;
+        String post = "\n" +
+                "{\n" +
+                "\"openid_list\":[\n" +
+                "\"" + fromUserName + "\"\n" +
+                "],\n" +
+                "\"tagid\":101\n" +
+                "}";
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=" + accessToken;
+        String jsonGroup = JSONObject.fromObject(post).toString();
+        JSONObject jsonObject = httpRequest(url, "POST", jsonGroup);
+
+        System.out.println("WeixinManager.batchworkertag()"+jsonObject.toString());
 
         return result;
     }
