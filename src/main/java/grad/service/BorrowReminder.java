@@ -27,8 +27,8 @@ public class BorrowReminder {
 
         int Borrower_ID = Database.getMember_Info(fromUserName).getMember_ID();
         List<Book_State> book_stateList = Database.getBook_StatebyBorrower(Borrower_ID);
-        String Borrow_Book_Title = null;
-        String Return_Book_Time = null;
+        String Borrow_Book_Title = "";
+        String Return_Book_Time = "";
 
         for (Book_State book_state: book_stateList) {
             String Return_Time = book_state.getBook_Return_Time();
@@ -47,8 +47,8 @@ public class BorrowReminder {
             Today_cal.setTime(Today_Date);
 
             if (Today_cal.compareTo(StartofRemind) * Today_cal.compareTo(EndofRemind) != 1){
-                Borrow_Book_Title += Borrow_Book_Title == null ? book_state.getBook_Title() : "\n" + book_state.getBook_Title();
-                Return_Book_Time += Return_Book_Time == null ? book_state.getBook_Return_Time() : "\n" + book_state.getBook_Return_Time();
+                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n" + book_state.getBook_Title();
+                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n" + book_state.getBook_Return_Time();
             }
         }
 
