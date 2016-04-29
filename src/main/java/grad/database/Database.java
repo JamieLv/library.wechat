@@ -277,7 +277,7 @@ public class Database {
         Query query = session.createQuery(String.format("from Member_Info"));
         List<Member_Info> member_infoList = null;
         if (query.list().size() > 0) {
-            member_infoList = query.list().get();
+            member_infoList = query.list();
         }
         session.getTransaction().commit();
 
