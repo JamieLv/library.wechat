@@ -263,7 +263,7 @@ public class Database {
     public static Worker_Info getWoker_Info(String Worker_Name){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Worker_Info where Woker_Name = '%s'", Worker_Name));
+        Query query = session.createQuery(String.format("from Worker_Info where Worker_Name = '%s'", Worker_Name));
         Worker_Info worker_info = null;
         if (query.list().size() > 0) {
             worker_info = (Worker_Info) query.list().get(0);
