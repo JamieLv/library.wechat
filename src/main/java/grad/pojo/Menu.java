@@ -22,4 +22,12 @@ public class Menu {
     public void setButton(Button[] button) {
         this.button = button;
     }
+
+    public MatchRule getMatchrule() {
+        return matchrule;
+    }
+
+    public void setMatchrule(MatchRule matchrule) {
+        this.matchrule = matchrule;
+    }
 }

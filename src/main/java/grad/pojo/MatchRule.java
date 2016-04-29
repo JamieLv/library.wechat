@@ -7,6 +7,14 @@ public class MatchRule {
     int tag_id;
     String language;
 
+    public MatchRule(int tag_id, String language) {
+        this.tag_id = tag_id;
+        this.language = language;
+    }
+    public MatchRule(String language){
+        this.language = language;
+    }
+
     public int getTag_id() {
         return tag_id;
     }

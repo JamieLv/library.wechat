@@ -15,11 +15,12 @@ public class TagManager {
         AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
 
         if (at != null) {
-            String op = "get";
+            String op = "getuser";
             if (op.equals("add")){WeixinUtil.createTag(at.getToken());}
             if (op.equals("get")){WeixinUtil.getAllTag(at.getToken());}
             if (op.equals("del")){WeixinUtil.deleteTag(at.getToken());}
             if (op.equals("up")){WeixinUtil.updateTag(at.getToken());}
+            System.out.println(WeixinUtil.getUserTagID(at.getToken(), "oog9Zv85WcOoYRCuOPwYb6KIVgHI"));
         }
     }
 

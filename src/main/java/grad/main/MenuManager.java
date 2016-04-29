@@ -55,48 +55,50 @@ public class MenuManager {
      * @return
      */
     private static Menu getMenu() {
+        int l = 1;
+
         CommonButton btn11 = new CommonButton();
-        btn11.setName("会员卡");
+        btn11.setName(l == 0 ? "会员卡" : "Member");
         btn11.setType("click");
         btn11.setKey(CommonButton.KEY_MEMBERSHIP);
 
         CommonButton btn12 = new CommonButton();
-        btn12.setName("我要借书");
+        btn12.setName(l == 0 ? "我要借书" : "Borrow");
         btn12.setType("scancode_waitmsg");
         btn12.setKey(CommonButton.KEY_BORROW_BOOK);
 
         CommonButton btn13 = new CommonButton();
-        btn13.setName("我要还书");
+        btn13.setName(l == 0 ? "我要还书" : "Return");
         btn13.setType("click");
         btn13.setKey(CommonButton.KEY_RETURN_BOOK);
 
         CommonButton btn14 = new CommonButton();
-        btn14.setName("使用帮助");
+        btn14.setName(l == 0 ? "使用帮助" : "Help");
         btn14.setType("click");
         btn14.setKey(CommonButton.KEY_HELP);
 
         CommonButton btn21 = new CommonButton();
-        btn21.setName("图书检索");
+        btn21.setName(l == 0 ? "图书检索" : "Search Book");
         btn21.setType("click");
         btn21.setKey(CommonButton.KEY_BOOK);
 
         CommonButton btn22 = new CommonButton();
-        btn22.setName("阅览室预约");
+        btn22.setName(l == 0 ? "阅览室预约" : "Reading Room");
         btn22.setType("click");
         btn22.setKey(CommonButton.KEY_RESERVE_ROOM);
 
         CommonButton btn23 = new CommonButton();
-        btn23.setName("图书推荐");
+        btn23.setName(l == 0 ? "图书推荐" : "Recommendation");
         btn23.setType("click");
         btn23.setKey(CommonButton.KEY_BOOK_RECOMMEND);
 
         CommonButton btn24 = new CommonButton();
-        btn24.setName("门店查询");
+        btn24.setName(l == 0 ? "门店查询" : "Nearby Library");
         btn24.setType("location_select");
         btn24.setKey(CommonButton.KEY_NEARBY);
 
         CommonButton btn31 = new CommonButton();
-        btn31.setName("我有意见");
+        btn31.setName(l == 0 ? "我的建议" : "Advice");
         btn31.setType("click");
         btn31.setKey(CommonButton.KEY_ADVICE);
 
@@ -106,29 +108,30 @@ public class MenuManager {
         btn32.setKey(CommonButton.KEY_ADVICE_TRACK);
         
         CommonButton btn33 = new CommonButton();
-        btn33.setName("官网");
+        btn33.setName(l == 0 ? "官网" : "Official Website");
         btn33.setType("view");
         btn33.setUrl("http://sse.tongji.edu.cn/zh");
 
         CommonButton btn34 = new CommonButton();
-        btn34.setName("加入我们");
+        btn34.setName(l == 0 ? "加入我们" : "Join Us");
         btn34.setType("click");
         btn34.setKey(CommonButton.KEY_JOIN_US);
 
         ComplexButton mainBtn1 = new ComplexButton();
-        mainBtn1.setName("个人服务");
+        mainBtn1.setName(l == 0 ? "个人服务" : "Personal");
         mainBtn1.setSub_button(new Button[]{btn11, btn12, btn13, btn14});
 
         ComplexButton mainBtn2 = new ComplexButton();
-        mainBtn2.setName("图书馆");
+        mainBtn2.setName(l == 0 ? "图书馆" : "Library");
         mainBtn2.setSub_button(new Button[]{btn21, btn22, btn23, btn24});
 
         ComplexButton mainBtn3 = new ComplexButton();
-        mainBtn3.setName("关于我们");
-        mainBtn3.setSub_button(new Button[]{btn31, btn32, btn33, btn34});
+        mainBtn3.setName(l == 0 ? "关于我们" : "About");
+        mainBtn3.setSub_button(new Button[]{btn31, btn33});
 
         Menu menu = new Menu();
         menu.setButton(new Button[]{mainBtn1, mainBtn2, mainBtn3});
+        menu.setMatchrule(new MatchRule(101, "en"));
 
         return menu;
     }

@@ -9,6 +9,9 @@
     <servlet-name>CoreServlet</servlet-name>
     <url-pattern>/CoreServlet</url-pattern>
   </servlet-mapping>
+  <listener>
+  <listener-class>grad.servlet.ReminderServlet</listener-class>
+  </listener>
   <session-config>
     <session-timeout>
       30

@@ -5,6 +5,7 @@ import grad.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import java.awt.print.Book;
 import java.lang.reflect.Member;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -242,7 +243,18 @@ public class Database {
         return book_state;
     }
 
+    public static List<Book_State> getBook_StatebyBorrower(int Borrower_ID){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Book_State where Book_Borrower_ID = '%s'", Borrower_ID));
+        List<Book_State> book_stateList = null;
+        if (query.list().size() > 0) {
+            book_stateList = query.list();
+        }
+        session.getTransaction().commit();
 
+        return book_stateList;
+    }
 
     // 查会员
     public static Member_Info getMember_Info(String Member_fromUserName){
@@ -257,6 +269,19 @@ public class Database {
         session.getTransaction().commit();
 
         return member_info;
+    }
+
+    public static List<Member_Info> getAllMember_Info(){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Member_Info"));
+        List<Member_Info> member_infoList = null;
+        if (query.list().size() > 0) {
+            member_infoList = query.list().get();
+        }
+        session.getTransaction().commit();
+
+        return member_infoList;
     }
 
     // 查工作人员

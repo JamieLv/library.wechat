@@ -7,6 +7,7 @@ package grad.util;
 
 import grad.pojo.AccessToken;
 import grad.pojo.Menu;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -234,7 +235,6 @@ public class WeixinUtil {
         return result;
     }
 
-
     public static int batchWorkerTag(String accessToken, String fromUserName){
         int result = 0;
         String post = "\n" +
@@ -251,5 +251,23 @@ public class WeixinUtil {
         System.out.println("WeixinManager.batchworkertag()"+jsonObject.toString());
 
         return result;
+    }
+
+    public static int getUserTagID(String accessToken, String fromUserName){
+        int result = 0;
+        String post = "\n" +
+                "{\n" +
+                "\"openid\":\"" + fromUserName + "\"\n" +
+                "}";
+        String url = "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=" + accessToken;
+        String jsonTagID = JSONObject.fromObject(post).toString();
+        JSONObject jsonObject = httpRequest(url, "POST", jsonTagID);
+
+        JSONArray jsonArray = jsonObject.getJSONArray("tagid_list");
+        int tagID = (int) jsonArray.get(0);
+
+        System.out.println("WeixinManager.getUserTagID()"+jsonObject.toString());
+
+        return tagID;
     }
 }
