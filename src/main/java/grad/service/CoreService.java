@@ -49,12 +49,11 @@ public class CoreService {
 
         List<Article> articleList = new ArrayList<>();
         Book_State book_state = Database.getBook_StatebyTitle(Search_Book_Title);
-//        Book_State book_state = Database.getBook_StatebyISBN(Book_State.getISBN());
 
         Article articleBOOK = new Article();
         articleBOOK.setTitle("书名: 《" + Search_Book_Title + "》");
         articleBOOK.setPicUrl(Return_BookPicURL(book_state.getBook_ISBN()));
-        articleBOOK.setUrl(Return_BookPicURL(book_state.getBook_ISBN()));
+        articleBOOK.setUrl("https://www.baidu.com/s?ie=UTF-8&wd=" + Search_Book_Title);
         articleList.add(articleBOOK);
 
         Article articleISBN = new Article();
@@ -69,12 +68,6 @@ public class CoreService {
         articleAUTHOR.setTitle("作者: " + book_state.getBook_Author());
         articleList.add(articleAUTHOR);
 
-//        if (book_state.getBook_Translator() != null) {
-//            Article articleTRANSLATOR = new Article();
-//            articleTRANSLATOR.setTitle("译者: " + book_state.getBook_Translator());
-//            articleList.add(articleTRANSLATOR);
-//        }
-
         Article articlePUBLISHER = new Article();
         articlePUBLISHER.setTitle("出版商: " + book_state.getBook_Publisher());
         articleList.add(articlePUBLISHER);
@@ -82,11 +75,7 @@ public class CoreService {
         Article articlePUBTIME = new Article();
         articlePUBTIME.setTitle("发行时间: " + book_state.getBook_PubTime());
         articleList.add(articlePUBTIME);
-
-//        Article articlePRICE = new Article();
-//        articlePRICE.setTitle("价格: " + book.getPrice());
-//        articleList.add(articlePRICE);
-
+//
 //        Article articleBOOKSTATEMENT = new Article();
 //        articleBOOKSTATEMENT.setTitle("存书状态: " + book_state.getLibrary_Name());
 //        articleList.add(articleBOOKSTATEMENT);
@@ -169,6 +158,8 @@ public class CoreService {
         return articleList;
     }
 
+
+
     public static String processRequest(HttpServletRequest request) {
         String respMessage = null;
         Database db = new Database();
@@ -242,6 +233,7 @@ public class CoreService {
                             sendMsg.send(keywords[4], yzm);
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
                         } else if (tag == 2){ // 已登记，手机验证通过
+                            TagManager.batchtagging(fromUserName, "Member");
                             respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
                         }
                     }catch (NumberFormatException e){ // Member开头但格式有误
@@ -319,37 +311,33 @@ public class CoreService {
                         return respMessage;
                     }
                 } else if (content.startsWith("Add") || content.startsWith("add")) {
-                    try { // add 9781278973602 2
-                        String[] keywords = content.trim().split(" ");
-                        if (keywords.length == 3) {
-                            String ADD_ISBN = keywords[1];
-                            int Library_id = Integer.parseInt(keywords[2]);
+                     // add 9781278973602 2
+                    String[] keywords = content.trim().split(" ");
+                    if (keywords.length == 3) {
+                        String ADD_ISBN = keywords[1];
+                        int Library_id = Integer.parseInt(keywords[2]);
 
-                            // if (Database.getBookbyISBN(ADD_ISBN) == null) {
-                            DouBanBook new_book = Return_BookInfo(ADD_ISBN);
-                            //String Book_ISBN, String Book_Title, String Book_Category, String Book_Author,
-                            //String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement
-                            Book_State book_state = new Book_State(
-                                    ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
-                                    new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), Library_id, "归还");
-                            Database.Add(book_state);
-                            articleList = SearchBookDisplay(new_book.getTitle());
+                        // if (Database.getBookbyISBN(ADD_ISBN) == null) {
+                        DouBanBook new_book = Return_BookInfo(ADD_ISBN);
+                        //String Book_ISBN, String Book_Title, String Book_Category, String Book_Author,
+                        //String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement
+                        Book_State book_state = new Book_State(
+                                ADD_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
+                                new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), Library_id, "归还");
+                        Database.Add(book_state);
+                        articleList = SearchBookDisplay(new_book.getTitle());
 
-                            // 设置图文消息个数
-                            newsMessage.setArticleCount(articleList.size());
-                            // 设置图文消息包含的图文集合
-                            newsMessage.setArticles(articleList);
-                            // 将图文消息对象转换成xml字符串
-                            respMessage = MessageUtil.newsMessageToXml(newsMessage);
+                        // 设置图文消息个数
+                        newsMessage.setArticleCount(articleList.size());
+                        // 设置图文消息包含的图文集合
+                        newsMessage.setArticles(articleList);
+                        // 将图文消息对象转换成xml字符串
+                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
-                            return respMessage;
-                        } else {
-                            respContent = "输入格式有误";
-                        }
-                    } catch (NumberFormatException e){ // Member开头但格式有误
-                        respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
+                        return respMessage;
+                    } else {
+                        respContent = "输入格式有误";
                     }
-
                 }
 
                 else {
@@ -367,12 +355,6 @@ public class CoreService {
 
                 String Location_X = requestMap.get("Location_X");
                 String Location_Y = requestMap.get("Location_Y");
-                String Scale = requestMap.get("Scale");
-//                Map<String, String> json = BaiduMapAPI.testPost(Location_X, Location_Y);
-
-
-//                respContent = "收到" + Location_X + Location_Y + "\n"
-//                        + json.get("address");
 
                 articleList = NearbyLibrary(Location_X, Location_Y);
                 // 设置图文消息个数
@@ -383,17 +365,13 @@ public class CoreService {
                 respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                 return respMessage;
-
-
             } // 链接消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
                 respContent = "你发送的是链接消息哦！";
 
-
             } // 音频消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
                 respContent = "你发送的是音频消息哦！";
-
 
             } // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
@@ -402,7 +380,7 @@ public class CoreService {
                 // 订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
                     respContent
-                            = getGreeting() + "，尊敬的读者:)\n"
+                            = getGreeting() + "，尊敬的读者" + emoji(0x1F604) + "\n"
                             + "感谢关注图书馆！\n"
                             + "赶紧戳一戳下方按钮，来和我们互动吧！";
 
@@ -412,7 +390,7 @@ public class CoreService {
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) { // 事件KEY值，与创建自定义菜单时指定的KEY值对应
                     String eventKey = requestMap.get("EventKey");
 
-                    if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
+                    if (eventKey.equals(CommonButton.KEY_LOGIN)) {
 
                         Member_Info member_info = Database.getMember_Info(fromUserName);
                         Worker_Info worker_info = Database.getWoker_InfobyfromUserName(fromUserName);
@@ -426,15 +404,16 @@ public class CoreService {
                                     + "Member 姓名 性别 年龄 手机号\n"
                                     + "60秒内将会收到有验证码的短信。\n"
                                     + "到时请将验证码回复给微信平台，谢谢配合。";
-                        } else if(worker_info != null){
-
+                        } else if(worker_info != null){ //登录
+                            TagManager.batchtagging(fromUserName, "Worker");
                         }
                         else { // 成功
+                            TagManager.batchtagging(fromUserName, "Member");
                             MemberService.MemberTemplate(member_info);
                             return "";
                         }
 
-                    } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
+                    } else if (eventKey.equals(CommonButton.KEY_RECORD)) {
                         articleList = MemberRecordDisplay(fromUserName);
 
                         // 设置图文消息个数
@@ -446,8 +425,31 @@ public class CoreService {
 
                         return respMessage;
 
-                    } else if (eventKey.equals(CommonButton.KEY_HELP)) {
-                        respContent = "14！";
+                    }else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
+                        String scanResult = requestMap.get("ScanResult");
+                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
+                        /*
+                         * 借书
+                         */
+                        if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
+                            String[] Book_State_Info = scanResult.trim().split(" ");
+                            int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+                            db.UpdateBook_State(Borrow_Book_ID, scanResult, Book_Borrower_ID);
+                            if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)){
+                                db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
+                            } else {
+                                Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
+                                db.Add(new_borrow_record);
+                            }
+                            BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
+                            return "";
+                        }
+                    } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
+                        String scanResult = requestMap.get("ScanResult");
+                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
+                        int Borrow_Book_Index = 1;
+                        db.UpdateBook_State(Borrow_Book_Index, scanResult, Book_Borrower_ID);
+                        respContent = "归还成功";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         respContent = "回复\"Search 书名\"查询您想要的书本!";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
@@ -464,41 +466,8 @@ public class CoreService {
 
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String scanResult = requestMap.get("ScanResult");
-                    try{
-                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
-                        /*
-                         * 借书
-                         */
-                        if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
-                            String[] Book_State_Info = scanResult.trim().split(" ");
-                            int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-                            // int Borrow_Member_ID = db.getMember_Info(fromUserName).getMember_ID();
-                            // int Borrow_Statement = db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Statement_ID();
-                            // int Borrow_Book_ID, int Borrow_Member_ID
-                            db.UpdateBook_State(Borrow_Book_ID, scanResult, Book_Borrower_ID);
-                            if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)){
-                                db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
-                            } else {
-                                Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
-                                db.Add(new_borrow_record);
-                            }
-                            BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
-                            return "";
-                        }
-                        /*
-                         * 还书
-                         */
-                        else if (scanResult.contentEquals("Return_Book")){ // 还书
-                            int Borrow_Book_Index = 1;
-                            db.UpdateBook_State(Borrow_Book_Index, scanResult, Book_Borrower_ID);
-                            respContent = "归还成功";
-                        }
-                        else {
-                            respContent = getGreeting() + scanResult;
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    System.out.println("二维码信息: "+scanResult);
+                    respContent = getGreeting();
                 }
             }
 

@@ -155,6 +155,21 @@ public class WeixinUtil {
         return result;
     }
 
+    public static int AddConditionalMenu(Menu menu, String accessToken) {
+        int result = 0;
+
+        // 拼装创建菜单的url
+        String url =  "https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token=" + accessToken;
+        // 将菜单对象转换成json字符串
+        String jsonMenu = JSONObject.fromObject(menu).toString();
+        // 调用接口创建菜单
+        JSONObject jsonObject = httpRequest(url, "POST", jsonMenu);
+
+        System.out.println("WeixinManager.conditional()"+jsonObject.toString());
+        return result;
+    }
+
+
     /**
      * 创建群组
      */
@@ -254,7 +269,6 @@ public class WeixinUtil {
     }
 
     public static int getUserTagID(String accessToken, String fromUserName){
-        int result = 0;
         String post = "\n" +
                 "{\n" +
                 "\"openid\":\"" + fromUserName + "\"\n" +
@@ -270,4 +284,5 @@ public class WeixinUtil {
 
         return tagID;
     }
+
 }

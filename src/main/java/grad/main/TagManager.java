@@ -15,7 +15,7 @@ public class TagManager {
         AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
 
         if (at != null) {
-            String op = "getuser";
+            String op = "get";
             if (op.equals("add")){WeixinUtil.createTag(at.getToken());}
             if (op.equals("get")){WeixinUtil.getAllTag(at.getToken());}
             if (op.equals("del")){WeixinUtil.deleteTag(at.getToken());}
