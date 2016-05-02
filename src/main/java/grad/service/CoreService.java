@@ -405,6 +405,10 @@ public class CoreService {
                             return "";
                         }
 
+                    } else if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
+                        Member_Info member_info = Database.getMember_Info(fromUserName);
+                        MemberService.MemberTemplate(member_info);
+                        return "";
                     } else if (eventKey.equals(CommonButton.KEY_RECORD)) {
                         articleList = MemberRecordDisplay(fromUserName);
 
