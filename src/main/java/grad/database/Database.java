@@ -323,17 +323,17 @@ public class Database {
 
 
     // 查借书状态/记录
-    public static Borrow_Record getBorrow_Record(int Borrow_Book_ID, int Borrow_Member_ID){
+    public static List<Borrow_Record> getBorrow_Record(int Borrow_Member_ID){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Borrow_Record where Borrow_Book_ID = '%s' and Borrow_Member_ID", Borrow_Book_ID, Borrow_Member_ID));
-        Borrow_Record borrow_record = null;
+        Query query = session.createQuery(String.format("from Borrow_Record where Borrow_Member_ID", Borrow_Member_ID));
+        List<Borrow_Record> borrow_recordList = null;
         if (query.list().size() > 0) {
-            borrow_record = (Borrow_Record) query.list().get(0);
+            borrow_recordList = query.list();
         }
         session.getTransaction().commit();
 
-        return borrow_record;
+        return borrow_recordList;
     }
 
     public static Borrow_Record getBorrow_RecordbyRecord_ID(int Record_ID){

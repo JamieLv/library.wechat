@@ -482,11 +482,12 @@ public class CoreService {
                         respContent = "34！";
                     }
 
-                } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
-                    String scanResult = requestMap.get("ScanResult");
-                    System.out.println("二维码信息: "+scanResult);
-                    respContent = getGreeting();
                 }
+//                else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
+//                    String scanResult = requestMap.get("ScanResult");
+//                    System.out.println("二维码信息: "+scanResult);
+//                    respContent = getGreeting();
+//                }
             }
 
             textMessage.setContent(respContent);

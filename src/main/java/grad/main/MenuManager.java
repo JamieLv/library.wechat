@@ -65,7 +65,7 @@ public class MenuManager {
         btn21.setKey(CommonButton.KEY_BOOK);
 
         CommonButton btn24 = new CommonButton();
-        btn24.setName(l == 0 ? "门店查询" : "Nearby Library");
+        btn24.setName(l == 0 ? "附近的图书馆" : "Nearby Library");
         btn24.setType("location_select");
         btn24.setKey(CommonButton.KEY_NEARBY);
 
@@ -107,7 +107,7 @@ public class MenuManager {
         btn21.setKey(CommonButton.KEY_BOOK);
 
         CommonButton btn24 = new CommonButton();
-        btn24.setName(l == 0 ? "门店查询" : "Nearby Library");
+        btn24.setName(l == 0 ? "附近的图书馆" : "Nearby Library");
         btn24.setType("location_select");
         btn24.setKey(CommonButton.KEY_NEARBY);
 

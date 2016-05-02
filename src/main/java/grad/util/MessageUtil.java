@@ -94,6 +94,14 @@ public class MessageUtil {
      * 事件类型：scancode_waitmsg
      */
     public static final String EVENT_TYPE_SCANCODE_WAITMSG = "scancode_waitmsg";
+    /**
+     * 借书
+     */
+    public static final String EVENT_TYPE_BORROW = "scancode_waitmsg";
+    /**
+     * 还书
+     */
+    public static final String EVENT_TYPE_RETURN = "scancode_waitmsg";
 
     /** 
      * 解析微信发来的请求（XML） 
