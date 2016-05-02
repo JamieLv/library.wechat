@@ -47,15 +47,15 @@ public class BorrowReminder {
             Today_cal.setTime(Today_Date);
 
             if (Today_cal.compareTo(StartofRemind) * Today_cal.compareTo(EndofRemind) != 1){
-                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n" + book_state.getBook_Title();
-                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n" + book_state.getBook_Return_Time();
+                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n      " + book_state.getBook_Title();
+                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n          " + book_state.getBook_Return_Time();
             }
         }
 
 
 
         TemplateMessage BorrowInfo = new TemplateMessage();
-        BorrowInfo.setTemplate_id("i0NdPgIFXYzRiuWJiVHxWzhfXpU7LQvNXmTcvZf_bN4");
+        BorrowInfo.setTemplate_id("7GH8ubmKHjPZXFpqZBusX1Ge0Ox6fFjI300HB8hTn6s");
 //        MemberInfo.setUrl("http://weixin.qq.com/download");
         BorrowInfo.setTopcolor("#000000");
         BorrowInfo.setTouser(fromUserName);
@@ -67,10 +67,10 @@ public class BorrowReminder {
         Title.setColor("#FF0000");
         data.put("Title", Title);
 
-        TemplateData Member_id = new TemplateData();
-        Member_id.setValue(String.valueOf(Database.getMember_Info(fromUserName).getMember_ID()));
-        Member_id.setColor("#FF0000");
-        data.put("Member_id", Member_id);
+        TemplateData Member_Name = new TemplateData();
+        Member_Name.setValue(String.valueOf(Database.getMember_Info(fromUserName).getMember_Name()));
+        Member_Name.setColor("#FF0000");
+        data.put("Member_Name", Member_Name);
 
         TemplateData ReturnTime = new TemplateData();
         ReturnTime.setValue(Return_Book_Time);

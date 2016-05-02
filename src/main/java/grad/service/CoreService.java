@@ -50,6 +50,14 @@ public class CoreService {
 
         List<Article> articleList = new ArrayList<>();
         Book_State book_state = Database.getBook_StatebyTitle(Search_Book_Title);
+        List<Book_State> book_stateList = Database.getBook_StateListbyTitle(Search_Book_Title);
+        String BookinLib = "";
+
+        for (Book_State book_stateLib: book_stateList) {
+            if (book_stateLib.getBook_Statement_ID() == 0){
+                BookinLib += BookinLib.equals("") ? Database.getLibraryName(book_stateLib.getBook_inLibrary_id()) : "；" + Database.getLibraryName(book_stateLib.getBook_inLibrary_id());
+            }
+        }
 
         Article articleBOOK = new Article();
         articleBOOK.setTitle("书名: 《" + Search_Book_Title + "》");
@@ -76,10 +84,10 @@ public class CoreService {
         Article articlePUBTIME = new Article();
         articlePUBTIME.setTitle("发行时间: " + book_state.getBook_PubTime());
         articleList.add(articlePUBTIME);
-//
-//        Article articleBOOKSTATEMENT = new Article();
-//        articleBOOKSTATEMENT.setTitle("存书状态: " + book_state.getLibrary_Name());
-//        articleList.add(articleBOOKSTATEMENT);
+
+        Article articleBOOKSTATEMENT = new Article();
+        articleBOOKSTATEMENT.setTitle("存书状态: " + BookinLib);
+        articleList.add(articleBOOKSTATEMENT);
 
         return articleList;
     }
@@ -111,22 +119,6 @@ public class CoreService {
                 articleBorrowRecordInput.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
                 articleList.add(articleBorrowRecordInput);
             }
-//            for (; Borrow_Book_Index <= 100; Borrow_Book_Index++){
-//                Book_State book_state = Database.getBook_StatebyBook_id(Borrow_Book_Index);
-//                if (book_state != null){
-//                    String Borrow_Book_Title = book_state.getBook_Title();
-//                    String Borrow_Book_ISBN = book_state.getBook_ISBN();
-//                    String Book_Borrow_Time = book_state.getBook_Borrow_Time();
-//                    String Book_Return_Time = book_state.getBook_Return_Time();
-//
-//                    Article articleBorrowRecordInput = new Article();
-//                    articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
-//                            + "借阅时间: " + Book_Borrow_Time + "\n"
-//                            + "归还时间: " + Book_Return_Time);
-//                    articleBorrowRecord.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
-//                    articleList.add(articleBorrowRecordInput);
-//                }
-//            }
         }
         return articleList;
     }
@@ -158,8 +150,6 @@ public class CoreService {
 
         return articleList;
     }
-
-
 
     public static String processRequest(HttpServletRequest request) {
         String respMessage = null;
@@ -234,8 +224,8 @@ public class CoreService {
                             sendMsg.send(keywords[4], yzm);
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
                         } else if (tag == 2){ // 已登记，手机验证通过
-                            TagManager.batchtagging(fromUserName, "Member");
-                            respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
+                            if (db.getWoker_Info(fromUserName) != null){ TagManager.batchtagging(fromUserName, "Member"); respContent = "读者身份登录";}
+                            else {respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"读者证\"或\"Member\"进行查询，谢谢！";}
                         }
                     }catch (NumberFormatException e){ // Member开头但格式有误
                         respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
@@ -436,22 +426,40 @@ public class CoreService {
                         if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
                             String[] Book_State_Info = scanResult.trim().split(" ");
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-                            db.UpdateBook_State(Borrow_Book_ID, scanResult, Book_Borrower_ID);
-                            if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)){
-                                db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
-                            } else {
-                                Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
-                                db.Add(new_borrow_record);
+                            Book_State book_state = db.getBook_StatebyBook_id(Borrow_Book_ID);
+                            if (book_state.getBook_Statement_ID() == 0) { // 借书
+                                db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
+                                if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)) {
+                                    db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
+                                } else {
+                                    Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
+                                    db.Add(new_borrow_record);
+                                }
+                                BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
+                                return "";
+                            } else { // 续借
+                                String Return_Time = book_state.getBook_Return_Time();
+                                SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+                                Date Return_Date = SDF.parse(Return_Time);
+                                Calendar Return_cal = Calendar.getInstance();
+                                Return_cal.setTime(Return_Date);
+
+                                if (Return_cal.compareTo(calendar) != 1) {
+                                    db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
+                                    BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
+                                    return "";
+                                } else {respContent = "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借";}
                             }
-                            BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
-                            return "";
-                        }
+
+                        } else {respContent = "非馆藏书本";}
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         String scanResult = requestMap.get("ScanResult");
-                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
-                        int Borrow_Book_Index = 1;
-                        db.UpdateBook_State(Borrow_Book_Index, scanResult, Book_Borrower_ID);
-                        respContent = "归还成功";
+                        String[] Book_State_Info = scanResult.trim().split(" ");
+                        int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+                        if (db.getWoker_Info(fromUserName).getWorker_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
+                            db.ReturnBook(Borrow_Book_ID);
+                            respContent = "归还成功";
+                        } else {respContent = "归还失败";}
                     } else if (eventKey.equals(CommonButton.KEY_LOG_OFF)) {
                         TagManager.batchuntagging(fromUserName, "Member");
                         respContent = "退出成功";
@@ -466,8 +474,6 @@ public class CoreService {
                         respContent = "23！";
                     } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
                         respContent = "31！";
-                    } else if (eventKey.equals(CommonButton.KEY_ADVICE_TRACK)) {
-                        respContent = "32！";
                     } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
                         respContent = "34！";
                     }

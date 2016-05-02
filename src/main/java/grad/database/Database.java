@@ -149,45 +149,42 @@ public class Database {
     }
 
     // 更新书本借阅情况
-    public static boolean UpdateBook_State(int Book_ID, String request, int Book_Borrower_ID) throws ParseException {
-
-        if (request.contentEquals("Return_Book")){
-            for (;getBook_StatebyBook_id(Book_ID) != null; Book_ID++){
-                if (getBook_StatebyBook_id(Book_ID).getBook_Borrower_ID() == Book_Borrower_ID){
-                    Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-                    session.beginTransaction();
-                    Book_State book_state = session.get(Book_State.class, Book_ID);
-                    book_state.setBook_Borrow_Time(null);
-                    book_state.setBook_Return_Time(null);
-                    book_state.setBook_Statement("归还");
-                    book_state.setBook_Statement_ID(0);
-                    book_state.setBook_Borrower_ID(0);
-                    session.getTransaction().commit();
-                }
-            }
-        } else if (request.startsWith("Book_Info")) {
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-            session.beginTransaction();
-            Book_State book_state = session.get(Book_State.class, Book_ID);
-            if (book_state.getBook_Statement().equals("归还")) { // 书未被借, 用户发出借书请求
-                book_state.setBook_Borrow_Time(getDate(0));
-                book_state.setBook_Return_Time(getDate(30));
-                book_state.setBook_Statement("于" + getDate(30) + "归还");
-                book_state.setBook_Statement_ID(1);
-                book_state.setBook_Borrower_ID(Book_Borrower_ID);
-            } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID) { // 用户已经借过这本书
-                String Return_Time = book_state.getBook_Return_Time();
-                SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = SDF.parse(Return_Time);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                calendar.add(Calendar.DATE, 14);
-                String New_Return_Time = SDF.format(calendar.getTime());
-                book_state.setBook_Return_Time(New_Return_Time);
-                book_state.setBook_Statement("于" + New_Return_Time + "归还");
-                book_state.setBook_Statement_ID(book_state.getBook_Statement_ID()+1);
-            }
+    public static boolean UpdateBook_State(int Book_ID, int Book_Borrower_ID) throws ParseException {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Book_State book_state = session.get(Book_State.class, Book_ID);
+        if (book_state.getBook_Statement().equals("归还")) { // 书未被借, 用户发出借书请求
+            book_state.setBook_Borrow_Time(getDate(0));
+            book_state.setBook_Return_Time(getDate(30));
+            book_state.setBook_Statement("于" + getDate(30) + "归还");
+            book_state.setBook_Statement_ID(1);
+            book_state.setBook_Borrower_ID(Book_Borrower_ID);
+        } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID && getDate(0) != book_state.getBook_Borrow_Time()) { // 用户已经借过这本书
+            String Return_Time = book_state.getBook_Return_Time();
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = SDF.parse(Return_Time);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, 14);
+            String New_Return_Time = SDF.format(calendar.getTime());
+            book_state.setBook_Return_Time(New_Return_Time);
+            book_state.setBook_Statement("于" + New_Return_Time + "归还");
+            book_state.setBook_Statement_ID(book_state.getBook_Statement_ID() + 1);
         }
+        return  true;
+    }
+
+    // 还书
+    public static boolean ReturnBook(int Borrow_Book_ID){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Book_State book_state = session.get(Book_State.class, Borrow_Book_ID);
+        book_state.setBook_Borrow_Time(null);
+        book_state.setBook_Return_Time(null);
+        book_state.setBook_Statement("归还");
+        book_state.setBook_Statement_ID(0);
+        book_state.setBook_Borrower_ID(0);
+        session.getTransaction().commit();
 
         return true;
     }
@@ -229,11 +226,11 @@ public class Database {
         return book_state;
     }
 
-    public static Book_State getBook_StatebyTitle(String title){
+    public static Book_State getBook_StatebyTitle(String Title){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Book_State where Book_Title = '%s'", title));
+        Query query = session.createQuery(String.format("from Book_State where Book_Title = '%s'", Title));
         Book_State book_state = null;
         if (query.list().size() > 0) {
             book_state = (Book_State) query.list().get(0);
@@ -247,6 +244,19 @@ public class Database {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery(String.format("from Book_State where Book_Borrower_ID = '%s'", Borrower_ID));
+        List<Book_State> book_stateList = null;
+        if (query.list().size() > 0) {
+            book_stateList = query.list();
+        }
+        session.getTransaction().commit();
+
+        return book_stateList;
+    }
+
+    public static List<Book_State> getBook_StateListbyTitle(String Title){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Book_State where Book_Title = '%s'", Title));
         List<Book_State> book_stateList = null;
         if (query.list().size() > 0) {
             book_stateList = query.list();
@@ -339,4 +349,18 @@ public class Database {
         return borrow_record;
     }
 
+    // 查图书馆名字
+    public static String getLibraryName(int Library_ID){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Library_Info where Library_ID = '%s'", Library_ID));
+        Library_Info library_info = null;
+        if (query.list().size() > 0) {
+            library_info = (Library_Info) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        String Library_Name = library_info.getLibrary_Name();
+        return Library_Name;
+    }
 }

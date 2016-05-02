@@ -69,7 +69,7 @@ public class BorrowService {
         data.put("Return_Time", ReturnTime);
 
         TemplateData Renew = new TemplateData();
-        Renew.setValue(Renew(Borrow_Statement_ID));
+        Renew.setValue(Borrow_Book_Time != Database.getDate(0) ? Renew(Borrow_Statement_ID) : Renew(Borrow_Statement_ID) + "\n\n温馨提醒：借书当日不可续借");
         Renew.setColor("#FF0000");
         data.put("Renew", Renew);
 
