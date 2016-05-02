@@ -316,8 +316,13 @@ public class MenuManager {
         btn13.setType("scancode_waitmsg");
         btn13.setKey(CommonButton.KEY_RETURN_BOOK);
 
+        CommonButton btn21 = new CommonButton();
+        btn21.setName(l == 0 ? "退出" : "Log off");
+        btn21.setType("click");
+        btn21.setKey(CommonButton.KEY_WORK_OFF);
+
         Menu menu = new Menu();
-        menu.setButton(new Button[]{btn13});
+        menu.setButton(new Button[]{btn13, btn21});
         menu.setMatchrule(new MatchRule(101, "zh_CN"));
 
         return menu;
@@ -331,8 +336,13 @@ public class MenuManager {
         btn13.setType("scancode_waitmsg");
         btn13.setKey(CommonButton.KEY_RETURN_BOOK);
 
+        CommonButton btn21 = new CommonButton();
+        btn21.setName(l == 0 ? "退出" : "Log off");
+        btn21.setType("click");
+        btn21.setKey(CommonButton.KEY_WORK_OFF);
+
         Menu menu = new Menu();
-        menu.setButton(new Button[]{btn13});
+        menu.setButton(new Button[]{btn13, btn21});
         menu.setMatchrule(new MatchRule(101, "en"));
 
         return menu;

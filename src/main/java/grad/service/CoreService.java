@@ -9,6 +9,7 @@ import grad.pojo.CommonButton;
 import grad.servlet.BaiduMapAPI;
 import grad.tools.*;
 import grad.util.MessageUtil;
+import grad.util.WeixinUtil;
 import net.sf.json.JSONObject;
 
 
@@ -406,6 +407,7 @@ public class CoreService {
                                     + "到时请将验证码回复给微信平台，谢谢配合。";
                         } else if(worker_info != null){ //登录
                             TagManager.batchtagging(fromUserName, "Worker");
+                            respContent = "员工" + worker_info.getWorker_ID() + "登录成功";
                         }
                         else { // 成功
                             TagManager.batchtagging(fromUserName, "Member");
@@ -425,7 +427,7 @@ public class CoreService {
 
                         return respMessage;
 
-                    }else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
+                    } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
                         String scanResult = requestMap.get("ScanResult");
                         int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
                         /*
@@ -450,6 +452,12 @@ public class CoreService {
                         int Borrow_Book_Index = 1;
                         db.UpdateBook_State(Borrow_Book_Index, scanResult, Book_Borrower_ID);
                         respContent = "归还成功";
+                    } else if (eventKey.equals(CommonButton.KEY_LOG_OFF)) {
+                        TagManager.batchuntagging(fromUserName, "Member");
+                        respContent = "退出成功";
+                    } else if (eventKey.equals(CommonButton.KEY_WORK_OFF)) {
+                        TagManager.batchuntagging(fromUserName, "Worker");
+                        respContent = "退出成功";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         respContent = "回复\"Search 书名\"查询您想要的书本!";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {

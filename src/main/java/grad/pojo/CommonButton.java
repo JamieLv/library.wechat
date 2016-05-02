@@ -19,6 +19,7 @@ public class CommonButton extends Button {
     public static final String KEY_RETURN_BOOK = "KEY_RETURN_BOOK";
     public static final String KEY_RECORD = "KEY_RECORD";
     public static final String KEY_LOG_OFF = "KEY_LOG_OFF";
+    public static final String KEY_WORK_OFF = "KEY_WORK_OFF";
 
     public static final String KEY_BOOK = "KEY_BOOK";
     public static final String KEY_RESERVE_ROOM = "KEY_RESERVE_ROOM";

@@ -40,4 +40,21 @@ public class TagManager {
         return true;
     }
 
+    public static boolean batchuntagging(String fromUserName, String request){
+        String appId = "wxe13392d6482304c4";
+        String appSecret = "41b6c04d9ac9819c779a186e0d6908ab";
+        AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
+
+        if (at != null) {
+            if (request.equals("Member")){
+                WeixinUtil.removeReaderTag(at.getToken(), fromUserName);
+            }
+            else if (request.equals("Worker")){
+                WeixinUtil.removeWorkerTag(at.getToken(), fromUserName);
+            }
+        }
+        return true;
+    }
+
+
 }
