@@ -421,8 +421,73 @@ public class CoreService {
 
                         return respMessage;
 
-                    } else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
+//                    }
+//                    else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
+//                        String scanResult = requestMap.get("ScanResult");
+//                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
+                        /*
+                         * 借书
+                         */
+//                        if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
+//                            String[] Book_State_Info = scanResult.trim().split(" ");
+//                            int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+//                            Book_State book_state = db.getBook_StatebyBook_id(Borrow_Book_ID);
+//                            if (book_state.getBook_Statement_ID() == 0) { // 借书
+//                                db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
+//                                if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)) {
+//                                    db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
+//                                } else {
+//                                    Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
+//                                    db.Add(new_borrow_record);
+//                                }
+//                                BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
+//                                return "";
+//                            } else { // 续借
+//                                String Return_Time = book_state.getBook_Return_Time();
+//                                SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+//                                Date Return_Date = SDF.parse(Return_Time);
+//                                Calendar Return_cal = Calendar.getInstance();
+//                                Return_cal.setTime(Return_Date);
+//
+//                                if (Return_cal.compareTo(calendar) != 1) {
+//                                    db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
+//                                    BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
+//                                    return "";
+//                                } else {respContent = "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借";}
+//                            }
+//
+//                        } else {respContent = "非馆藏书本";}
+                    } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         String scanResult = requestMap.get("ScanResult");
+                        String[] Book_State_Info = scanResult.trim().split(" ");
+                        int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+                        if (db.getWoker_Info(fromUserName).getWorker_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
+                            db.ReturnBook(Borrow_Book_ID);
+                            respContent = "归还成功";
+                        } else {respContent = "归还失败";}
+                    } else if (eventKey.equals(CommonButton.KEY_LOG_OFF)) {
+                        TagManager.batchuntagging(fromUserName, "Member");
+                        respContent = "退出成功";
+                    } else if (eventKey.equals(CommonButton.KEY_WORK_OFF)) {
+                        TagManager.batchuntagging(fromUserName, "Worker");
+                        respContent = "退出成功";
+                    } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
+                        respContent = "回复\"Search 书名\"查询您想要的书本!";
+                    } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
+                        respContent = "22！";
+                    } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
+                        respContent = "23！";
+                    } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
+                        respContent = "31！";
+                    } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
+                        respContent = "34！";
+                    }
+
+                }
+                else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
+                    String eventKey = requestMap.get("EventKey");
+                    String scanResult = requestMap.get("ScanResult");
+                    if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
                         int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
                         /*
                          * 借书
@@ -457,37 +522,18 @@ public class CoreService {
 
                         } else {respContent = "非馆藏书本";}
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
-                        String scanResult = requestMap.get("ScanResult");
                         String[] Book_State_Info = scanResult.trim().split(" ");
                         int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
                         if (db.getWoker_Info(fromUserName).getWorker_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
                             db.ReturnBook(Borrow_Book_ID);
                             respContent = "归还成功";
                         } else {respContent = "归还失败";}
-                    } else if (eventKey.equals(CommonButton.KEY_LOG_OFF)) {
-                        TagManager.batchuntagging(fromUserName, "Member");
-                        respContent = "退出成功";
-                    } else if (eventKey.equals(CommonButton.KEY_WORK_OFF)) {
-                        TagManager.batchuntagging(fromUserName, "Worker");
-                        respContent = "退出成功";
-                    } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
-                        respContent = "回复\"Search 书名\"查询您想要的书本!";
-                    } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
-                        respContent = "22！";
-                    } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
-                        respContent = "23！";
-                    } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
-                        respContent = "31！";
-                    } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
-                        respContent = "34！";
                     }
-
+                    else {
+                        System.out.println("二维码信息: " + scanResult);
+                        respContent = getGreeting();
+                    }
                 }
-//                else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
-//                    String scanResult = requestMap.get("ScanResult");
-//                    System.out.println("二维码信息: "+scanResult);
-//                    respContent = getGreeting();
-//                }
             }
 
             textMessage.setContent(respContent);
