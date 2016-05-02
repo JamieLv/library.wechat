@@ -524,7 +524,7 @@ public class CoreService {
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         String[] Book_State_Info = scanResult.trim().split(" ");
                         int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-                        if (db.getWoker_Info(fromUserName).getWorker_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
+                        if (db.getMember_Info(fromUserName).getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
                             db.ReturnBook(Borrow_Book_ID);
                             respContent = "归还成功";
                         } else {respContent = "归还失败";}
