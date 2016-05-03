@@ -14,6 +14,7 @@ import net.sf.json.JSONObject;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 import javax.xml.ws.soap.Addressing;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -94,31 +95,22 @@ public class CoreService {
 
     public static List<Article> MemberRecordDisplay(String fromUserName) throws IOException {
         List<Article> articleList = new ArrayList<>();
-//        int Record_ID = Database.getBorrow_Record(Borrow_Book_Index, Database.getMember_Info(fromUserName).getMember_ID()).getRecord_ID();
-//        Borrow_Record borrow_record = Database.getBorrow_Record()_Record(5);
-
         Article articleBorrowRecord = new Article();
         articleBorrowRecord.setTitle("借阅记录");
         articleList.add(articleBorrowRecord);
-        int Record_ID = 1;
-        Borrow_Record borrow_record = Database.getBorrow_RecordbyRecord_ID(Record_ID);
-        Member_Info member_info = Database.getMember_Info(fromUserName);
-        for (; borrow_record != null; Record_ID++, borrow_record = Database.getBorrow_RecordbyRecord_ID(Record_ID)){
-            if (borrow_record.getBorrow_Member_ID() == member_info.getMember_ID()){
-                int Borrow_Book_ID = borrow_record.getBorrow_Book_ID();
-                Book_State book_state = Database.getBook_StatebyBook_id(Borrow_Book_ID);
-                String Borrow_Book_Title = book_state.getBook_Title();
-                String Borrow_Book_ISBN = book_state.getBook_ISBN();
-                String Book_Borrow_Time = book_state.getBook_Borrow_Time();
-                String Book_Return_Time = book_state.getBook_Return_Time();
+        List<Book_State> book_stateList = Database.getBook_StatebyBorrower(Database.getMember_Info(fromUserName).getMember_ID());
+        for (Book_State book_state: book_stateList) {
+            String Borrow_Book_Title = book_state.getBook_Title();
+            String Borrow_Book_ISBN = book_state.getBook_ISBN();
+            String Book_Borrow_Time = book_state.getBook_Borrow_Time();
+            String Book_Return_Time = book_state.getBook_Return_Time();
 
-                Article articleBorrowRecordInput = new Article();
-                articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
-                        + "借阅时间: " + Book_Borrow_Time + "\n"
-                        + "归还时间: " + Book_Return_Time);
-                articleBorrowRecordInput.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
-                articleList.add(articleBorrowRecordInput);
-            }
+            Article articleBorrowRecordInput = new Article();
+            articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
+                    + "借阅时间: " + Book_Borrow_Time + "\n"
+                    + "归还时间: " + Book_Return_Time);
+            articleBorrowRecordInput.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
+            articleList.add(articleBorrowRecordInput);
         }
         return articleList;
     }
@@ -154,12 +146,12 @@ public class CoreService {
     public static String processRequest(HttpServletRequest request) {
         String respMessage = null;
         Database db = new Database();
-        String currentTime;
-        //获得当前时间
-        //格式如下： 20160411-11:12:43
-        Calendar calendar = Calendar.getInstance(); //获取当天日期
-        SimpleDateFormat sdf = new SimpleDateFormat("20yyMMdd-HH:mm:ss");
-        currentTime = sdf.format(calendar.getTime());
+//        String currentTime;
+//        //获得当前时间
+//        //格式如下： 20160411-11:12:43
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8")); //获取当天日期
+//        SimpleDateFormat sdf = new SimpleDateFormat("20yyMMdd-HH:mm:ss");
+//        currentTime = sdf.format(calendar.getTime());
 
         try {
             // 默认返回的文本消息内容
@@ -228,7 +220,7 @@ public class CoreService {
                             else {respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"读者证\"或\"Member\"进行查询，谢谢！";}
                         }
                     }catch (NumberFormatException e){ // Member开头但格式有误
-                        respContent = "您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
+                        respContent = "尊敬的读者，您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
                     }
                 }
 
@@ -285,6 +277,7 @@ public class CoreService {
                 }
 
                 else if (content.startsWith("Search") || content.startsWith("search")){ // 检索书本
+
                     String[] keywords = content.trim().split("\\s+");
                     Book_State book_state = Database.getBook_StatebyTitle(keywords[1]);
                     if (book_state == null){
@@ -410,61 +403,20 @@ public class CoreService {
                         MemberService.MemberTemplate(member_info);
                         return "";
                     } else if (eventKey.equals(CommonButton.KEY_RECORD)) {
-                        articleList = MemberRecordDisplay(fromUserName);
+                        if (db.getBook_StatebyBorrower(db.getMember_Info(fromUserName).getMember_ID()) == null){
+                            respContent = "尊敬的读者，您目前没有未归还的书本。欢迎您至附近的图书馆借阅。";
+                        } else {
+                            articleList = MemberRecordDisplay(fromUserName);
 
-                        // 设置图文消息个数
-                        newsMessage.setArticleCount(articleList.size());
-                        // 设置图文消息包含的图文集合
-                        newsMessage.setArticles(articleList);
-                        // 将图文消息对象转换成xml字符串
-                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
+                            // 设置图文消息个数
+                            newsMessage.setArticleCount(articleList.size());
+                            // 设置图文消息包含的图文集合
+                            newsMessage.setArticles(articleList);
+                            // 将图文消息对象转换成xml字符串
+                            respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
-                        return respMessage;
-
-//                    }
-//                    else if (eventKey.equals(CommonButton.KEY_BORROW_BOOK)) {
-//                        String scanResult = requestMap.get("ScanResult");
-//                        int Book_Borrower_ID = db.getMember_Info(fromUserName).getMember_ID();
-                        /*
-                         * 借书
-                         */
-//                        if (scanResult.startsWith("Book_Info")){ // Book_Info 5 剪刀石头布 1 艾尔法图书馆
-//                            String[] Book_State_Info = scanResult.trim().split(" ");
-//                            int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-//                            Book_State book_state = db.getBook_StatebyBook_id(Borrow_Book_ID);
-//                            if (book_state.getBook_Statement_ID() == 0) { // 借书
-//                                db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
-//                                if (db.Borrow_RecordExist(Borrow_Book_ID, Book_Borrower_ID)) {
-//                                    db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
-//                                } else {
-//                                    Borrow_Record new_borrow_record = new Borrow_Record(Borrow_Book_ID, Book_Borrower_ID, 1);
-//                                    db.Add(new_borrow_record);
-//                                }
-//                                BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
-//                                return "";
-//                            } else { // 续借
-//                                String Return_Time = book_state.getBook_Return_Time();
-//                                SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
-//                                Date Return_Date = SDF.parse(Return_Time);
-//                                Calendar Return_cal = Calendar.getInstance();
-//                                Return_cal.setTime(Return_Date);
-//
-//                                if (Return_cal.compareTo(calendar) != 1) {
-//                                    db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
-//                                    BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
-//                                    return "";
-//                                } else {respContent = "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借";}
-//                            }
-//
-//                        } else {respContent = "非馆藏书本";}
-                    } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
-                        String scanResult = requestMap.get("ScanResult");
-                        String[] Book_State_Info = scanResult.trim().split(" ");
-                        int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-                        if (db.getWoker_Info(fromUserName).getWorker_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
-                            db.ReturnBook(Borrow_Book_ID);
-                            respContent = "归还成功";
-                        } else {respContent = "归还失败";}
+                            return respMessage;
+                        }
                     } else if (eventKey.equals(CommonButton.KEY_LOG_OFF)) {
                         TagManager.batchuntagging(fromUserName, "Member");
                         respContent = "退出成功";
@@ -482,7 +434,6 @@ public class CoreService {
                     } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
                         respContent = "34！";
                     }
-
                 }
                 else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String eventKey = requestMap.get("EventKey");
@@ -526,6 +477,7 @@ public class CoreService {
                         int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
                         if (db.getMember_Info(fromUserName).getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
                             db.ReturnBook(Borrow_Book_ID);
+                            ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID(), fromUserName);
                             respContent = "归还成功";
                         } else {respContent = "归还失败";}
                     }

@@ -281,6 +281,20 @@ public class Database {
         return member_info;
     }
 
+    public static Member_Info getMember_InfobyMember_ID(int Member_ID){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Member_Info where Member_ID = '%s'", Member_ID));
+        Member_Info member_info = null;
+        if (query.list().size() > 0) {
+            member_info = (Member_Info) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return member_info;
+    }
+
     public static List<Member_Info> getAllMember_Info(){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
@@ -334,19 +348,6 @@ public class Database {
         session.getTransaction().commit();
 
         return borrow_recordList;
-    }
-
-    public static Borrow_Record getBorrow_RecordbyRecord_ID(int Record_ID){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createQuery(String.format("from Borrow_Record where Record_ID = '%s'", Record_ID));
-        Borrow_Record borrow_record = null;
-        if (query.list().size() > 0) {
-            borrow_record = (Borrow_Record) query.list().get(0);
-        }
-        session.getTransaction().commit();
-
-        return borrow_record;
     }
 
     // 查图书馆名字

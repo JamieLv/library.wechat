@@ -1,10 +1,8 @@
 package grad.servlet;
 
-import grad.database.Borrow_Record;
 import grad.database.Database;
 import grad.database.Member_Info;
 import grad.service.BorrowReminder;
-import grad.util.WeixinUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
