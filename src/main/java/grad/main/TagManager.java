@@ -36,6 +36,7 @@ public class TagManager {
             else if (request.equals("Worker")){
                 WeixinUtil.batchWorkerTag(at.getToken(), fromUserName);
             }
+            else {WeixinUtil.removeReaderWorkerTag(at.getToken(), fromUserName);}
         }
         return true;
     }
@@ -52,6 +53,7 @@ public class TagManager {
             else if (request.equals("Worker")){
                 WeixinUtil.removeWorkerTag(at.getToken(), fromUserName);
             }
+            else {WeixinUtil.removeReaderWorkerTag(at.getToken(), fromUserName);}
         }
         return true;
     }

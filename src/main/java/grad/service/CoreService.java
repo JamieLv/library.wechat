@@ -216,8 +216,7 @@ public class CoreService {
                             sendMsg.send(keywords[4], yzm);
                             respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
                         } else if (tag == 2){ // 已登记，手机验证通过
-                            if (db.getWoker_Info(fromUserName) != null){ TagManager.batchtagging(fromUserName, "Member"); respContent = "读者身份登录";}
-                            else {respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"读者证\"或\"Member\"进行查询，谢谢！";}
+                            respContent = "尊敬的读者，您已完成注册，请点击\"登录/注册\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
                         }
                     }catch (NumberFormatException e){ // Member开头但格式有误
                         respContent = "尊敬的读者，您输入的信息有误，请核对后重新输入！仿照格式: Member 张三 男 20 13112345678";
@@ -241,9 +240,7 @@ public class CoreService {
                         } else if (tag == 1){
                             if (i_yzm == Database.getMember_Info(fromUserName).getMember_ID()){
                                 Database.UpdateMember_Verification(fromUserName, true);
-                                // 用户分组
-                                TagManager.batchtagging(fromUserName, "Member");
-                                respContent = "恭喜你验证成功！可以点击菜单中的【会员卡】了解个人动态!";
+                                respContent = "恭喜您验证成功！请再次点击\"登录/注册\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
                             } else {
                                 respContent = "尊敬的读者，验证码输入有误，请仔细核对！\n"
                                         + "或者再次按照以下格式进行回复： \n"
@@ -253,7 +250,7 @@ public class CoreService {
                             }
                         }
                         else { // 验证已通过
-                            respContent = "尊敬的读者，您已完成注册，请直接点击菜单中的\"会员卡\"进行查询，谢谢！";
+                            respContent = "尊敬的读者，您已完成注册，请点击\"登录/注册\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
                         }
                     }
                     else{
@@ -269,10 +266,9 @@ public class CoreService {
                         respContent = "您的员工号不符，请重新核实，谢谢配合。";
                     } else if (tag == 1) {
                         db.UpdateWorker_Verification(keywords[2], fromUserName);
-                        TagManager.batchtagging(fromUserName, keywords[0]);
-                        respContent = "成功与员工账号绑定，现能使用工作人员功能。";
+                        respContent = "成功与员工账号绑定，再次登录可以使用工作人员功能。";
                     } else if (tag == 2) {
-                        respContent = "您的员工信息已录入，谢谢配合。";
+                        respContent = "您的员工信息已录入，请点击\"登录/注册\"按钮进行登录。";
                     }
                 }
 
@@ -379,23 +375,37 @@ public class CoreService {
                         Member_Info member_info = Database.getMember_Info(fromUserName);
                         Worker_Info worker_info = Database.getWoker_InfobyfromUserName(fromUserName);
 
-                        if(member_info == null){ // 用户尚未登记
-                            respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册";
+                        int tag = 0; // 既不是读者也不是职工
+                        if (member_info != null && worker_info == null) {tag=1;} // 是读者不是职工
+                        else if (member_info == null && worker_info != null) {tag=2;} // 是职工不是读者
+                        else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
 
-                        } else if(member_info.getMember_Verification() == false){ // 用户已登记，手机验证未通过
-                            respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1\n"
-                                    + "或者再次按照以下格式进行回复： \n"
-                                    + "Member 姓名 性别 年龄 手机号\n"
-                                    + "60秒内将会收到有验证码的短信。\n"
-                                    + "到时请将验证码回复给微信平台，谢谢配合。";
-                        } else if(worker_info != null){ //登录
-                            TagManager.batchtagging(fromUserName, "Worker");
-                            respContent = "员工" + worker_info.getWorker_ID() + "登录成功";
-                        }
-                        else { // 成功
-                            TagManager.batchtagging(fromUserName, "Member");
-                            MemberService.MemberTemplate(member_info);
-                            return "";
+                        switch (tag){
+                            case 0:
+                                respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册"; break;
+                            case 1:
+                                if(member_info.getMember_Verification() == false){ // 用户已登记，手机验证未通过
+                                respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1\n"
+                                        + "或者再次按照以下格式进行回复： \n"
+                                        + "Member 姓名 性别 年龄 手机号\n"
+                                        + "60秒内将会收到有验证码的短信。\n"
+                                        + "到时请将验证码回复给微信平台，谢谢配合。";
+                            } else { // 成功
+                                TagManager.batchtagging(fromUserName, "Member");
+                                MemberService.MemberTemplate(member_info);
+                                return "";
+                            }
+                                break;
+                            case 2:
+                                TagManager.batchtagging(fromUserName, "Worker");
+                                respContent = "员工" + worker_info.getWorker_ID() + "登录成功";
+                                break;
+                            case 3:
+                                TagManager.batchtagging(fromUserName, "Reader+Worker");
+                                respContent = "员工" + worker_info.getWorker_ID() + "登录成功";
+                                break;
+                            default:
+                                respContent = "按键功能出错，我们正在抢救。";
                         }
 
                     } else if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
@@ -404,7 +414,7 @@ public class CoreService {
                         return "";
                     } else if (eventKey.equals(CommonButton.KEY_RECORD)) {
                         if (db.getBook_StatebyBorrower(db.getMember_Info(fromUserName).getMember_ID()) == null){
-                            respContent = "尊敬的读者，您目前没有未归还的书本。欢迎您至附近的图书馆借阅。";
+                            respContent = "尊敬的读者，您目前没有未归还的书本。\n欢迎您至附近的图书馆借阅。";
                         } else {
                             articleList = MemberRecordDisplay(fromUserName);
 

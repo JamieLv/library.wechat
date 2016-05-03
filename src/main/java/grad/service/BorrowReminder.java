@@ -47,8 +47,8 @@ public class BorrowReminder {
             Today_cal.setTime(Today_Date);
 
             if (Today_cal.compareTo(StartofRemind) * Today_cal.compareTo(EndofRemind) != 1){
-                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n      " + book_state.getBook_Title();
-                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n          " + book_state.getBook_Return_Time();
+                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n            " + book_state.getBook_Title();
+                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n                    " + book_state.getBook_Return_Time();
             }
         }
 
