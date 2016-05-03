@@ -36,7 +36,7 @@ public class TagManager {
             else if (request.equals("Worker")){
                 WeixinUtil.batchWorkerTag(at.getToken(), fromUserName);
             }
-            else {WeixinUtil.removeReaderWorkerTag(at.getToken(), fromUserName);}
+            else {WeixinUtil.batchReaderTag(at.getToken(), fromUserName);}
         }
         return true;
     }
