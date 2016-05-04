@@ -476,7 +476,7 @@ public class CoreService {
                                 StartofRenew.add(Calendar.DATE, -7);
                                 String str_StartofRenew = SDF.format(StartofRenew.getTime());
 
-                                if (Return_cal.compareTo(calendar) * Return_cal.compareTo(StartofRenew) != 1) {
+                                if (Return_cal.compareTo(calendar) * StartofRenew.compareTo(calendar) != 1) {
                                     db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
                                     db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
                                     BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
@@ -484,10 +484,11 @@ public class CoreService {
                                 } else {
                                     respContent = Return_cal.compareTo(calendar) == -1 ?
                                             "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借。"
-                                            : "续借只能在归还时间前7天操作，谢谢配合。《" + book_state.getBook_Title() + "》最早于" + str_StartofRenew + "可以续借";
+                                            : "续借只能在归还时间前7天操作，谢谢配合。\n" +
+                                            "《" + book_state.getBook_Title() + "》最早于" + str_StartofRenew + "可以续借。";
                                 }
                             }
-                        } else {respContent = "非馆藏书本";}
+                        } else {respContent = "非馆藏书本。";}
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         try {
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
