@@ -434,7 +434,7 @@ public class CoreService {
                         }
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         db.UpdateMember_Function(fromUserName, "searchbook");
-                        respContent = "回复\"书名\"查询您想要的书本！再次点击可取消查询功能。";
+                        respContent = member_info.getMember_Function() == "searchbook" ?  "书本查询功能已经关闭，可点击按钮重新开启。" : "回复\"书名\"查询您想要的书本！再次点击可关闭查询功能。";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
                         respContent = "22！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
@@ -472,15 +472,21 @@ public class CoreService {
                                 Date Return_Date = SDF.parse(Return_Time);
                                 Calendar Return_cal = Calendar.getInstance();
                                 Return_cal.setTime(Return_Date);
+                                Calendar StartofRenew = (Calendar) Return_cal.clone();
+                                StartofRenew.add(Calendar.DATE, -7);
+                                String str_StartofRenew = SDF.format(StartofRenew);
 
-                                if (Return_cal.compareTo(calendar) != -1) {
+                                if (Return_cal.compareTo(calendar) * Return_cal.compareTo(StartofRenew) != 1) {
                                     db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
                                     db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
                                     BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                                     return "";
-                                } else {respContent = "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借";}
+                                } else {
+                                    respContent = Return_cal.compareTo(calendar) == -1 ?
+                                            "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借。"
+                                            : "续借只能在归还时间前7天操作，谢谢配合。《" + book_state.getBook_Title() + "》最早于" + str_StartofRenew + "可以续借";
+                                }
                             }
-
                         } else {respContent = "非馆藏书本";}
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         try {

@@ -177,10 +177,10 @@ public class Database {
             String Return_Time = book_state.getBook_Return_Time();
             SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
             Date Return_Date = SDF.parse(Return_Time);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(Return_Date);
-            calendar.add(Calendar.DATE, 14);
-            String New_Return_Time = SDF.format(calendar.getTime());
+            Calendar Return_cal = Calendar.getInstance();
+            Return_cal.setTime(Return_Date);
+            Return_cal.add(Calendar.DATE, 14);
+            String New_Return_Time = SDF.format(Return_cal.getTime());
             book_state.setBook_Return_Time(New_Return_Time);
             book_state.setBook_Statement("于" + New_Return_Time + "归还");
             book_state.setBook_Statement_ID(book_state.getBook_Statement_ID() + 1);
