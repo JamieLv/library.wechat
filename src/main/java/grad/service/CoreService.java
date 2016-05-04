@@ -474,7 +474,7 @@ public class CoreService {
                                 Return_cal.setTime(Return_Date);
                                 Calendar StartofRenew = (Calendar) Return_cal.clone();
                                 StartofRenew.add(Calendar.DATE, -7);
-                                String str_StartofRenew = SDF.format(StartofRenew);
+                                String str_StartofRenew = SDF.format(StartofRenew.getTime());
 
                                 if (Return_cal.compareTo(calendar) * Return_cal.compareTo(StartofRenew) != 1) {
                                     db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
