@@ -135,6 +135,20 @@ public class Database {
         return true;
     }
 
+    // 更改用户使用状态
+    public static boolean UpdateMember_Function(String Member_fromUserName, String Member_Function){
+        int Member_ID = getMember_Info(Member_fromUserName).getMember_ID();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Member_Info member_info = session.get(Member_Info.class, Member_ID);
+        if (member_info.getMember_Function() != Member_Function) {
+            member_info.setMember_Function(Member_Function);
+        } else { member_info.setMember_Function(""); }
+        session.getTransaction().commit();
+
+        return true;
+    }
+
     // 更新工作人员验证状态
     public static boolean UpdateWorker_Verification(String Worker_Name, String Worker_fromUserName){
         int Worker_ID = getWoker_Info(Worker_Name).getWorker_ID();
