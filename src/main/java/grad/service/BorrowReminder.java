@@ -31,22 +31,7 @@ public class BorrowReminder {
         String Return_Book_Time = "";
 
         for (Book_State book_state: book_stateList) {
-            String Return_Time = book_state.getBook_Return_Time();
-            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
-            Date Return_Date = SDF.parse(Return_Time);
-            Calendar Return_cal = Calendar.getInstance();
-            Return_cal.setTime(Return_Date);
-            Calendar StartofRemind = (Calendar) Return_cal.clone();
-            StartofRemind.add(Calendar.DATE, -7);
-            Calendar EndofRemind = (Calendar) Return_cal.clone();
-            EndofRemind.add(Calendar.DATE, 7);
-
-            String Today = Database.getDate(0);
-            Date Today_Date = SDF.parse(Today);
-            Calendar Today_cal = Calendar.getInstance();
-            Today_cal.setTime(Today_Date);
-
-            if (Today_cal.compareTo(StartofRemind) * Today_cal.compareTo(EndofRemind) != 1){
+            if (Database.Borrower_RemindNeed(fromUserName) != 1){
                 Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n            " + book_state.getBook_Title();
                 Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n                    " + book_state.getBook_Return_Time();
             }

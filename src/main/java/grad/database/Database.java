@@ -89,6 +89,38 @@ public class Database {
         return exist;
     }
 
+    // 判断用户是否需要还书提醒
+    public static int Borrower_RemindNeed(String Borrower_fromUserName) throws ParseException {
+        int result = 0;
+
+        int Borrower_ID = getMember_Info(Borrower_fromUserName).getMember_ID();
+        List<Book_State> book_stateList = getBook_StatebyBorrower(Borrower_ID);
+
+        for (Book_State book_state: book_stateList) {
+            String Return_Time = book_state.getBook_Return_Time();
+            SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+            Date Return_Date = SDF.parse(Return_Time);
+            Calendar Return_cal = Calendar.getInstance();
+            Return_cal.setTime(Return_Date);
+            Calendar StartofRemind = (Calendar) Return_cal.clone();
+            StartofRemind.add(Calendar.DATE, -7);
+            Calendar EndofRemind = (Calendar) Return_cal.clone();
+            EndofRemind.add(Calendar.DATE, 7);
+
+            String Today = Database.getDate(0);
+            Date Today_Date = SDF.parse(Today);
+            Calendar Today_cal = Calendar.getInstance();
+            Today_cal.setTime(Today_Date);
+
+            result = Today_cal.compareTo(StartofRemind) * Today_cal.compareTo(EndofRemind);
+
+            if (result != 1){
+                return result;
+            }
+        }
+
+        return result;
+    }
 
     /*
     *

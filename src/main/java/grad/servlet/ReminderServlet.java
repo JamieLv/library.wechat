@@ -29,14 +29,15 @@ public class ReminderServlet implements ServletContextListener {
             @Override
             public void run() {
                 List<Member_Info> member_infoList = Database.getAllMember_Info();
-                for (Member_Info member_info: member_infoList) {
-//                    if (Database.getBook_StatebyBorrower(member_info.getMember_ID()) != null) {
-                        try {
-                            BorrowReminder.BorrowReminderTemplate(member_info.getMember_fromUserName());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                try {
+                    for (Member_Info member_info : member_infoList) {
+                        if (Database.getBook_StatebyBorrower(member_info.getMember_ID()) != null
+                                && Database.Borrower_RemindNeed(member_info.getMember_fromUserName()) != 1) {
+                                BorrowReminder.BorrowReminderTemplate(member_info.getMember_fromUserName());
                         }
-//                    }
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
             }
         }, 0, 1, TimeUnit.DAYS);
