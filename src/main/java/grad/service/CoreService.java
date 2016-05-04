@@ -318,21 +318,7 @@ public class CoreService {
                     } else {
                         respContent = "输入格式有误";
                     }
-                } else if (content.equals("图书馆")){
-                    String Location_X = requestMap.get("Location_X");
-                    String Location_Y = requestMap.get("Location_Y");
-
-                    articleList = NearbyLibrary(Location_X, Location_Y);
-                    // 设置图文消息个数
-                    newsMessage.setArticleCount(articleList.size());
-                    // 设置图文消息包含的图文集合
-                    newsMessage.setArticles(articleList);
-                    // 将图文消息对象转换成xml字符串
-                    respMessage = MessageUtil.newsMessageToXml(newsMessage);
-
-                    return respMessage;
                 }
-
                 else {
                     respContent = getGreeting() + "，尊敬的读者" + emoji(0x1F604)
                             + "\n您的留言我们已经收到，并在24小时内回复您。";
@@ -497,14 +483,20 @@ public class CoreService {
                         } else {respContent = "非馆藏书本";}
                     } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         String[] Book_State_Info = scanResult.trim().split(" ");
-                        int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
-                        if (db.getMember_Info(fromUserName).getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
-                            db.ReturnBook(Borrow_Book_ID);
-                            ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID(), fromUserName);
-                            respContent = "归还成功";
-                        } else if (db.getMember_Info(fromUserName).getMember_ID() == db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()){
-                            respContent = "工作人员不能给本人进行还书操作";
-                        } else {respContent = "归还失败 " + scanResult;}
+                        try {
+                            int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+                            if (db.getMember_Info(fromUserName).getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
+                                db.ReturnBook(Borrow_Book_ID);
+                                ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID(), fromUserName);
+                                respContent = "归还成功";
+                            } else if (db.getMember_Info(fromUserName).getMember_ID() == db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
+                                respContent = "工作人员不能给本人进行还书操作";
+                            }
+                        }
+                        catch (Exception e) {
+                            respContent = "归还失败 " + scanResult;
+                            e.printStackTrace();
+                        }
                     }
                     else {
                         System.out.println("二维码信息: " + scanResult);
