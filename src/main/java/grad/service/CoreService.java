@@ -364,7 +364,8 @@ public class CoreService {
                     else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
 
                     if (eventKey.equals(CommonButton.KEY_LOGIN)) {
-                        db.UpdateMember_Function(fromUserName, "register");
+                        int Member_ID = member_info.getMember_ID();
+                        db.UpdateMember_Function(Member_ID, "register");
                         switch (tag){
                             case 0:
                                 respContent = "请输入\"姓名 性别 年龄 手机号\"注册";
@@ -377,19 +378,19 @@ public class CoreService {
                                         + "60秒内将会收到有验证码的短信。\n"
                                         + "到时请将验证码回复给微信平台，谢谢配合。";
                                 } else { // 成功
-                                    db.UpdateMember_Function(fromUserName, "register");
+                                    db.UpdateMember_Function(Member_ID, "register");
                                     TagManager.batchtagging(fromUserName, "Member");
                                     MemberService.MemberTemplate(member_info);
                                     return "";
                                 }
                                 break;
                             case 2:
-                                db.UpdateMember_Function(fromUserName, "register");
+                                db.UpdateMember_Function(Member_ID, "register");
                                 TagManager.batchtagging(fromUserName, "Worker");
                                 respContent = "员工" + worker_info.getWorker_ID() + "登录成功";
                                 break;
                             case 3:
-                                db.UpdateMember_Function(fromUserName, "register");
+                                db.UpdateMember_Function(Member_ID, "register");
                                 TagManager.batchtagging(fromUserName, "Reader+Worker");
                                 respContent = "员工" + worker_info.getWorker_ID() + "登录成功";
                                 break;
@@ -433,7 +434,7 @@ public class CoreService {
                                 respContent = "退出失败";
                         }
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
-                        db.UpdateMember_Function(fromUserName, "searchbook");
+                        db.UpdateMember_Function(member_info.getMember_ID(), "searchbook");
                         respContent = member_info.getMember_Function() == "searchbook" ?  "书本查询功能已经关闭，可点击按钮重新开启。" : "回复\"书名\"查询您想要的书本！再次点击可关闭查询功能。";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
                         respContent = "22！";

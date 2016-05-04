@@ -168,14 +168,13 @@ public class Database {
     }
 
     // 更改用户使用状态
-    public static boolean UpdateMember_Function(String Member_fromUserName, String Member_Function){
-        int Member_ID = getMember_Info(Member_fromUserName).getMember_ID();
+    public static boolean UpdateMember_Function(int Member_ID, String Member_Function){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Member_Info member_info = session.get(Member_Info.class, Member_ID);
         if (member_info.getMember_Function() != Member_Function) {
             member_info.setMember_Function(Member_Function);
-        } else { member_info.setMember_Function(""); }
+        } else { member_info.setMember_Function(" "); }
         session.getTransaction().commit();
 
         return true;
