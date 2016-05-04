@@ -489,7 +489,9 @@ public class CoreService {
                             db.ReturnBook(Borrow_Book_ID);
                             ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID(), fromUserName);
                             respContent = "归还成功";
-                        } else {respContent = "归还失败";}
+                        } else if (db.getMember_Info(fromUserName).getMember_ID() == db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()){
+                            respContent = "工作人员不能给本人进行还书操作";
+                        } else {respContent = "归还失败 " + scanResult;}
                     }
                     else {
                         System.out.println("二维码信息: " + scanResult);
