@@ -312,11 +312,12 @@ public class Database {
     public static List<Member_Info> getAllMember_Info(){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery(String.format("from Member_Info"));
-        List<Member_Info> member_infoList = null;
-        if (query.list().size() > 0) {
-            member_infoList = query.list();
-        }
+        Query query = session.createQuery("from Member_Info");
+        List<Member_Info> member_infoList = query.list();
+//        List<Member_Info> member_infoList = null;
+//        if (query.list().size() > 0) {
+//            member_infoList = query.list();
+//        }
         session.getTransaction().commit();
 
         return member_infoList;
