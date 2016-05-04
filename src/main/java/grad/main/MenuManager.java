@@ -485,15 +485,15 @@ public class MenuManager {
         return menu;
     }
     // 其他用
-    private static Menu getNearbyMenu() {
-        CommonButton btn11 = new CommonButton();
-        btn11.setName("电影院");
-        btn11.setType("location_select");
-        btn11.setKey(CommonButton.KEY_CINEMA);
-
-        CommonButton btn24 = new CommonButton();
-        btn24.setName("附近的图书馆");
-        btn24.setType("location_select");
-        btn24.setKey(CommonButton.KEY_NEARBY);
-    }
+//    private static Menu getNearbyMenu() {
+//        CommonButton btn11 = new CommonButton();
+//        btn11.setName("电影院");
+//        btn11.setType("location_select");
+//        btn11.setKey(CommonButton.KEY_CINEMA);
+//
+//        CommonButton btn24 = new CommonButton();
+//        btn24.setName("附近的图书馆");
+//        btn24.setType("location_select");
+//        btn24.setKey(CommonButton.KEY_NEARBY);
+//    }
 }
