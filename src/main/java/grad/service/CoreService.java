@@ -318,6 +318,19 @@ public class CoreService {
                     } else {
                         respContent = "输入格式有误";
                     }
+                } else if (content.equals("图书馆")){
+                    String Location_X = requestMap.get("Location_X");
+                    String Location_Y = requestMap.get("Location_Y");
+
+                    articleList = NearbyLibrary(Location_X, Location_Y);
+                    // 设置图文消息个数
+                    newsMessage.setArticleCount(articleList.size());
+                    // 设置图文消息包含的图文集合
+                    newsMessage.setArticles(articleList);
+                    // 将图文消息对象转换成xml字符串
+                    respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                    return respMessage;
                 }
 
                 else {
