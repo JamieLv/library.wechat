@@ -159,12 +159,12 @@ public class Database {
             book_state.setBook_Statement("于" + getDate(30) + "归还");
             book_state.setBook_Statement_ID(1);
             book_state.setBook_Borrower_ID(Book_Borrower_ID);
-        } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID && getDate(0) != book_state.getBook_Borrow_Time()) { // 用户已经借过这本书
+        } else if (book_state.getBook_Borrower_ID() == Book_Borrower_ID) { // 用户已经借过这本书
             String Return_Time = book_state.getBook_Return_Time();
             SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = SDF.parse(Return_Time);
+            Date Return_Date = SDF.parse(Return_Time);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
+            calendar.setTime(Return_Date);
             calendar.add(Calendar.DATE, 14);
             String New_Return_Time = SDF.format(calendar.getTime());
             book_state.setBook_Return_Time(New_Return_Time);
@@ -309,19 +309,6 @@ public class Database {
     }
 
     // 查工作人员
-    public static Worker_Info getWoker_Info(String Worker_Name){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createQuery(String.format("from Worker_Info where Worker_Name = '%s'", Worker_Name));
-        Worker_Info worker_info = null;
-        if (query.list().size() > 0) {
-            worker_info = (Worker_Info) query.list().get(0);
-        }
-        session.getTransaction().commit();
-
-        return worker_info;
-    }
-
     public static Worker_Info getWoker_InfobyfromUserName(String Worker_fromUserName){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();

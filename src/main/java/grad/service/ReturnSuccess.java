@@ -46,7 +46,7 @@ public class ReturnSuccess {
         data.put("Member_Name", Member_Name);
 
         TemplateData Worker_ID = new TemplateData();
-        Worker_ID.setValue(String.valueOf(Database.getWoker_Info(fromUserName).getWorker_ID()));
+        Worker_ID.setValue(String.valueOf(Database.getWoker_InfobyfromUserName(fromUserName).getWorker_ID()));
         Worker_ID.setColor("#FF0000");
         data.put("Worker_ID", Worker_ID);
 
