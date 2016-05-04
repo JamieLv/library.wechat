@@ -369,16 +369,15 @@ public class CoreService {
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) { // 事件KEY值，与创建自定义菜单时指定的KEY值对应
                     String eventKey = requestMap.get("EventKey");
 
+                    Member_Info member_info = Database.getMember_Info(fromUserName);
+                    Worker_Info worker_info = Database.getWoker_InfobyfromUserName(fromUserName);
+
+                    int tag = 0; // 既不是读者也不是职工
+                    if (member_info != null && worker_info == null) {tag=1;} // 是读者不是职工
+                    else if (member_info == null && worker_info != null) {tag=2;} // 是职工不是读者
+                    else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
+
                     if (eventKey.equals(CommonButton.KEY_LOGIN)) {
-
-                        Member_Info member_info = Database.getMember_Info(fromUserName);
-                        Worker_Info worker_info = Database.getWoker_InfobyfromUserName(fromUserName);
-
-                        int tag = 0; // 既不是读者也不是职工
-                        if (member_info != null && worker_info == null) {tag=1;} // 是读者不是职工
-                        else if (member_info == null && worker_info != null) {tag=2;} // 是职工不是读者
-                        else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
-
                         switch (tag){
                             case 0:
                                 respContent = "请输入\"Member 姓名 性别 年龄 手机号\"注册"; break;
@@ -408,7 +407,6 @@ public class CoreService {
                         }
 
                     } else if (eventKey.equals(CommonButton.KEY_MEMBERSHIP)) {
-                        Member_Info member_info = Database.getMember_Info(fromUserName);
                         MemberService.MemberTemplate(member_info);
                         return "";
                     } else if (eventKey.equals(CommonButton.KEY_RECORD)) {
@@ -427,11 +425,22 @@ public class CoreService {
                             return respMessage;
                         }
                     } else if (eventKey.equals(CommonButton.KEY_LOG_OFF)) {
-                        TagManager.batchuntagging(fromUserName, "Member");
-                        respContent = "退出成功";
-                    } else if (eventKey.equals(CommonButton.KEY_WORK_OFF)) {
-                        TagManager.batchuntagging(fromUserName, "Worker");
-                        respContent = "退出成功";
+                        switch (tag){
+                            case 1:
+                                TagManager.batchuntagging(fromUserName, "Member");
+                                respContent = "退出成功";
+                                break;
+                            case 2:
+                                TagManager.batchuntagging(fromUserName, "Worker");
+                                respContent = "退出成功";
+                                break;
+                            case 3:
+                                TagManager.batchuntagging(fromUserName, "MemberWorker");
+                                respContent = "退出成功";
+                                break;
+                            default:
+                                respContent = "退出失败";
+                        }
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         respContent = "回复\"Search 书名\"查询您想要的书本!";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {

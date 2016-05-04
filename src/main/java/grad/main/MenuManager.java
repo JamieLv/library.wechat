@@ -316,7 +316,7 @@ public class MenuManager {
         CommonButton btn31 = new CommonButton();
         btn31.setName(l == 0 ? "退出" : "Log off");
         btn31.setType("click");
-        btn31.setKey(CommonButton.KEY_WORK_OFF);
+        btn31.setKey(CommonButton.KEY_LOG_OFF);
 
         Menu menu = new Menu();
         menu.setButton(new Button[]{btn13, mainBtn2, btn31});
@@ -350,7 +350,7 @@ public class MenuManager {
         CommonButton btn31 = new CommonButton();
         btn31.setName(l == 0 ? "退出" : "Log off");
         btn31.setType("click");
-        btn31.setKey(CommonButton.KEY_WORK_OFF);
+        btn31.setKey(CommonButton.KEY_LOG_OFF);
 
         Menu menu = new Menu();
         menu.setButton(new Button[]{btn13, mainBtn2, btn31});
@@ -413,7 +413,7 @@ public class MenuManager {
         CommonButton btn31 = new CommonButton();
         btn31.setName(l == 0 ? "退出" : "Log off");
         btn31.setType("click");
-        btn31.setKey(CommonButton.KEY_WORK_OFF);
+        btn31.setKey(CommonButton.KEY_LOG_OFF);
 
         Menu menu = new Menu();
         menu.setButton(new Button[]{mainBtn1, mainBtn2, btn31});
@@ -476,7 +476,7 @@ public class MenuManager {
         CommonButton btn31 = new CommonButton();
         btn31.setName(l == 0 ? "退出" : "Log off");
         btn31.setType("click");
-        btn31.setKey(CommonButton.KEY_WORK_OFF);
+        btn31.setKey(CommonButton.KEY_LOG_OFF);
 
         Menu menu = new Menu();
         menu.setButton(new Button[]{mainBtn1, mainBtn2, btn31});
