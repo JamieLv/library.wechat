@@ -309,6 +309,19 @@ public class Database {
     }
 
     // 查工作人员
+    public static Worker_Info getWoker_Info(String Worker_Name){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery(String.format("from Worker_Info where Worker_Name = '%s'", Worker_Name));
+        Worker_Info worker_info = null;
+        if (query.list().size() > 0) {
+            worker_info = (Worker_Info) query.list().get(0);
+        }
+        session.getTransaction().commit();
+
+        return worker_info;
+    }
+
     public static Worker_Info getWoker_InfobyfromUserName(String Worker_fromUserName){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();

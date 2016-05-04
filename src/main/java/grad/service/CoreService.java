@@ -484,6 +484,7 @@ public class CoreService {
 
                                 if (Return_cal.compareTo(calendar) != -1) {
                                     db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
+                                    db.UpdateBorrow_Record(Borrow_Book_ID, Book_Borrower_ID);
                                     BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                                     return "";
                                 } else {respContent = "《" + book_state.getBook_Title() + "》应于" + Return_Time + "归还，逾期不可续借";}
