@@ -6,9 +6,8 @@
 package grad.message.resp;
 
 /**
- * 图文信息
- *(这里之所以另外建立一个图文信息的类，是因为在ArticleMessage中可能有多条Aritcle)
- * @author smile
+ *
+ * Created by Jamie on 4/11/16.
  */
 public class Article extends BaseMessage{
 

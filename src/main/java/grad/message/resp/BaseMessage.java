@@ -6,10 +6,8 @@
 package grad.message.resp;
 
 /** 
- * 消息基类（公众帐号 -> 普通用户） 
- *  
- * @author liufeng 
- * @date 2013-05-19 
+ *
+ * Created by Jamie on 4/11/16.
  */  
 public class BaseMessage {  
     // 接收方帐号（收到的OpenID）  

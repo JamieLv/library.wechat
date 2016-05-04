@@ -9,8 +9,8 @@ package grad.message.resp;
 import java.util.List;
 
 /**
- *news消息（服务器回应）
- * @author smile
+ *
+ * Created by Jamie on 4/11/16.
  */
 public class NewsMessage extends BaseMessage {
     

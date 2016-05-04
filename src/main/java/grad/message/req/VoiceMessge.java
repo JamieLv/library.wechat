@@ -7,7 +7,7 @@ package grad.message.req;
 
 /**
  *
- * @author smile
+ * Created by Jamie on 4/11/16.
  */
 public class VoiceMessge extends BaseMessage {
 

@@ -6,9 +6,8 @@
 package grad.message.resp;
 
 /**
- *音乐的定义
- * (这里为什么要多定义个music)
- * @author smile
+ *
+ * Created by Jamie on 4/11/16.
  */
 public class Music extends BaseMessage {
 

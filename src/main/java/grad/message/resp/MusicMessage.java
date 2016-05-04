@@ -6,9 +6,8 @@
 package grad.message.resp;
 
 /**
- * 音乐消息(服务器回应)
  *
- * @author smile
+ * Created by Jamie on 4/11/16.
  */
 public class MusicMessage extends BaseMessage {
 

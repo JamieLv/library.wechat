@@ -6,9 +6,8 @@
 package grad.message.req;
 
 /**
- * ?接消息(用户请求)
  *
- * @author smile
+ * Created by Jamie on 4/11/16.
  */
 public class LinkMessage extends BaseMessage {
 

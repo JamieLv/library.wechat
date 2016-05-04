@@ -7,8 +7,8 @@
 package grad.message.resp;
 
 /**
- *文本信息（公众号回应）
- * @author smile
+ *
+ * Created by Jamie on 4/11/16.
  */
 public class TextMessage extends BaseMessage {
     

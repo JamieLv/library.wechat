@@ -482,7 +482,7 @@ public class CoreService {
                                 Calendar Return_cal = Calendar.getInstance();
                                 Return_cal.setTime(Return_Date);
 
-                                if (Return_cal.compareTo(calendar) != 1) {
+                                if (Return_cal.compareTo(calendar) != -1) {
                                     db.UpdateBook_State(Borrow_Book_ID, Book_Borrower_ID);
                                     BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                                     return "";
@@ -495,8 +495,8 @@ public class CoreService {
                         try {
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
                             if (db.getMember_Info(fromUserName).getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
-                                db.ReturnBook(Borrow_Book_ID);
                                 ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID(), fromUserName);
+                                db.ReturnBook(Borrow_Book_ID);
                                 respContent = "归还成功";
                             } else if (db.getMember_Info(fromUserName).getMember_ID() == db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
                                 respContent = "工作人员不能给本人进行还书操作";

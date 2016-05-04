@@ -7,10 +7,8 @@ package grad.message.req;
 
   
 /** 
- * 消息基类（普通用户 -> 公众帐号） 
- *  
- * @author liufeng 
- * @date 2013-05-19 
+ *
+ * Created by Jamie on 4/11/16.
  */  
 public class BaseMessage {  
     // 开发者微信号  
