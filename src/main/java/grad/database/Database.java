@@ -172,9 +172,9 @@ public class Database {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Member_Info member_info = session.get(Member_Info.class, Member_ID);
-        if (member_info.getMember_Function() != Member_Function) {
-            member_info.setMember_Function(Member_Function);
-        } else { member_info.setMember_Function(" "); }
+        if (member_info.getMember_Function().equals(Member_Function)) {
+            member_info.setMember_Function(" ");
+        } else { member_info.setMember_Function(Member_Function); }
         session.getTransaction().commit();
 
         return true;
