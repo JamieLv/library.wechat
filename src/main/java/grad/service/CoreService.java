@@ -435,7 +435,7 @@ public class CoreService {
                         }
                     } else if (eventKey.equals(CommonButton.KEY_BOOK)) {
                         db.UpdateMember_Function(member_info.getMember_ID(), "searchbook");
-                        respContent = member_info.getMember_Function() == "searchbook" ? "回复\"书名\"查询您想要的书本！再次点击可关闭查询功能。" : "书本查询功能已经关闭，可点击按钮重新开启。"+member_info.getMember_ID();
+                        respContent = member_info.getMember_Function() == "searchbook" ? "回复\"书名\"查询您想要的书本！再次点击可关闭查询功能。" : "书本查询功能已经关闭，可点击按钮重新开启。"+member_info.getMember_Function();
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
                         respContent = "22！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
