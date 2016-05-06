@@ -194,6 +194,18 @@ public class Database {
         return true;
     }
 
+    // 增加超级管理员
+    public static boolean UpdateWorker_Duty(int Worker_ID, String Worker_Duty){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Worker_Info worker_info = session.get(Worker_Info.class, Worker_ID);
+        worker_info.setWorker_Duty(Worker_Duty);
+        session.getTransaction().commit();
+
+        return true;
+    }
+
     // 更新用户信息
     public static boolean UpdateSubscriber_Info(String fromUserName){
         int Subscriber_ID = getSubscriber_Info(fromUserName).getSubscriber_ID();
@@ -218,7 +230,6 @@ public class Database {
 
         return true;
     }
-
 
     // 更改用户使用状态
     public static boolean UpdateSubscriber_Function(int Subscriber_ID, String Subscriber_Function){

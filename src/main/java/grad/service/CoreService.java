@@ -323,10 +323,15 @@ public class CoreService {
                             Worker_Info del_worker_info = db.getWoker_InfobyWorker_Name(keywords[1]);
                             db.Del(del_worker_info);
                             respContent = "员工\n" + del_worker_info.getWorker_ID() + " " + del_worker_info.getWorker_Name() + " " + del_worker_info.getWorker_Duty() + "\n删除成功";
+                        } else if (content.startsWith("Duty") || content.startsWith("duty")) {
+                            int Worker_ID = Integer.parseInt(keywords[1]);
+                            db.UpdateWorker_Duty(Worker_ID, keywords[2]);
+                            respContent = "员工" + db.getWoker_Info(Worker_ID).getWorker_Name() + "更改为" + keywords[2] + "权限";
                         } else if (content.equals("Help") || content.equals("help") || content.equals("H") || content.equals("h")){
                             respContent = "使用帮助\n" +
                                     "删除读者：Deletemember 读者ID\n" +
                                     "添加职工：Addworker 职工姓名 职工性别 职工年龄 职工手机号 职工职能\n" +
+                                    "更改员工职能：Duty 职工编号 职工职能\n" +
                                     "删除职工：Deleteworker 职工姓名";
                         } else { respContent = "回复Help进行查询功能。"; }
                         break;
@@ -362,6 +367,9 @@ public class CoreService {
                                     + "\n您还没有输入您的基本信息吧！请点击\"登录/注册\"按钮进行注册，谢谢配合。";
                     }
 
+                } else if (content.equals(931014) && worker_info.getWorker_Duty().equals("超级管理员")) {
+                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
+                    respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
                 } else {
                     respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
                         + "\n您的留言我们已经收到，并在24小时内回复您。";
@@ -409,14 +417,19 @@ public class CoreService {
                 // 订阅
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
                     JSONObject User_Info = UserManager.getUser_Info(fromUserName);
-                    String Subscriber_Sex = "未知";
-                    if((int)User_Info.get("sex") == 1)  {Subscriber_Sex = "男";}
-                    else if ((int)User_Info.get("sex") == 2) {Subscriber_Sex = "女";}
+                    if (db.getSubscriber_Info(fromUserName) == null) {
+                        String Subscriber_Sex = "未知";
+                        if ((int) User_Info.get("sex") == 1) {
+                            Subscriber_Sex = "男";
+                        } else if ((int) User_Info.get("sex") == 2) {
+                            Subscriber_Sex = "女";
+                        }
 
-                    Subscriber_Info new_subscriber_info = new Subscriber_Info(
-                            1, (String)User_Info.get("openid"), (String)User_Info.get("nickname"), Subscriber_Sex, (String)User_Info.get("language"),
-                            (String)User_Info.get("city"), (String)User_Info.get("province"), (String)User_Info.get("country"), (String)User_Info.get("headimgurl"), "Subscribe");
-                    db.Add(new_subscriber_info);
+                        Subscriber_Info new_subscriber_info = new Subscriber_Info(
+                                1, (String) User_Info.get("openid"), (String) User_Info.get("nickname"), Subscriber_Sex, (String) User_Info.get("language"),
+                                (String) User_Info.get("city"), (String) User_Info.get("province"), (String) User_Info.get("country"), (String) User_Info.get("headimgurl"), "Subscribe");
+                        db.Add(new_subscriber_info);
+                    } else { db.UpdateSubscriber_Info(fromUserName); }
                     respContent
                             = User_Info.get("nickname") + getGreeting() + emoji(0x1F604) + "\n"
                             + "感谢关注图书馆！\n"
