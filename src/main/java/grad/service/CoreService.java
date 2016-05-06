@@ -404,7 +404,7 @@ public class CoreService {
                     Subscriber_Info new_subscriber_info = new Subscriber_Info(
                             (String)User_Info.get("openid"), (String)User_Info.get("nickname"), Subscriber_Sex, (String)User_Info.get("language"),
                             (String)User_Info.get("city"), (String)User_Info.get("province"), (String)User_Info.get("country"), (String)User_Info.get("headimgurl"),
-                            (String)User_Info.get("subscribe_time"), (String)User_Info.get("tagid_list"));
+                            (String)User_Info.get("tagid_list"));
                     db.Add(new_subscriber_info);
                     respContent
                             = User_Info.get("nickname") + getGreeting() + emoji(0x1F604) + "\n"

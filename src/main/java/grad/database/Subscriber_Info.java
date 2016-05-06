@@ -22,13 +22,12 @@ public class Subscriber_Info {
     String Subscriber_Province;
     String Subscriber_Country;
     String Subscriber_HeadingImgURL;
-    String Subscribe_Time;
     String Tagid_List;
     String Subscriber_Function;
 
     public Subscriber_Info(){}
 
-    public Subscriber_Info(String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL, String subscribe_Time, String tagid_List) {
+    public Subscriber_Info(String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL, String tagid_List) {
         OpenID = openID;
         Nickname = nickname;
         Subscriber_Sex = subscriber_Sex;
@@ -37,7 +36,6 @@ public class Subscriber_Info {
         Subscriber_Province = subscriber_Province;
         Subscriber_Country = subscriber_Country;
         Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
-        Subscribe_Time = subscribe_Time;
         Tagid_List = tagid_List;
     }
 
@@ -120,14 +118,6 @@ public class Subscriber_Info {
 
     public void setSubscriber_HeadingImgURL(String subscriber_HeadingImgURL) {
         Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
-    }
-
-    public String getSubscribe_Time() {
-        return Subscribe_Time;
-    }
-
-    public void setSubscribe_Time(String subscribe_Time) {
-        Subscribe_Time = subscribe_Time;
     }
 
     public String getTagid_List() {
