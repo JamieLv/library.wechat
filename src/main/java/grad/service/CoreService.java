@@ -15,6 +15,7 @@ import net.sf.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -381,8 +382,9 @@ public class CoreService {
             } // 音频消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
                 respContent = "你发送的是音频消息哦！";
-                String voice = requestMap.get("Recognition");
-                String text = new String(voice.getBytes("utf8"), "gb2312");
+
+                String voice = requestMap.get("Recognition").trim();
+                String text = requestMap.get("MsgType");
                 Map<String, String> map = new HashMap<>();
                 String creat_time = requestMap.get("CreateTime");
 
