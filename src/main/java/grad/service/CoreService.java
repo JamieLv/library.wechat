@@ -383,8 +383,11 @@ public class CoreService {
                 respContent = "你发送的是音频消息哦！";
                 String voice = requestMap.get("Recognition");
                 String text = new String(voice.getBytes("utf8"), "gb2312");
+                Map<String, String> map = new HashMap<>();
+                String creat_time = requestMap.get("CreateTime");
 
-                respContent = voice + "\n" + text;
+
+                respContent = voice + "\n" + text + "\n" + creat_time;
 
             } // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
