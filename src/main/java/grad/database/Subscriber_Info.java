@@ -27,15 +27,16 @@ public class Subscriber_Info {
 
     public Subscriber_Info(){}
 
-    public Subscriber_Info(String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL) {
-        OpenID = openID;
-        Nickname = nickname;
-        Subscriber_Sex = subscriber_Sex;
-        Subscriber_Language = subscriber_Language;
-        Subscriber_City = subscriber_City;
-        Subscriber_Province = subscriber_Province;
-        Subscriber_Country = subscriber_Country;
-        Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
+    public Subscriber_Info(int Subscribe, String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL) {
+        this.Subscribe = Subscribe;
+        this.OpenID = openID;
+        this.Nickname = nickname;
+        this.Subscriber_Sex = subscriber_Sex;
+        this.Subscriber_Language = subscriber_Language;
+        this.Subscriber_City = subscriber_City;
+        this.Subscriber_Province = subscriber_Province;
+        this.Subscriber_Country = subscriber_Country;
+        this.Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
     }
 
     @Id

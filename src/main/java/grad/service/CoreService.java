@@ -403,7 +403,7 @@ public class CoreService {
                     else if ((int)User_Info.get("sex") == 2) {Subscriber_Sex = "女";}
 
                     Subscriber_Info new_subscriber_info = new Subscriber_Info(
-                            (String)User_Info.get("openid"), (String)User_Info.get("nickname"), Subscriber_Sex, (String)User_Info.get("language"),
+                            1, (String)User_Info.get("openid"), (String)User_Info.get("nickname"), Subscriber_Sex, (String)User_Info.get("language"),
                             (String)User_Info.get("city"), (String)User_Info.get("province"), (String)User_Info.get("country"), (String)User_Info.get("headimgurl"));
                     db.Add(new_subscriber_info);
                     respContent
