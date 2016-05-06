@@ -27,7 +27,7 @@ public class Subscriber_Info {
 
     public Subscriber_Info(){}
 
-    public Subscriber_Info(String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL, String tagid_List) {
+    public Subscriber_Info(String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL) {
         OpenID = openID;
         Nickname = nickname;
         Subscriber_Sex = subscriber_Sex;
@@ -36,7 +36,6 @@ public class Subscriber_Info {
         Subscriber_Province = subscriber_Province;
         Subscriber_Country = subscriber_Country;
         Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
-        Tagid_List = tagid_List;
     }
 
     @Id

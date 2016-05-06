@@ -401,13 +401,10 @@ public class CoreService {
                     String Subscriber_Sex = "未知";
                     if((int)User_Info.get("sex") == 1)  {Subscriber_Sex = "男";}
                     else if ((int)User_Info.get("sex") == 2) {Subscriber_Sex = "女";}
-                    
-                    String tagid_list = Arrays.toString((int[]) User_Info.get("tagid_list"));
 
                     Subscriber_Info new_subscriber_info = new Subscriber_Info(
                             (String)User_Info.get("openid"), (String)User_Info.get("nickname"), Subscriber_Sex, (String)User_Info.get("language"),
-                            (String)User_Info.get("city"), (String)User_Info.get("province"), (String)User_Info.get("country"), (String)User_Info.get("headimgurl"),
-                            tagid_list);
+                            (String)User_Info.get("city"), (String)User_Info.get("province"), (String)User_Info.get("country"), (String)User_Info.get("headimgurl"));
                     db.Add(new_subscriber_info);
                     respContent
                             = User_Info.get("nickname") + getGreeting() + emoji(0x1F604) + "\n"

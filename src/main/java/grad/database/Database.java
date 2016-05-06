@@ -205,6 +205,7 @@ public class Database {
         String Subscriber_Sex = "未知";
         if((int)User_Info.get("sex") == 1)  {Subscriber_Sex = "男";}
         else if ((int)User_Info.get("sex") == 2) {Subscriber_Sex = "女";}
+        String tagid_list = Arrays.toString((int[]) User_Info.get("tagid_list")) == null ? null : Arrays.toString((int[]) User_Info.get("tagid_list"));;
         subscriber_info.setOpenID((String)User_Info.get("openid"));
         subscriber_info.setNickname((String)User_Info.get("nickname"));
         subscriber_info.setSubscriber_Sex(Subscriber_Sex);
@@ -213,7 +214,7 @@ public class Database {
         subscriber_info.setSubscriber_Province((String)User_Info.get("province"));
         subscriber_info.setSubscriber_Country((String)User_Info.get("country"));
         subscriber_info.setSubscriber_HeadingImgURL((String)User_Info.get("headimgurl"));
-        subscriber_info.setTagid_List((String)User_Info.get("tagid_list"));
+        subscriber_info.setTagid_List(tagid_list);
         session.getTransaction().commit();
 
         return true;
