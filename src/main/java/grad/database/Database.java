@@ -226,7 +226,7 @@ public class Database {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Subscriber_Info subscriber_info = session.get(Subscriber_Info.class, Subscriber_ID);
-        if (subscriber_info.getSubscriber_Function().isEmpty()){subscriber_info.setSubscriber_Function("Initialize");}
+        if (subscriber_info.getSubscriber_Function().equals(null)){subscriber_info.setSubscriber_Function("Initialize");}
         if (subscriber_info.getSubscriber_Function().equals(Subscriber_Function)) {
             subscriber_info.setSubscriber_Function(null);
         } else { subscriber_info.setSubscriber_Function(Subscriber_Function); }
