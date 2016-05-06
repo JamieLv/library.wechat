@@ -21,13 +21,12 @@ public class Subscriber_Info {
     String Subscriber_City;
     String Subscriber_Province;
     String Subscriber_Country;
-    String Subscriber_HeadingImgURL;
-    String Tagid_List;
+    String Subscriber_HeadImgURL;
     String Subscriber_Function;
 
     public Subscriber_Info(){}
 
-    public Subscriber_Info(int Subscribe, String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadingImgURL) {
+    public Subscriber_Info(int Subscribe, String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadImgURL) {
         this.Subscribe = Subscribe;
         this.OpenID = openID;
         this.Nickname = nickname;
@@ -36,7 +35,7 @@ public class Subscriber_Info {
         this.Subscriber_City = subscriber_City;
         this.Subscriber_Province = subscriber_Province;
         this.Subscriber_Country = subscriber_Country;
-        this.Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
+        this.Subscriber_HeadImgURL = subscriber_HeadImgURL;
     }
 
     @Id
@@ -112,20 +111,12 @@ public class Subscriber_Info {
         Subscriber_Country = subscriber_Country;
     }
 
-    public String getSubscriber_HeadingImgURL() {
-        return Subscriber_HeadingImgURL;
+    public String getSubscriber_HeadImgURL() {
+        return Subscriber_HeadImgURL;
     }
 
-    public void setSubscriber_HeadingImgURL(String subscriber_HeadingImgURL) {
-        Subscriber_HeadingImgURL = subscriber_HeadingImgURL;
-    }
-
-    public String getTagid_List() {
-        return Tagid_List;
-    }
-
-    public void setTagid_List(String tagid_List) {
-        Tagid_List = tagid_List;
+    public void setSubscriber_HeadImgURL(String subscriber_HeadImgURL) {
+        Subscriber_HeadImgURL = subscriber_HeadImgURL;
     }
 
     public String getSubscriber_Function() {
