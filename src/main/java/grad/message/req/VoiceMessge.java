@@ -15,6 +15,8 @@ public class VoiceMessge extends BaseMessage {
     private String MediaId;
     //音乐的格式
     private String Format;
+    //声音的内容
+    private String Recognition;
 
     public void setMediaId(String MediaId) {
         this.MediaId = MediaId;
@@ -32,4 +34,11 @@ public class VoiceMessge extends BaseMessage {
         return Format;
     }
 
+    public String getRecognition() {
+        return Recognition;
+    }
+
+    public void setRecognition(String recognition) {
+        Recognition = recognition;
+    }
 }

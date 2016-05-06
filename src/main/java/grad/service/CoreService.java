@@ -381,7 +381,7 @@ public class CoreService {
             } // 音频消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
                 respContent = "你发送的是音频消息哦！";
-                String voice = new String(requestMap.get("Recognition").getBytes("utf8"), "gb2312");
+                String voice = requestMap.get("Recognition");
                 String text = new String(voice.getBytes("utf8"), "gb2312");
 
                 respContent = voice + "\n" + text;
