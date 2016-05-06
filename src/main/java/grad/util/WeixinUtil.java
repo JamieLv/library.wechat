@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -169,11 +171,27 @@ public class WeixinUtil {
         return result;
     }
 
+    /**
+     * User Info
+     */
+    public static List<JSONObject> getUserInfo(String fromUserName, String accessToken){
+        String url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token="+ accessToken + "&openid=" + fromUserName;
+        JSONObject jsonObject = httpRequest(url, "GET", null);
+        JSONArray jsonArray = JSONArray.fromObject(jsonObject);
+
+
+        List<JSONObject> User_Info = new ArrayList<>();
+        for (Object jsonObj : jsonArray){
+            User_Info.add(JSONObject.fromObject(jsonObj));
+        }
+        return User_Info;
+    }
+
 
     /**
      * Tag
      */
-    public static int createTag(String accessToken){
+    public static int createTag(String accessToken) {
         int result = 0;
         String post = "\n" +
                 "{\n" +
@@ -189,7 +207,7 @@ public class WeixinUtil {
         return result;
     }
 
-    public static int getAllTag(String accessToken){
+    public static int getAllTag(String accessToken) {
         int result = 0;
 
         String url = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token=" + accessToken;

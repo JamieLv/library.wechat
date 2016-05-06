@@ -11,8 +11,13 @@ public class MatchRule {
         this.tag_id = tag_id;
         this.language = language;
     }
+
     public MatchRule(String language){
         this.language = language;
+    }
+
+    public MatchRule(int tag_id) {
+        this.tag_id = tag_id;
     }
 
     public int getTag_id() {

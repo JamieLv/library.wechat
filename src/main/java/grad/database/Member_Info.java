@@ -20,7 +20,6 @@ public class Member_Info {
     String Member_RegisterTime;
     String Member_fromUserName;
     Boolean Member_Verification;
-    String Member_Function;
 
     public Member_Info(){}
 
@@ -98,13 +97,5 @@ public class Member_Info {
 
     public void setMember_Verification(Boolean member_Verification) {
         Member_Verification = member_Verification;
-    }
-
-    public String getMember_Function() {
-        return Member_Function;
-    }
-
-    public void setMember_Function(String member_Function) {
-        Member_Function = member_Function;
     }
 }

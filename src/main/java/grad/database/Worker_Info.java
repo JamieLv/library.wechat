@@ -18,16 +18,17 @@ public class Worker_Info {
     int Worker_Age;
     String Worker_Mobile;
     String Worker_fromUserName;
-    Boolean Worker_Verification;
+    String Worker_Duty;
 
-    public Worker_Info(){}
+    public Worker_Info() {
+    }
 
-    public Worker_Info(String Worker_Name, String Worker_Gender, int Worker_Age, String Worker_Mobile, String Worker_fromUserName){
+    public Worker_Info(String Worker_Name, String Worker_Gender, int Worker_Age, String Worker_Mobile, String Worker_Duty) {
         this.Worker_Name = Worker_Name;
         this.Worker_Gender = Worker_Gender;
         this.Worker_Age = Worker_Age;
         this.Worker_Mobile = Worker_Mobile;
-        this.Worker_fromUserName = Worker_fromUserName;
+        this.Worker_Duty = Worker_Duty;
     }
 
     @Id
@@ -79,11 +80,11 @@ public class Worker_Info {
         Worker_fromUserName = worker_fromUserName;
     }
 
-    public Boolean getWorker_Verification() {
-        return Worker_Verification;
+    public String getWorker_Duty() {
+        return Worker_Duty;
     }
 
-    public void setWorker_Verification(Boolean worker_Verification) {
-        Worker_Verification = worker_Verification;
+    public void setWorker_Duty(String worker_Duty) {
+        Worker_Duty = worker_Duty;
     }
 }
