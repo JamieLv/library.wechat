@@ -26,7 +26,7 @@ public class Subscriber_Info {
 
     public Subscriber_Info(){}
 
-    public Subscriber_Info(int Subscribe, String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadImgURL) {
+    public Subscriber_Info(int Subscribe, String openID, String nickname, String subscriber_Sex, String subscriber_Language, String subscriber_City, String subscriber_Province, String subscriber_Country, String subscriber_HeadImgURL, String subscriber_Function) {
         this.Subscribe = Subscribe;
         this.OpenID = openID;
         this.Nickname = nickname;
@@ -36,6 +36,7 @@ public class Subscriber_Info {
         this.Subscriber_Province = subscriber_Province;
         this.Subscriber_Country = subscriber_Country;
         this.Subscriber_HeadImgURL = subscriber_HeadImgURL;
+        this.Subscriber_Function = subscriber_Function;
     }
 
     @Id
