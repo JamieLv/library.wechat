@@ -381,7 +381,7 @@ public class CoreService {
                         break;
 
                     default:
-                        respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
+                        respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F603)
                                 + "\n您的留言我们已经收到，并在24小时内回复您。";
                 }
 
