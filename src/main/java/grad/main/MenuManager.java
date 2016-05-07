@@ -35,8 +35,8 @@ public class MenuManager {
             int addMemberEn = WeixinUtil.AddConditionalMenu(getMembemrMenuEn(), at.getToken());
             int addMember = WeixinUtil.AddConditionalMenu(getMemberMenu(), at.getToken());
 
-            int addReturnWorkerEn = WeixinUtil.AddConditionalMenu(getWorkerMenuEn(), at.getToken());
-            int addReturnWorker = WeixinUtil.AddConditionalMenu(getWorkerMenu(), at.getToken());
+            int addReturnWorkerEn = WeixinUtil.AddConditionalMenu(getReturnWorkerMenuEn(), at.getToken());
+            int addReturnWorker = WeixinUtil.AddConditionalMenu(getReturnWorkerMenu(), at.getToken());
 
             int addBookWorkerEN = WeixinUtil.AddConditionalMenu(getAddBookWorkerMenuEn(), at.getToken());
             int addBookWorker = WeixinUtil.AddConditionalMenu(getAddBookWorkerMenu(), at.getToken());
@@ -296,7 +296,7 @@ public class MenuManager {
     }
 
     // 英文 还书员工
-    private static Menu getWorkerMenuEn() {
+    private static Menu getReturnWorkerMenuEn() {
         int l = 1;
 
         CommonButton btn13 = new CommonButton();
@@ -330,7 +330,7 @@ public class MenuManager {
         return menu;
     }
     // 中文 还书员工
-    private static Menu getWorkerMenu() {
+    private static Menu getReturnWorkerMenu() {
         int l = 0;
 
         CommonButton btn13 = new CommonButton();
