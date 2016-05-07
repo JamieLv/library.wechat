@@ -13,6 +13,7 @@ package grad.pojo;
 
 public class CommonButton extends Button {
 
+    public static final String KEY_REGISTER = "KEY_REGISTER";
     public static final String KEY_LOGIN = "KEY_LOGIN";
     public static final String KEY_MEMBERSHIP = "KEY_MEMBERSHIP";
     public static final String KEY_BORROW_BOOK = "KEY_BORROW_BOOK";

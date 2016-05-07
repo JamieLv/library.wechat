@@ -159,12 +159,16 @@ public class Database {
      */
 
     // 更新手机号
-    public static boolean UpdateMobile(String Member_fromUserName, String Member_Mobile){
+    public static boolean UpdateReaderInfo(String Member_fromUserName, Member_Info new_member_info){
         int Member_ID = getMember_Info(Member_fromUserName).getMember_ID();
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Member_Info member_info = (Member_Info) session.get(Member_Info.class, Member_ID);
-        member_info.setMember_Mobile(Member_Mobile);
+        member_info.setMember_Name(new_member_info.getMember_Name());
+        member_info.setMember_Gender(new_member_info.getMember_Gender());
+        member_info.setMember_Age(new_member_info.getMember_Age());
+        member_info.setMember_Mobile(new_member_info.getMember_Mobile());
+        member_info.setMember_RegisterTime(new_member_info.getMember_RegisterTime());
         session.getTransaction().commit();
 
         return true;

@@ -77,13 +77,15 @@ public class CoreService {
                 sendMsg.send(keywords[3], yzm);
                 respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
             } else if (tag == 1) { // 用户已登记，手机验证未通过
-                Database.UpdateMobile(fromUserName, keywords[3]);
+                Member_Info new_member_info = new Member_Info(
+                        keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
+                Database.UpdateReaderInfo(fromUserName, new_member_info);
                 int yzm = Database.getMember_Info(fromUserName).getMember_ID();
                 SendMsg_webchinese sendMsg = new SendMsg_webchinese();
                 sendMsg.send(keywords[3], yzm);
                 respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: \"yzm 1\"";
             } else if (tag == 2) { // 已登记，手机验证通过
-                respContent = "尊敬的读者，您已完成注册，请点击\"登录/注册\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
+                respContent = "尊敬的读者，您已完成注册，请点击\"登录\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
             }
         } catch (NumberFormatException e) { // 格式有误
             respContent = "尊敬的读者，您输入的信息有误，请核对后重新输入！仿照格式: \"张三 男 20 13112345678\"。\n" +
@@ -103,7 +105,7 @@ public class CoreService {
                 } else if (tag == 1) {
                     if (i_yzm == Database.getMember_Info(fromUserName).getMember_ID()) {
                         Database.UpdateMember_Verification(fromUserName, true);
-                        respContent = "恭喜您验证成功！请再次点击\"登录/注册\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
+                        respContent = "恭喜您验证成功！请点击\"登录\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
                     } else {
                         respContent = "尊敬的读者，验证码输入有误，请仔细核对！\n"
                                 + "或者再次按照以下格式进行回复： \n"
@@ -112,7 +114,7 @@ public class CoreService {
                                 + "到时请将验证码回复给微信平台，谢谢配合。";
                     }
                 } else { // 验证已通过
-                    respContent = "尊敬的读者，您已完成注册，请点击\"登录/注册\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
+                    respContent = "尊敬的读者，您已完成注册，请点击\"登录\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
                 }
             } else {
                 respContent = "验证码格式错误，请仿照格式: \"yzm 1\"回复，谢谢配合。";
@@ -315,8 +317,18 @@ public class CoreService {
                 String[] keywords = content.trim().split(" ");
                 switch (subscriber_info.getSubscriber_Function()) {
                     case "register":
-                     // 吕嘉铭 男 22 13611774556
-                        respContent = Register(fromUserName, keywords);
+                        if (content.startsWith("Worker") || content.startsWith("worker")) { // Worker 1 吕嘉铭
+                            int tag = db.WorkerExist(keywords[1], keywords[2], fromUserName);
+                            if (tag == 0) {
+                                respContent = "您的员工号不符，请重新核实，谢谢配合。";
+                            } else if (tag == 1) {
+                                db.UpdateWorker_Verification(keywords[2], fromUserName);
+                                respContent = "成功与员工账号绑定，请点击\"登录\"按钮进行登录。";
+                            }
+                        } else {
+                            // 吕嘉铭 男 22 13611774556
+                            respContent = Register(fromUserName, keywords);
+                        }
                         break;
 
                     case "searchbook":
@@ -381,25 +393,7 @@ public class CoreService {
                         break;
 
                     default:
-                        if (content.startsWith("Worker") || content.startsWith("worker")) { // Worker 1 吕嘉铭
-                            int tag = db.WorkerExist(keywords[1], keywords[2], fromUserName);
-                            if (tag == 0) {
-                                respContent = "您的员工号不符，请重新核实，谢谢配合。";
-                            } else if (tag == 1) {
-                                db.UpdateWorker_Verification(keywords[2], fromUserName);
-                                respContent = db.getMember_Info(fromUserName) != null && db.getWoker_InfobyfromUserName(fromUserName) != null ?
-                                        "成功与员工账号绑定，输入\"Worker 员工编号 员工姓名\"即可登录。" :
-                                        "成功与员工账号绑定，请点击\"登录/注册\"按钮进行登录。";
-                            } else if (tag == 2) {
-                                if (worker_info.getWorker_Duty().equals("还书管理员")) {
-                                    TagManager.batchtagging(fromUserName, "ReturnWorker");
-                                    respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
-                                } else if (worker_info.getWorker_Duty().equals("增书管理员")) {
-                                    TagManager.batchtagging(fromUserName, "AddWorker");
-                                    respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功";
-                                }
-                            }
-                        } else if (content.equals("Member") || content.equals("member")) {
+                        if (content.equals("Member") || content.equals("member")) {
 
                             if (db.MemberExist(fromUserName) == 2) {
                                 TagManager.batchtagging(fromUserName, "Member");
@@ -425,7 +419,7 @@ public class CoreService {
                                     + "\n您的留言我们已经收到，并在24小时内回复您。";
                         }
                 }
-                
+
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
                 respContent = "我喜欢你发的图片！";
@@ -513,40 +507,42 @@ public class CoreService {
                     }
                     else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
 
-                    if (eventKey.equals(CommonButton.KEY_LOGIN)) {
+                    if (eventKey.equals(CommonButton.KEY_REGISTER)){
                         int Subscriber_ID = subscriber_info.getSubscriber_ID();
                         db.UpdateSubscriber_Function(Subscriber_ID, "register");
+
+                        respContent = "请输入\"姓名 性别 年龄 手机号\"注册，谢谢。";
+
+                    } else if (eventKey.equals(CommonButton.KEY_LOGIN)) {
+                        int Subscriber_ID = subscriber_info.getSubscriber_ID();
+                        db.UpdateSubscriber_Function(Subscriber_ID, "login");
                         switch (tag){
                             case 0:
-                                respContent = "请输入\"姓名 性别 年龄 手机号\"注册";
+                                respContent = "请点击\"注册\"按钮进行注册，谢谢。";
                                 break;
                             case 1:
                                 if(member_info.getMember_Verification() == false){ // 用户已登记，手机验证未通过
-                                respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1\n"
-                                        + "或者再次按照以下格式进行回复： \n"
-                                        + "Member 姓名 性别 年龄 手机号\n"
-                                        + "60秒内将会收到有验证码的短信。\n"
-                                        + "到时请将验证码回复给微信平台，谢谢配合。";
+                                respContent = "尊敬的读者，您的手机号还未绑定，请点击\"注册\"按钮完成注册，谢谢配合。";
                                 } else { // 成功
-                                    db.UpdateSubscriber_Function(Subscriber_ID, "register");
+                                    db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                     TagManager.batchtagging(fromUserName, "Member");
                                     MemberService.MemberTemplate(member_info);
                                     return "";
                                 }
                                 break;
                             case 21:
-                                db.UpdateSubscriber_Function(Subscriber_ID, "register");
+                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                 TagManager.batchtagging(fromUserName, "ReturnWorker");
                                 respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
                                 break;
                             case 22:
-                                db.UpdateSubscriber_Function(Subscriber_ID, "register");
+                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                 TagManager.batchtagging(fromUserName, "AddWorker");
                                 respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功\n\n" +
                                         "输入\"addbook\"开启增添书本功能，再次输入可关闭";
                                 break;
                             case 3:
-                                db.UpdateSubscriber_Function(Subscriber_ID, "register");
+                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
 //                                TagManager.batchtagging(fromUserName, "Reader+Worker");
                                 respContent = "若要以读者身份登录，请回复Member或member进行登录。\n\n" +
                                         "若要以员工身份登录，请回复\"Worker 员工号 员工姓名\"。\n\n" +
