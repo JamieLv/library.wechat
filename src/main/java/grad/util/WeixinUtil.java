@@ -238,8 +238,8 @@ public class WeixinUtil {
         String post = "\n" +
                 "{\n" +
                 "\"tag\":{\n" +
-                "\"id\":101,\n" +
-                "\"name\":\"职工\"\n" +
+                "\"id\":102,\n" +
+                "\"name\":\"增书职工\"\n" +
                 "}}";
         String url = "https://api.weixin.qq.com/cgi-bin/tags/update?access_token=" + accessToken;
         String jsonGroup = JSONObject.fromObject(post).toString();
@@ -286,7 +286,7 @@ public class WeixinUtil {
         return result;
     }
 
-    public static int batchWorkerTag(String accessToken, String fromUserName){
+    public static int batchReturnWorkerTag(String accessToken, String fromUserName){
         int result = 0;
         String post = "\n" +
                 "{\n" +
@@ -304,7 +304,7 @@ public class WeixinUtil {
         return result;
     }
 
-    public static int removeWorkerTag(String accessToken, String fromUserName){
+    public static int removeReturnWorkerTag(String accessToken, String fromUserName){
         int result = 0;
         String post = "\n" +
                 "{\n" +
@@ -322,7 +322,7 @@ public class WeixinUtil {
         return result;
     }
 
-    public static int batchReaderWorkerTag(String accessToken, String fromUserName){
+    public static int batchAddWorkerTag(String accessToken, String fromUserName){
         int result = 0;
         String post = "\n" +
                 "{\n" +
@@ -340,7 +340,7 @@ public class WeixinUtil {
         return result;
     }
 
-    public static int removeReaderWorkerTag(String accessToken, String fromUserName){
+    public static int removeAddrWorkerTag(String accessToken, String fromUserName){
         int result = 0;
         String post = "\n" +
                 "{\n" +

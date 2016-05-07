@@ -33,10 +33,12 @@ public class TagManager {
             if (request.equals("Member")){
                 WeixinUtil.batchReaderTag(at.getToken(), fromUserName);
             }
-            else if (request.equals("Worker")){
-                WeixinUtil.batchWorkerTag(at.getToken(), fromUserName);
+            else if (request.equals("ReturnWorker")){
+                WeixinUtil.batchReturnWorkerTag(at.getToken(), fromUserName);
             }
-            else {WeixinUtil.batchReaderWorkerTag(at.getToken(), fromUserName);}
+            else if (request.equals("AddWorker")){
+                WeixinUtil.batchAddWorkerTag(at.getToken(), fromUserName);
+            }
         }
         return true;
     }
@@ -50,10 +52,12 @@ public class TagManager {
             if (request.equals("Member")){
                 WeixinUtil.removeReaderTag(at.getToken(), fromUserName);
             }
-            else if (request.equals("Worker")){
-                WeixinUtil.removeWorkerTag(at.getToken(), fromUserName);
+            else if (request.equals("ReturnWorker")){
+                WeixinUtil.removeReturnWorkerTag(at.getToken(), fromUserName);
             }
-            else {WeixinUtil.removeReaderWorkerTag(at.getToken(), fromUserName);}
+            else if (request.equals("AddWorker")){
+                WeixinUtil.removeAddrWorkerTag(at.getToken(), fromUserName);
+            }
         }
         return true;
     }

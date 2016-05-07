@@ -19,6 +19,7 @@ public class Worker_Info {
     String Worker_Mobile;
     String Worker_fromUserName;
     String Worker_Duty;
+    int Worker_Coefficient;
 
     public Worker_Info() {
     }
@@ -86,5 +87,13 @@ public class Worker_Info {
 
     public void setWorker_Duty(String worker_Duty) {
         Worker_Duty = worker_Duty;
+    }
+
+    public int getWorker_Coefficient() {
+        return Worker_Coefficient;
+    }
+
+    public void setWorker_Coefficient(int worker_Coefficient) {
+        Worker_Coefficient = worker_Coefficient;
     }
 }

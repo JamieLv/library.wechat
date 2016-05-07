@@ -17,7 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class RetrieveDocumentByURL {
 
-    public static  String Return_BookPicURL(String Book_ISBN) throws ClientProtocolException, IOException{
+    public static String Return_BookPicURL(String Book_ISBN) throws ClientProtocolException, IOException{
         DefaultHttpClient client = new DefaultHttpClient();
 
 //        Pattern p = Pattern.compile("[^0-9]");

@@ -194,6 +194,18 @@ public class Database {
         return true;
     }
 
+    // 更改工作人员的工作参数
+    public static boolean UpdateWorker_Coefficient(String Worker_fromUserName, int Worker_Coefficient){
+        int Worker_ID = getWoker_InfobyfromUserName(Worker_fromUserName).getWorker_ID();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Worker_Info worker_info = session.get(Worker_Info.class, Worker_ID);
+        worker_info.setWorker_Coefficient(Worker_Coefficient);
+        session.getTransaction().commit();
+
+        return true;
+    }
+
     // 增加超级管理员
     public static boolean UpdateWorker_Duty(int Worker_ID, String Worker_Duty){
 
@@ -226,6 +238,18 @@ public class Database {
         subscriber_info.setSubscriber_Province((String)User_Info.get("province"));
         subscriber_info.setSubscriber_Country((String)User_Info.get("country"));
         subscriber_info.setSubscriber_HeadImgURL((String)User_Info.get("headimgurl"));
+        session.getTransaction().commit();
+
+        return true;
+    }
+
+    // 更新退订用户信息
+    public static boolean UpdateUnSubscriber_Info(String fromUserName) {
+        int Subscriber_ID = getSubscriber_Info(fromUserName).getSubscriber_ID();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Subscriber_Info subscriber_info = session.get(Subscriber_Info.class, Subscriber_ID);
+        subscriber_info.setSubscribe(0);
         session.getTransaction().commit();
 
         return true;
@@ -483,7 +507,7 @@ public class Database {
     }
 
     // 查图书馆名字
-    public static String getLibraryName(int Library_ID){
+    public static Library_Info getLibrarInfo(int Library_ID){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
@@ -494,7 +518,7 @@ public class Database {
         }
         session.getTransaction().commit();
 
-        String Library_Name = library_info.getLibrary_Name();
-        return Library_Name;
+//        String Library_Name = library_info.getLibrary_Name();
+        return library_info;
     }
 }
