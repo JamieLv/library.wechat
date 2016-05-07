@@ -18,8 +18,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static grad.main.TagManager.UserTagID;
 import static grad.tools.RetrieveDocumentByURL.Return_BookInfo;
 import static grad.tools.RetrieveDocumentByURL.Return_BookPicURL;
+import static grad.util.WeixinUtil.getUserTagID;
 
 /**
  *
@@ -585,6 +587,15 @@ public class CoreService {
                             case 22:
                                 TagManager.batchuntagging(fromUserName, "AddWorker");
                                 respContent = "退出成功";
+                                break;
+                            case 3:
+                                if (UserTagID(fromUserName) == 102) {
+                                    TagManager.batchuntagging(fromUserName, "ReturnWorker");
+                                    respContent = "退出成功";
+                                } else if (UserTagID(fromUserName) == 103) {
+                                    TagManager.batchuntagging(fromUserName, "AddWorker");
+                                    respContent = "退出成功";
+                                }
                                 break;
                             default:
                                 respContent = "退出失败";

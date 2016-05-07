@@ -4,6 +4,8 @@ import grad.pojo.AccessToken;
 import grad.util.WeixinUtil;
 import java.text.ParseException;
 
+import static grad.util.WeixinUtil.getUserTagID;
+
 /**
  * Created by Jamie on 4/28/16.
  */
@@ -20,8 +22,21 @@ public class TagManager {
             if (op.equals("get")){WeixinUtil.getAllTag(at.getToken());}
             if (op.equals("del")){WeixinUtil.deleteTag(at.getToken());}
             if (op.equals("up")){WeixinUtil.updateTag(at.getToken());}
-            System.out.println(WeixinUtil.getUserTagID(at.getToken(), "oog9Zv85WcOoYRCuOPwYb6KIVgHI"));
+            System.out.println(getUserTagID(at.getToken(), "oog9Zv85WcOoYRCuOPwYb6KIVgHI"));
         }
+    }
+
+    public static int UserTagID(String fromUserName){
+        String appId = "wxe13392d6482304c4";
+        String appSecret = "41b6c04d9ac9819c779a186e0d6908ab";
+        AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
+
+        if (at != null) {
+            int UserTagID = getUserTagID(at.getToken(), fromUserName);
+            return UserTagID;
+        }
+
+        return 0;
     }
 
     public static boolean batchtagging(String fromUserName, String request){
