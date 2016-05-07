@@ -578,12 +578,12 @@ public class CoreService {
                                 TagManager.batchuntagging(fromUserName, "Member");
                                 respContent = "退出成功";
                                 break;
-                            case 2:
-                                TagManager.batchuntagging(fromUserName, "Worker");
+                            case 21:
+                                TagManager.batchuntagging(fromUserName, "ReturnWorker");
                                 respContent = "退出成功";
                                 break;
-                            case 3:
-                                TagManager.batchuntagging(fromUserName, "MemberWorker");
+                            case 22:
+                                TagManager.batchuntagging(fromUserName, "AddWorker");
                                 respContent = "退出成功";
                                 break;
                             default:
