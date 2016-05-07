@@ -381,54 +381,51 @@ public class CoreService {
                         break;
 
                     default:
-                        respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F603)
-                                + "\n您的留言我们已经收到，并在24小时内回复您。";
-                }
+                        if (content.startsWith("Worker") || content.startsWith("worker")) { // Worker 1 吕嘉铭
+                            int tag = db.WorkerExist(keywords[1], keywords[2], fromUserName);
+                            if (tag == 0) {
+                                respContent = "您的员工号不符，请重新核实，谢谢配合。";
+                            } else if (tag == 1) {
+                                db.UpdateWorker_Verification(keywords[2], fromUserName);
+                                respContent = db.getMember_Info(fromUserName) != null && db.getWoker_InfobyfromUserName(fromUserName) != null ?
+                                        "成功与员工账号绑定，输入\"Worker 员工编号 员工姓名\"即可登录。" :
+                                        "成功与员工账号绑定，请点击\"登录/注册\"按钮进行登录。";
+                            } else if (tag == 2) {
+                                if (worker_info.getWorker_Duty().equals("还书管理员")) {
+                                    TagManager.batchtagging(fromUserName, "ReturnWorker");
+                                    respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
+                                } else if (worker_info.getWorker_Duty().equals("增书管理员")) {
+                                    TagManager.batchtagging(fromUserName, "AddWorker");
+                                    respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功";
+                                }
+                            }
+                        } else if (content.equals("Member") || content.equals("member")) {
 
-                if (content.startsWith("Worker") || content.startsWith("worker")) { // Worker 1 吕嘉铭
-                    int tag = db.WorkerExist(keywords[1], keywords[2], fromUserName);
-                    if (tag == 0) {
-                        respContent = "您的员工号不符，请重新核实，谢谢配合。";
-                    } else if (tag == 1) {
-                        db.UpdateWorker_Verification(keywords[2], fromUserName);
-                        respContent = db.getMember_Info(fromUserName) != null && db.getWoker_InfobyfromUserName(fromUserName) != null ?
-                                "成功与员工账号绑定，输入\"Worker 员工编号 员工姓名\"即可登录。" :
-                                "成功与员工账号绑定，请点击\"登录/注册\"按钮进行登录。";
-                    } else if (tag == 2) {
-                        if (worker_info.getWorker_Duty().equals("还书管理员")) {
-                            TagManager.batchtagging(fromUserName, "ReturnWorker");
-                            respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
-                        } else if (worker_info.getWorker_Duty().equals("增书管理员")) {
-                            TagManager.batchtagging(fromUserName, "AddWorker");
-                            respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功";
-                        }
-                    }
-                } else if (content.equals("Member") || content.equals("member")) {
+                            if (db.MemberExist(fromUserName) == 2) {
+                                TagManager.batchtagging(fromUserName, "Member");
+                                MemberService.MemberTemplate(member_info);
+                                return "";
+                            } else if (db.MemberExist(fromUserName) == 1){
 
-                    if (db.MemberExist(fromUserName) == 2) {
-                        TagManager.batchtagging(fromUserName, "Member");
-                        MemberService.MemberTemplate(member_info);
-                        return "";
-                    } else if (db.MemberExist(fromUserName) == 1){
+                            } else {
+                                respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
+                                        + "\n您还没有输入您的基本信息吧！请点击\"登录/注册\"按钮进行注册，谢谢配合。";
+                            }
 
-                    } else {
+                        } else if (content.equals("Addbook") || content.equals("addbook")) {
+                            db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
+                            respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
+
+                        } else if (content.equals(931014) && worker_info.getWorker_Duty().equals("超级管理员")) {
+                            db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
+                            respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
+
+                        } else {
                             respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
-                                    + "\n您还没有输入您的基本信息吧！请点击\"登录/注册\"按钮进行注册，谢谢配合。";
-                    }
-
-                } else if (content.equals("Addbook") || content.equals("addbook")) {
-                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
-                    respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
-
-                } else if (content.equals(931014) && worker_info.getWorker_Duty().equals("超级管理员")) {
-                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
-                    respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
-
-                } else {
-                    respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
-                        + "\n您的留言我们已经收到，并在24小时内回复您。";
+                                    + "\n您的留言我们已经收到，并在24小时内回复您。";
+                        }
                 }
-
+                
             } // 图片消息
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
                 respContent = "我喜欢你发的图片！";
