@@ -416,9 +416,14 @@ public class CoreService {
                                     + "\n您还没有输入您的基本信息吧！请点击\"登录/注册\"按钮进行注册，谢谢配合。";
                     }
 
+                } else if (content.equals("Addbook") || content.equals("addbook")) {
+                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
+                    respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启";
+
                 } else if (content.equals(931014) && worker_info.getWorker_Duty().equals("超级管理员")) {
                     db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
                     respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
+
                 } else {
                     respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
                         + "\n您的留言我们已经收到，并在24小时内回复您。";
@@ -667,33 +672,31 @@ public class CoreService {
                             e.printStackTrace();
                         }
                     } else if (eventKey.equals(CommonButton.KEY_ADD_BOOK)) {
-                        String[] Add_Book_Scanresult = scanResult.split(",");
-                        String Add_Book_ISBN = Add_Book_Scanresult[1];
-                        System.out.println(Add_Book_ISBN);
-                        DouBanBook new_book = Return_BookInfo(Add_Book_ISBN);
-                        db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
-//                        respContent = "所添加书本名字：" + new_book.getTitle() +
-//                                "\n所添加书本作者：" + new_book.getAuthor() +
-//                                "\n所添加书本出版社：" + new_book.getPublisher() +
-//                                "\n所添加书本出版日期：" + new_book.getPubdate() +
-//                                "\n如果确认无误请继续输入图书馆代号。";
-                        //String Book_ISBN, String Book_Title, String Book_Category, String Book_Author,
-                        //String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement
-                        Book_State new_book_state = new Book_State(
-                                Add_Book_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
-                                new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), worker_info.getWorker_Coefficient(), "归还");
-                        Database.Add(new_book_state);
-                        articleList = AddBookDisplay(new_book_state);
+                        if (subscriber_info.getSubscriber_Function().equals("addbook") && worker_info != null) {
+                            String[] Add_Book_Scanresult = scanResult.split(",");
+                            String Add_Book_ISBN = Add_Book_Scanresult[1];
+                            System.out.println(Add_Book_ISBN);
+                            DouBanBook new_book = Return_BookInfo(Add_Book_ISBN);
 
-                        // 设置图文消息个数
-                        newsMessage.setArticleCount(articleList.size());
-                        // 设置图文消息包含的图文集合
-                        newsMessage.setArticles(articleList);
-                        // 将图文消息对象转换成xml字符串
-                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
+                            Book_State new_book_state = new Book_State(
+                                    Add_Book_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
+                                    new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), worker_info.getWorker_Coefficient(), "归还");
+                            Database.Add(new_book_state);
+                            articleList = AddBookDisplay(new_book_state);
 
-                        return respMessage;
+                            // 设置图文消息个数
+                            newsMessage.setArticleCount(articleList.size());
+                            // 设置图文消息包含的图文集合
+                            newsMessage.setArticles(articleList);
+                            // 将图文消息对象转换成xml字符串
+                            respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
+                            return respMessage;
+                        } else if (worker_info == null) {
+                            respContent = "您不是书本管理员，不可使用此功能。";
+                        } else {
+                            respContent = "增添书本功能未开启，输入\"addbook\"可开启功能，再次输入可关闭。";
+                        }
                     }
                     else {
                         System.out.println("二维码信息: " + scanResult);
