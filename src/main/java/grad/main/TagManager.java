@@ -26,19 +26,6 @@ public class TagManager {
         }
     }
 
-    public static int UserTagID(String fromUserName){
-        String appId = "wxe13392d6482304c4";
-        String appSecret = "41b6c04d9ac9819c779a186e0d6908ab";
-        AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
-
-        if (at != null) {
-            int UserTagID = getUserTagID(at.getToken(), fromUserName);
-            return UserTagID;
-        }
-
-        return 0;
-    }
-
     public static boolean batchtagging(String fromUserName, String request){
         String appId = "wxe13392d6482304c4";
         String appSecret = "41b6c04d9ac9819c779a186e0d6908ab";
