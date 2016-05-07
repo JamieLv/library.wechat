@@ -418,7 +418,7 @@ public class CoreService {
 
                 } else if (content.equals("Addbook") || content.equals("addbook")) {
                     db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
-                    respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启";
+                    respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
 
                 } else if (content.equals(931014) && worker_info.getWorker_Duty().equals("超级管理员")) {
                     db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
@@ -545,7 +545,8 @@ public class CoreService {
                             case 22:
                                 db.UpdateSubscriber_Function(Subscriber_ID, "register");
                                 TagManager.batchtagging(fromUserName, "AddWorker");
-                                respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功";
+                                respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功\n\n" +
+                                        "输入\"addbook\"开启增添书本功能，再次输入可关闭";
                                 break;
                             case 3:
                                 db.UpdateSubscriber_Function(Subscriber_ID, "register");
