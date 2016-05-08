@@ -171,12 +171,12 @@ public class CoreService {
         return articleList;
     }
 
-    public static List<Article> AddBookDisplay(Book_State new_book_state) throws IOException {
+    public static List<Article> AddBookDisplay(Book_State new_book_state, int new_Book_ID, int size) throws IOException {
 
         List<Article> articleList = new ArrayList<>();
 
         Article articleBOOK = new Article();
-        articleBOOK.setTitle("书本编号: " + new_book_state.getBook_id() + " 书名: 《" + new_book_state.getBook_Title() + "》");
+        articleBOOK.setTitle("书本编号: " + new_Book_ID + " 书名: 《" + new_book_state.getBook_Title() + "》" + size);
         articleBOOK.setPicUrl(Return_BookPicURL(new_book_state.getBook_ISBN()));
         articleBOOK.setUrl("https://www.baidu.com/s?ie=UTF-8&wd=" + new_book_state.getBook_Title());
         articleList.add(articleBOOK);
@@ -672,11 +672,21 @@ public class CoreService {
                             System.out.println(Add_Book_ISBN);
                             DouBanBook new_book = Return_BookInfo(Add_Book_ISBN);
 
+                            List<Book_State> book_stateList = db.getAllBook_State();
+                            int new_Book_ID = 0;
+                            int size = book_stateList.size();
+                            for (Book_State book_state: book_stateList) {
+                                new_Book_ID = book_state.getBook_id();
+                            }
+                            size += 1;
+                            new_Book_ID += 1;
+
                             Book_State new_book_state = new Book_State(
-                                    Add_Book_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
+                                    new_Book_ID, Add_Book_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
                                     new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), worker_info.getWorker_Coefficient(), "归还");
                             Database.Add(new_book_state);
-                            articleList = AddBookDisplay(new_book_state);
+
+                            articleList = AddBookDisplay(new_book_state, new_Book_ID, size);
 
                             // 设置图文消息个数
                             newsMessage.setArticleCount(articleList.size());

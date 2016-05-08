@@ -340,6 +340,17 @@ public class Database {
       */
 
     // 查书本
+    public static List<Book_State> getAllBook_State(){
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Book_State");
+        List<Book_State> book_stateList = query.list();
+        session.getTransaction().commit();
+
+        return book_stateList;
+    }
+
     public static Book_State getBook_StatebyBook_id(int Book_id){
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();

@@ -31,7 +31,8 @@ public class Book_State {
     public Book_State() {
     }
 
-    public Book_State(String Book_ISBN, String Book_Title, String Book_Category, String Book_Author, String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement) {
+    public Book_State(int Book_id, String Book_ISBN, String Book_Title, String Book_Category, String Book_Author, String Book_Publisher, String Book_PubTime, String Book_Price, int Book_inLibrary_id, String Book_Statement) {
+        this.Book_id = Book_id;
         this.Book_ISBN = Book_ISBN;
         this.Book_Title = Book_Title;
         this.Book_Category = Book_Category;
