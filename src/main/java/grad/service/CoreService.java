@@ -331,6 +331,18 @@ public class CoreService {
                         }
                         break;
 
+                    case "login":
+                        if (content.startsWith("Worker") || content.startsWith("worker")) { // Worker 1 吕嘉铭
+                            TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
+                            respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
+                        } else if (content.equals("Member") || content.equals("member")) {
+                            TagManager.batchtagging(fromUserName, "Member");
+                            MemberService.MemberTemplate(member_info);
+                            return "";
+                        }
+                        db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "login");
+                        break;
+
                     case "searchbook":
                         if (db.getBook_StatebyTitle(content) == null) {
                             respContent = "此书尚未录入";
@@ -393,20 +405,7 @@ public class CoreService {
                         break;
 
                     default:
-                        if (content.equals("Member") || content.equals("member")) {
-
-                            if (db.MemberExist(fromUserName) == 2) {
-                                TagManager.batchtagging(fromUserName, "Member");
-                                MemberService.MemberTemplate(member_info);
-                                return "";
-                            } else if (db.MemberExist(fromUserName) == 1){
-
-                            } else {
-                                respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
-                                        + "\n您还没有输入您的基本信息吧！请点击\"登录/注册\"按钮进行注册，谢谢配合。";
-                            }
-
-                        } else if (content.equals("Addbook") || content.equals("addbook")) {
+                        if (content.equals("Addbook") || content.equals("addbook")) {
                             db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
                             respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
 
@@ -499,11 +498,12 @@ public class CoreService {
                     int tag = 0; // 既不是读者也不是职工
                     if (member_info != null && worker_info == null) {tag=1;} // 是读者不是职工
                     else if (member_info == null && worker_info != null) { // 是职工不是读者
-                        if (worker_info.getWorker_Duty().equals("还书管理员")) {
-                            tag = 21;
-                        } else if (worker_info.getWorker_Duty().equals("增书管理员")) {
-                            tag =22;
-                        }
+//                        if (worker_info.getWorker_Duty().equals("还书管理员")) {
+//                            tag = 21;
+//                        } else if (worker_info.getWorker_Duty().equals("增书管理员")) {
+//                            tag =22;
+//                        }
+                        tag = 2;
                     }
                     else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
 
@@ -530,19 +530,23 @@ public class CoreService {
                                     return "";
                                 }
                                 break;
-                            case 21:
+                            case 2:
                                 db.UpdateSubscriber_Function(Subscriber_ID, "login");
-                                TagManager.batchtagging(fromUserName, "ReturnWorker");
-                                respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
+                                TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
+                                respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
                                 break;
-                            case 22:
-                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
-                                TagManager.batchtagging(fromUserName, "AddWorker");
-                                respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功\n\n" +
-                                        "输入\"addbook\"开启增添书本功能，再次输入可关闭";
-                                break;
+//                            case 21:
+//                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
+//                                TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
+//                                respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
+//                                break;
+//                            case 22:
+//                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
+//                                TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
+//                                respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功\n\n" +
+//                                        "输入\"addbook\"开启增添书本功能，再次输入可关闭";
+//                                break;
                             case 3:
-                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
 //                                TagManager.batchtagging(fromUserName, "Reader+Worker");
                                 respContent = "若要以读者身份登录，请回复Member或member进行登录。\n\n" +
                                         "若要以员工身份登录，请回复\"Worker 员工号 员工姓名\"。\n\n" +
