@@ -7,7 +7,6 @@ import grad.message.resp.Article;
 import grad.message.resp.NewsMessage;
 import grad.message.resp.TextMessage;
 import grad.pojo.CommonButton;
-import grad.servlet.BaiduMapAPI;
 import grad.tools.*;
 import grad.util.MessageUtil;
 import net.sf.json.JSONObject;
@@ -17,8 +16,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static grad.main.ArticleManager.*;
 import static grad.tools.RetrieveDocumentByURL.Return_BookInfo;
-import static grad.tools.RetrieveDocumentByURL.Return_BookPicURL;
 
 /**
  *
@@ -44,23 +43,6 @@ public class CoreService {
         return greeting;
     }
 
-    public static List<Article> SubscribeGreeting(String fromUserName) {
-        List<Article> articleList = new ArrayList<>();
-        Subscriber_Info subscriber_info = Database.getSubscriber_Info(fromUserName);
-
-        Article articleSubscriberGreeting = new Article();
-        articleSubscriberGreeting.setTitle(subscriber_info.getNickname() + "，" + getGreeting());
-        articleList.add(articleSubscriberGreeting);
-
-        Article articleSubscriberInfo = new Article();
-        articleSubscriberInfo.setTitle("性别：" + subscriber_info.getSubscriber_Sex() +
-                "\n所在地：" + subscriber_info.getSubscriber_Country() + " " + subscriber_info.getSubscriber_Province() + " " + subscriber_info.getSubscriber_City());
-        articleSubscriberInfo.setPicUrl(subscriber_info.getSubscriber_HeadImgURL());
-        articleList.add(articleSubscriberInfo);
-
-        return articleList;
-    }
-
     public static String Register(String fromUserName, String[] keywords) throws IOException {
         String respContent = "请求处理异常，请稍候尝试！";
         try {
@@ -68,14 +50,16 @@ public class CoreService {
 
             if (tag == 0) {  // 第一次注册
                 // String Member_Name, String Member_Gender, int Member_Age, String Member_Mobile, String Member_RegisterTime, String Member_fromUserName, Boolean Member_Verification
-                Member_Info new_member_info = new Member_Info(
-                        keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
-                Database.Add(new_member_info);
+                if (Database.getMember_InfobyMember_Mobile(keywords[3]) == null) {
+                    Member_Info new_member_info = new Member_Info(
+                            keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
+                    Database.Add(new_member_info);
 
-                int yzm = Database.getMember_Info(fromUserName).getMember_ID();
-                SendMsg_webchinese sendMsg = new SendMsg_webchinese();
-                sendMsg.send(keywords[3], yzm);
-                respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
+                    int yzm = Database.getMember_Info(fromUserName).getMember_ID();
+                    SendMsg_webchinese sendMsg = new SendMsg_webchinese();
+                    sendMsg.send(keywords[3], yzm);
+                    respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
+                } else { respContent = "尊敬的读者，该手机号已被注册。如有疑问请直接回复，我们将尽快回复，谢谢配合。"; }
             } else if (tag == 1) { // 用户已登记，手机验证未通过
                 Member_Info new_member_info = new Member_Info(
                         keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
@@ -91,6 +75,7 @@ public class CoreService {
             respContent = "尊敬的读者，您输入的信息有误，请核对后重新输入！仿照格式: \"张三 男 20 13112345678\"。\n" +
                     "我们将发送验证短信至您填写的手机号，所以请务必填写正确的手机号，谢谢配合。";
         }
+
         if (keywords[0].equals("yzm")) { // yzm 1
             if (keywords.length == 2) {
                 String str_yzm = keywords[1];
@@ -121,141 +106,6 @@ public class CoreService {
             }
         }
         return respContent;
-    }
-
-    public static List<Article> SearchBookDisplay(String Search_Book_Title) throws IOException {
-
-        List<Article> articleList = new ArrayList<>();
-        Book_State book_state = Database.getBook_StatebyTitle(Search_Book_Title);
-        List<Book_State> book_stateList = Database.getBook_StateListbyTitle(Search_Book_Title);
-        String BookinLib = "";
-
-        for (Book_State book_stateLib: book_stateList) {
-            if (book_stateLib.getBook_Statement_ID() == 0){
-                BookinLib += BookinLib.equals("") ?
-                        Database.getLibrarInfo(book_stateLib.getBook_inLibrary_id()).getLibrary_Name() :
-                        "；" + Database.getLibrarInfo(book_stateLib.getBook_inLibrary_id()).getLibrary_Name();
-            }
-        }
-
-        Article articleBOOK = new Article();
-        articleBOOK.setTitle("书名: 《" + Search_Book_Title + "》");
-        articleBOOK.setPicUrl(Return_BookPicURL(book_state.getBook_ISBN()));
-        articleBOOK.setUrl("https://www.baidu.com/s?ie=UTF-8&wd=" + Search_Book_Title);
-        articleList.add(articleBOOK);
-
-        Article articleISBN = new Article();
-        articleISBN.setTitle("ISBN: " + book_state.getBook_ISBN());
-        articleList.add(articleISBN);
-
-        Article articleCATALOG = new Article();
-        articleCATALOG.setTitle("类别: " + book_state.getBook_Category());
-        articleList.add(articleCATALOG);
-
-        Article articleAUTHOR = new Article();
-        articleAUTHOR.setTitle("作者: " + book_state.getBook_Author());
-        articleList.add(articleAUTHOR);
-
-        Article articlePUBLISHER = new Article();
-        articlePUBLISHER.setTitle("出版商: " + book_state.getBook_Publisher());
-        articleList.add(articlePUBLISHER);
-
-        Article articlePUBTIME = new Article();
-        articlePUBTIME.setTitle("发行时间: " + book_state.getBook_PubTime());
-        articleList.add(articlePUBTIME);
-
-        Article articleBOOKSTATEMENT = new Article();
-        articleBOOKSTATEMENT.setTitle("存书状态: " + BookinLib);
-        articleList.add(articleBOOKSTATEMENT);
-
-        return articleList;
-    }
-
-    public static List<Article> AddBookDisplay(Book_State new_book_state, int new_Book_ID, int size) throws IOException {
-
-        List<Article> articleList = new ArrayList<>();
-
-        Article articleBOOK = new Article();
-        articleBOOK.setTitle("书本编号: " + new_Book_ID + " 书名: 《" + new_book_state.getBook_Title() + "》" + size);
-        articleBOOK.setPicUrl(Return_BookPicURL(new_book_state.getBook_ISBN()));
-        articleBOOK.setUrl("https://www.baidu.com/s?ie=UTF-8&wd=" + new_book_state.getBook_Title());
-        articleList.add(articleBOOK);
-
-        Article articleISBN = new Article();
-        articleISBN.setTitle("ISBN: " + new_book_state.getBook_ISBN());
-        articleList.add(articleISBN);
-
-        Article articleCATALOG = new Article();
-        articleCATALOG.setTitle("类别: " + new_book_state.getBook_Category());
-        articleList.add(articleCATALOG);
-
-        Article articleAUTHOR = new Article();
-        articleAUTHOR.setTitle("作者: " + new_book_state.getBook_Author());
-        articleList.add(articleAUTHOR);
-
-        Article articlePUBLISHER = new Article();
-        articlePUBLISHER.setTitle("出版商: " + new_book_state.getBook_Publisher());
-        articleList.add(articlePUBLISHER);
-
-        Article articlePUBTIME = new Article();
-        articlePUBTIME.setTitle("发行时间: " + new_book_state.getBook_PubTime());
-        articleList.add(articlePUBTIME);
-
-        Article articleBOOKSTATEMENT = new Article();
-        articleBOOKSTATEMENT.setTitle("存书状态: " + Database.getLibrarInfo(new_book_state.getBook_inLibrary_id()).getLibrary_Name());
-        articleList.add(articleBOOKSTATEMENT);
-
-        return articleList;
-    }
-
-    public static List<Article> MemberRecordDisplay(String fromUserName) throws IOException {
-        List<Article> articleList = new ArrayList<>();
-        Article articleBorrowRecord = new Article();
-        articleBorrowRecord.setTitle("借阅记录");
-        articleList.add(articleBorrowRecord);
-        List<Book_State> book_stateList = Database.getBook_StatebyBorrower(Database.getMember_Info(fromUserName).getMember_ID());
-        for (Book_State book_state: book_stateList) {
-            String Borrow_Book_Title = book_state.getBook_Title();
-            String Borrow_Book_ISBN = book_state.getBook_ISBN();
-            String Book_Borrow_Time = book_state.getBook_Borrow_Time();
-            String Book_Return_Time = book_state.getBook_Return_Time();
-
-            Article articleBorrowRecordInput = new Article();
-            articleBorrowRecordInput.setTitle("书名: " + Borrow_Book_Title + "\n"
-                    + "借阅时间: " + Book_Borrow_Time + "\n"
-                    + "归还时间: " + Book_Return_Time);
-            articleBorrowRecordInput.setPicUrl(Return_BookPicURL(Borrow_Book_ISBN));
-            articleList.add(articleBorrowRecordInput);
-        }
-        return articleList;
-    }
-
-    public static List<Article> NearbyLibrary(String Location_X, String Location_Y) throws IOException {
-        List<Article> articleList = new ArrayList<>();
-        String region = BaiduMapAPI.testPost(Location_X, Location_Y).get("city");
-
-        Article articleNearbyLibrary = new Article();
-        articleNearbyLibrary.setTitle("附近的图书馆");
-        articleList.add(articleNearbyLibrary);
-        List<JSONObject> resultsList = BaiduMapAPI.getLibraryfrom(Location_X, Location_Y);
-        for (JSONObject LibraryInfo: resultsList){
-            Article articleLibraryInfo = new Article();
-            articleLibraryInfo.setTitle("名字：" + LibraryInfo.get("name") +
-                    "\n地址：" + LibraryInfo.get("address"));
-            if (LibraryInfo.get("telephone") != null){
-                articleLibraryInfo.setTitle(articleLibraryInfo.getTitle() +
-                    "\n电话：" + LibraryInfo.get("telephone"));
-            }
-            //http://api.map.baidu.com/direction?origin=latlng:34.264642646862,108.95108518068|name:我家&destination=大雁塔&mode=driving&region=西安&output=html //调起百度PC或Web地图，展示“西安市”从（lat:34.264642646862,lng:108.95108518068 ）“我家”到“大雁塔”的驾车路线。
-            articleLibraryInfo.setUrl("http://api.map.baidu.com/direction?" +
-                    "origin=" + Location_X + "," + Location_Y +
-                    "&destination=" + LibraryInfo.get("name") +
-                    "&region=" + region +
-                    "&mode=walking&output=html");
-            articleList.add(articleLibraryInfo);
-        }
-
-        return articleList;
     }
 
     public static String processRequest(HttpServletRequest request) {
@@ -332,7 +182,7 @@ public class CoreService {
                         break;
 
                     case "login":
-                        if (content.startsWith("Worker") || content.startsWith("worker")) { // Worker 1 吕嘉铭
+                        if (content.equals("Worker") || content.equals("worker")) { // Worker
                             TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
                             respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
                         } else if (content.equals("Member") || content.equals("member")) {
@@ -349,11 +199,8 @@ public class CoreService {
                         } else {
                             articleList = SearchBookDisplay(content);
 
-                            // 设置图文消息个数
                             newsMessage.setArticleCount(articleList.size());
-                            // 设置图文消息包含的图文集合
                             newsMessage.setArticles(articleList);
-                            // 将图文消息对象转换成xml字符串
                             respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                             return respMessage;
@@ -366,13 +213,13 @@ public class CoreService {
                                 int Library_id = Integer.parseInt(keywords[0]);
                                 if (db.getLibrarInfo(Library_id) != null) {
                                     db.UpdateWorker_Coefficient(fromUserName, Library_id);
-                                    respContent = "存入" + db.getLibrarInfo(Library_id).getLibrary_Name();
-                                } else { respContent = "图书馆不存在，请输入正确的图书馆代号"; }
+                                    respContent = "存入" + emoji(0x1F449) + db.getLibrarInfo(Library_id).getLibrary_Name();
+                                } else { respContent = "图书馆不存在，请输入正确的图书馆代号，若要停止增添书本，请再次输入\"Addbook\""; }
                             } else {
                                 respContent = "输入格式有误。请先输入\"图书馆代号\"再扫描图书条形码。";
                             }
                         } catch (NumberFormatException e) {
-                            respContent = "请输入图书馆代号";
+                            respContent = "请输入图书馆代号，若要停止增添书本，请再次输入\"Addbook\"";
                         }
 
                         break;
@@ -409,7 +256,7 @@ public class CoreService {
                             db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
                             respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
 
-                        } else if (content.equals(931014) && worker_info.getWorker_Duty().equals("超级管理员")) {
+                        } else if (content.equals(931014) /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
                             db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
                             respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
 
@@ -430,11 +277,8 @@ public class CoreService {
                 String Location_Y = requestMap.get("Location_Y");
 
                 articleList = NearbyLibrary(Location_X, Location_Y);
-                // 设置图文消息个数
                 newsMessage.setArticleCount(articleList.size());
-                // 设置图文消息包含的图文集合
                 newsMessage.setArticles(articleList);
-                // 将图文消息对象转换成xml字符串
                 respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                 return respMessage;
@@ -448,7 +292,7 @@ public class CoreService {
 
                 String voice = requestMap.get("Recognition").trim();
                 String text = requestMap.get("MsgType");
-                Map<String, String> map = new HashMap<>();
+
                 String creat_time = requestMap.get("CreateTime");
 
 
@@ -478,11 +322,8 @@ public class CoreService {
                     }
 
                     articleList = SubscribeGreeting(fromUserName);
-                    // 设置图文消息个数
                     newsMessage.setArticleCount(articleList.size());
-                    // 设置图文消息包含的图文集合
                     newsMessage.setArticles(articleList);
-                    // 将图文消息对象转换成xml字符串
                     respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                     return respMessage;
@@ -497,14 +338,7 @@ public class CoreService {
 
                     int tag = 0; // 既不是读者也不是职工
                     if (member_info != null && worker_info == null) {tag=1;} // 是读者不是职工
-                    else if (member_info == null && worker_info != null) { // 是职工不是读者
-//                        if (worker_info.getWorker_Duty().equals("还书管理员")) {
-//                            tag = 21;
-//                        } else if (worker_info.getWorker_Duty().equals("增书管理员")) {
-//                            tag =22;
-//                        }
-                        tag = 2;
-                    }
+                    else if (member_info == null && worker_info != null) {tag=2;} // 是职工不是读者
                     else if (member_info != null && worker_info != null) {tag=3;} // 是职工也是读者
 
                     if (eventKey.equals(CommonButton.KEY_REGISTER)){
@@ -535,21 +369,10 @@ public class CoreService {
                                 TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
                                 respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
                                 break;
-//                            case 21:
-//                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
-//                                TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
-//                                respContent = "还书员工【" + worker_info.getWorker_Name() + "】登录成功";
-//                                break;
-//                            case 22:
-//                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
-//                                TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
-//                                respContent = "增书员工【" + worker_info.getWorker_Name() + "】登录成功\n\n" +
-//                                        "输入\"addbook\"开启增添书本功能，再次输入可关闭";
-//                                break;
+
                             case 3:
-//                                TagManager.batchtagging(fromUserName, "Reader+Worker");
                                 respContent = "若要以读者身份登录，请回复Member或member进行登录。\n\n" +
-                                        "若要以员工身份登录，请回复\"Worker 员工号 员工姓名\"。\n\n" +
+                                        "若要以员工身份登录，请回复Worker或worker进行登录。\n\n" +
                                         "登录后10分钟内菜单功能将会开启。";
                                 break;
                             default:
@@ -565,11 +388,8 @@ public class CoreService {
                         } else {
                             articleList = MemberRecordDisplay(fromUserName);
 
-                            // 设置图文消息个数
                             newsMessage.setArticleCount(articleList.size());
-                            // 设置图文消息包含的图文集合
                             newsMessage.setArticles(articleList);
-                            // 将图文消息对象转换成xml字符串
                             respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                             return respMessage;
@@ -580,18 +400,13 @@ public class CoreService {
                                 TagManager.batchuntagging(fromUserName, "Member");
                                 respContent = "退出成功";
                                 break;
-                            case 21:
-                                TagManager.batchuntagging(fromUserName, "ReturnWorker");
-                                respContent = "退出成功";
-                                break;
-                            case 22:
-                                TagManager.batchuntagging(fromUserName, "AddWorker");
+                            case 2:
+                                TagManager.batchuntagging(fromUserName, worker_info.getWorker_Duty());
                                 respContent = "退出成功";
                                 break;
                             case 3:
                                 TagManager.batchuntagging(fromUserName, "Member");
-                                TagManager.batchuntagging(fromUserName, "ReturnWorker");
-                                TagManager.batchuntagging(fromUserName, "AddWorker");
+                                TagManager.batchuntagging(fromUserName, worker_info.getWorker_Duty());
                                 respContent = "退出成功";
                                 break;
                             default:
@@ -601,13 +416,13 @@ public class CoreService {
                         db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "searchbook");
                         respContent = subscriber_info.getSubscriber_Function().equals("searchbook") ? "书本查询功能已经关闭，可点击按钮重新开启。" : "回复\"书名\"查询您想要的书本！再次点击可关闭查询功能。";
                     } else if (eventKey.equals(CommonButton.KEY_RESERVE_ROOM)) {
-                        respContent = "22！";
+                        respContent = "阅览室尚未开放，尽请期待！";
                     } else if (eventKey.equals(CommonButton.KEY_BOOK_RECOMMEND)) {
-                        respContent = "23！";
+                        respContent = "图书推荐功能尚未开放，尽情期待！";
                     } else if (eventKey.equals(CommonButton.KEY_ADVICE)) {
-                        respContent = "31！";
+                        respContent = "欢迎您向我们提出建议！";
                     } else if (eventKey.equals(CommonButton.KEY_JOIN_US)) {
-                        respContent = "34！";
+                        respContent = "加入我们吧！";
                     }
                 } else if (eventType.equals(MessageUtil.EVENT_TYPE_SCANCODE_WAITMSG)) {
                     String eventKey = requestMap.get("EventKey");
@@ -654,7 +469,11 @@ public class CoreService {
                                 }
                             }
                         } else {respContent = "非馆藏书本。";}
-                    } else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
+                    }
+                    /*
+                     * 还书
+                     */
+                    else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         try {
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
                             if (member_info.getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
@@ -669,7 +488,11 @@ public class CoreService {
                             respContent = "归还失败 " + scanResult;
                             e.printStackTrace();
                         }
-                    } else if (eventKey.equals(CommonButton.KEY_ADD_BOOK)) {
+                    }
+                    /*
+                     * 加书
+                     */
+                    else if (eventKey.equals(CommonButton.KEY_ADD_BOOK)) {
                         if (subscriber_info.getSubscriber_Function().equals("addbook") && worker_info != null) {
                             String[] Add_Book_Scanresult = scanResult.split(",");
                             String Add_Book_ISBN = Add_Book_Scanresult[1];
@@ -677,26 +500,18 @@ public class CoreService {
                             DouBanBook new_book = Return_BookInfo(Add_Book_ISBN);
 
                             List<Book_State> book_stateList = db.getAllBook_State();
-                            int new_Book_ID = 0;
-                            int size = book_stateList.size();
-                            for (Book_State book_state: book_stateList) {
-                                new_Book_ID = book_state.getBook_id();
-                            }
-                            size += 1;
-                            new_Book_ID += 1;
+                            int new_book_id = book_stateList.size();
+                            new_book_id += 1;
 
                             Book_State new_book_state = new Book_State(
-                                    new_Book_ID, Add_Book_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
+                                    new_book_id, Add_Book_ISBN, new_book.getTitle(), new_book.getTags(), new_book.getAuthor(),
                                     new_book.getPublisher(), new_book.getPubdate(), new_book.getPrice(), worker_info.getWorker_Coefficient(), "归还");
                             Database.Add(new_book_state);
 
-                            articleList = AddBookDisplay(new_book_state, new_Book_ID, size);
+                            articleList = AddBookDisplay(new_book_state, new_book_id);
 
-                            // 设置图文消息个数
                             newsMessage.setArticleCount(articleList.size());
-                            // 设置图文消息包含的图文集合
                             newsMessage.setArticles(articleList);
-                            // 将图文消息对象转换成xml字符串
                             respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                             return respMessage;
@@ -708,7 +523,7 @@ public class CoreService {
                     }
                     else {
                         System.out.println("二维码信息: " + scanResult);
-                        respContent = getGreeting();
+                        respContent = getGreeting() + "该二维码无法识别，请在后台留言，谢谢。";
                     }
                 }
             }
