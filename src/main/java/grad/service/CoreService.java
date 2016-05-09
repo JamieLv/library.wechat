@@ -352,6 +352,7 @@ public class CoreService {
                         db.UpdateSubscriber_Function(Subscriber_ID, "login");
                         switch (tag){
                             case 0:
+                                db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                 respContent = "请点击\"注册\"按钮进行注册，谢谢。";
                                 break;
                             case 1:
