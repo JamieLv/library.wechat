@@ -88,6 +88,34 @@ public class Database {
         return exist;
     }
 
+    // 用户所借书是否到期
+    public static int Book_Return_State(int Borrow_Book_ID) throws ParseException {
+        int state = 0;
+        Book_State book_state = getBook_StatebyBook_id(Borrow_Book_ID);
+
+        String Return_Time = book_state.getBook_Return_Time();
+        SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+        Date Return_Date = SDF.parse(Return_Time);
+        Calendar Return_cal = Calendar.getInstance();
+        Return_cal.setTime(Return_Date);
+
+        String Today = Database.getDate(0);
+        Date Today_Date = SDF.parse(Today);
+        Calendar Today_cal = Calendar.getInstance();
+        Today_cal.setTime(Today_Date);
+
+        if (Today_cal.compareTo(Return_cal) == 1) {
+            Calendar Help_cal = (Calendar) Return_cal.clone();
+            int days = 0;
+            for (; Today_cal.compareTo(Help_cal) != 0; days++) {
+                Help_cal.add(Calendar.DATE, days);
+            }
+            state = days;
+        }
+
+        return state;
+    }
+
     // 判断用户是否需要还书提醒
     public static int Borrower_RemindNeed(String Borrower_fromUserName) throws ParseException {
         int result = 0;
@@ -267,7 +295,9 @@ public class Database {
         Subscriber_Info subscriber_info = session.get(Subscriber_Info.class, Subscriber_ID);
         if (subscriber_info.getSubscriber_Function().equals(Subscriber_Function)) {
             subscriber_info.setSubscriber_Function("General");
-        } else { subscriber_info.setSubscriber_Function(Subscriber_Function); }
+        } else {
+            subscriber_info.setSubscriber_Function(Subscriber_Function);
+        }
         session.getTransaction().commit();
 
         return true;
@@ -298,6 +328,17 @@ public class Database {
             book_state.setBook_Statement_ID(book_state.getBook_Statement_ID() + 1);
         }
         return  true;
+    }
+
+    // 还书管理员更改还书时间
+    public static boolean UpdateBook_Return_TimebyWorker(int Book_ID) throws ParseException {
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Book_State book_state = session.get(Book_State.class, Book_ID);
+        book_state.setBook_Return_Time(getDate(0));
+
+        return true;
     }
 
     // 还书

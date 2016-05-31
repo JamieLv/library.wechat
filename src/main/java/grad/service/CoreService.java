@@ -12,6 +12,7 @@ import grad.util.MessageUtil;
 import net.sf.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.print.Book;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -43,40 +44,42 @@ public class CoreService {
         return greeting;
     }
 
-    public static String Register(String fromUserName, String[] keywords) throws IOException {
-        String respContent = "请求处理异常，请稍候尝试！";
-        try {
-            int tag = Database.MemberExist(fromUserName);
+    static String Register(String fromUserName, String[] keywords) throws IOException {
+        String respContent = "输入格式有误，如果您要退出注册模式，请再次点击注册按钮。";
+        if (keywords.length == 4) {
+            try {
+                int tag = Database.MemberExist(fromUserName);
 
-            if (tag == 0) {  // 第一次注册
-                // String Member_Name, String Member_Gender, int Member_Age, String Member_Mobile, String Member_RegisterTime, String Member_fromUserName, Boolean Member_Verification
-                if (Database.getMember_InfobyMember_Mobile(keywords[3]) == null) {
+                if (tag == 0) {  // 第一次注册
+                    // String Member_Name, String Member_Gender, int Member_Age, String Member_Mobile, String Member_RegisterTime, String Member_fromUserName, Boolean Member_Verification
+                    if (Database.getMember_InfobyMember_Mobile(keywords[3]) == null) {
+                        Member_Info new_member_info = new Member_Info(
+                                keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
+                        Database.Add(new_member_info);
+
+                        int yzm = Database.getMember_Info(fromUserName).getMember_ID();
+                        SendMsg_webchinese sendMsg = new SendMsg_webchinese();
+                        sendMsg.send(keywords[3], yzm);
+                        respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
+                    } else {
+                        respContent = "尊敬的读者，该手机号已被注册。如有疑问请直接回复，我们将尽快回复，谢谢配合。";
+                    }
+                } else if (tag == 1) { // 用户已登记，手机验证未通过
                     Member_Info new_member_info = new Member_Info(
                             keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
-                    Database.Add(new_member_info);
-
+                    Database.UpdateReaderInfo(fromUserName, new_member_info);
                     int yzm = Database.getMember_Info(fromUserName).getMember_ID();
                     SendMsg_webchinese sendMsg = new SendMsg_webchinese();
                     sendMsg.send(keywords[3], yzm);
-                    respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: yzm 1";
-                } else { respContent = "尊敬的读者，该手机号已被注册。如有疑问请直接回复，我们将尽快回复，谢谢配合。"; }
-            } else if (tag == 1) { // 用户已登记，手机验证未通过
-                Member_Info new_member_info = new Member_Info(
-                        keywords[0], keywords[1], Integer.parseInt(keywords[2]), keywords[3], Database.getDate(0), fromUserName, false);
-                Database.UpdateReaderInfo(fromUserName, new_member_info);
-                int yzm = Database.getMember_Info(fromUserName).getMember_ID();
-                SendMsg_webchinese sendMsg = new SendMsg_webchinese();
-                sendMsg.send(keywords[3], yzm);
-                respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: \"yzm 1\"";
-            } else if (tag == 2) { // 已登记，手机验证通过
-                respContent = "尊敬的读者，您已完成注册，请点击\"登录\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
+                    respContent = "尊敬的读者，请输入您收到的短信验证码，仿照格式: \"yzm 1\"";
+                } else if (tag == 2) { // 已登记，手机验证通过
+                    respContent = "尊敬的读者，您已完成注册，请点击\"登录\"按钮进行登录，出现读者证后请稍等10分钟，之后可进行正常操作，谢谢配合。";
+                }
+            } catch (Exception e) { // 格式有误
+                respContent = "尊敬的读者，您输入的信息有误，请核对后重新输入！仿照格式: \"张三 男 20 13112345678\"。\n" +
+                        "我们将发送验证短信至您填写的手机号，所以请务必填写正确的手机号，谢谢配合。";
             }
-        } catch (NumberFormatException e) { // 格式有误
-            respContent = "尊敬的读者，您输入的信息有误，请核对后重新输入！仿照格式: \"张三 男 20 13112345678\"。\n" +
-                    "我们将发送验证短信至您填写的手机号，所以请务必填写正确的手机号，谢谢配合。";
-        }
-
-        if (keywords[0].equals("yzm")) { // yzm 1
+        } else if (keywords[0].equals("yzm")) { // yzm 1
             if (keywords.length == 2) {
                 String str_yzm = keywords[1];
                 int i_yzm = Integer.parseInt(str_yzm); // 获取验证码并转换成原型
@@ -173,6 +176,7 @@ public class CoreService {
                                 respContent = "您的员工号不符，请重新核实，谢谢配合。";
                             } else if (tag == 1) {
                                 db.UpdateWorker_Verification(keywords[2], fromUserName);
+                                db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "register");
                                 respContent = "成功与员工账号绑定，请点击\"登录\"按钮进行登录。";
                             }
                         } else {
@@ -252,13 +256,19 @@ public class CoreService {
                         break;
 
                     default:
-                        if (content.equals("Addbook") || content.equals("addbook")) {
+                        if ((content.equals("Addbook") || content.equals("addbook")) && worker_info.getWorker_Duty().equals("增书管理员")) {
                             db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
                             respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
 
                         } else if (content.equals(931014) /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
                             db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
                             respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
+
+                        } else if (content.equals(worker_info.getWorker_Coefficient()) && worker_info.getWorker_Duty().equals("还书管理员")) {
+                            db.UpdateBook_Return_TimebyWorker(worker_info.getWorker_Coefficient());
+                            Book_State book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
+                            respContent = db.getMember_InfobyMember_ID(book_state.getBook_Borrower_ID()).getMember_Name() + "所借的"
+                                    + book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》已经重置，再次扫描书本二维码即可完成还书。";
 
                         } else {
                             respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
@@ -344,20 +354,21 @@ public class CoreService {
                     if (eventKey.equals(CommonButton.KEY_REGISTER)){
                         int Subscriber_ID = subscriber_info.getSubscriber_ID();
                         db.UpdateSubscriber_Function(Subscriber_ID, "register");
-
-                        respContent = "请输入\"姓名 性别 年龄 手机号\"注册，谢谢。";
+                        respContent = subscriber_info.getSubscriber_Function().equals("register") ?
+                                "注册模式已经退出，如要继续进行注册信息登记或验证码检验，请再次点击\"注册\"按钮，谢谢。"
+                                : "请输入\"姓名 性别 年龄 手机号\"注册，谢谢。";
 
                     } else if (eventKey.equals(CommonButton.KEY_LOGIN)) {
                         int Subscriber_ID = subscriber_info.getSubscriber_ID();
                         db.UpdateSubscriber_Function(Subscriber_ID, "login");
-                        switch (tag){
+                        switch (tag) {
                             case 0:
                                 db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                 respContent = "请点击\"注册\"按钮进行注册，谢谢。";
                                 break;
                             case 1:
-                                if(member_info.getMember_Verification() == false){ // 用户已登记，手机验证未通过
-                                respContent = "尊敬的读者，您的手机号还未绑定，请点击\"注册\"按钮完成注册，谢谢配合。";
+                                if (member_info.getMember_Verification() == false) { // 用户已登记，手机验证未通过
+                                    respContent = "尊敬的读者，您的手机号还未绑定，请点击\"注册\"按钮完成注册，谢谢配合。";
                                 } else { // 成功
                                     db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                     TagManager.batchtagging(fromUserName, "Member");
@@ -370,7 +381,6 @@ public class CoreService {
                                 TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
                                 respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
                                 break;
-
                             case 3:
                                 respContent = "若要以读者身份登录，请回复Member或member进行登录。\n\n" +
                                         "若要以员工身份登录，请回复Worker或worker进行登录。\n\n" +
@@ -447,7 +457,7 @@ public class CoreService {
                                 }
                                 BorrowService.BorrowTemplate(Borrow_Book_ID, fromUserName);
                                 return "";
-                            } else { // 续借
+                            } else if (book_state.getBook_Borrower_ID() == member_info.getMember_ID()) { // 续借
                                 String Return_Time = book_state.getBook_Return_Time();
                                 SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
                                 Date Return_Date = SDF.parse(Return_Time);
@@ -468,7 +478,7 @@ public class CoreService {
                                             : "续借只能在归还时间前7天操作，谢谢配合。\n" +
                                             "《" + book_state.getBook_Title() + "》最早于" + str_StartofRenew + "可以续借。";
                                 }
-                            }
+                            } else {respContent = "此书已被借走。";}
                         } else {respContent = "非馆藏书本。";}
                     }
                     /*
@@ -477,10 +487,17 @@ public class CoreService {
                     else if (eventKey.equals(CommonButton.KEY_RETURN_BOOK)) {
                         try {
                             int Borrow_Book_ID = Integer.parseInt(Book_State_Info[1]);
+                            Book_State book_state = db.getBook_StatebyBook_id(Borrow_Book_ID);
                             if (member_info.getMember_ID() != db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
-                                ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID(), fromUserName);
-                                db.ReturnBook(Borrow_Book_ID);
-                                respContent = "归还成功";
+                                if (db.Book_Return_State(Borrow_Book_ID) == 0) {
+                                    ReturnSuccess.ReturnSuccessTemplate(Borrow_Book_ID, book_state.getBook_Borrower_ID(), fromUserName);
+                                    db.ReturnBook(Borrow_Book_ID);
+                                    respContent = "归还成功";
+                                } else {
+                                    db.UpdateWorker_Coefficient(fromUserName, book_state.getBook_id());
+                                    respContent = book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》应于" +book_state.getBook_Return_Time() + "前归还。"
+                                            + "\n读者需要支付" + 0.5 * db.Book_Return_State(Borrow_Book_ID) + "元。";
+                                }
                             } else if (member_info.getMember_ID() == db.getBook_StatebyBook_id(Borrow_Book_ID).getBook_Borrower_ID()) {
                                 respContent = "工作人员不能给本人进行还书操作";
                             }
