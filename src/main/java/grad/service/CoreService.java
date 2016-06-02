@@ -265,12 +265,11 @@ public class CoreService {
                                 Book_State book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
                                 respContent = db.getMember_InfobyMember_ID(book_state.getBook_Borrower_ID()).getMember_Name() + "所借的"
                                         + book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》已经重置，再次扫描书本二维码即可完成还书。";
+                            } else if (content.equals(931014) /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
+                                db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
+                                respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
+
                             }
-
-                        } else if (content.equals(931014) /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
-                            db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
-                            respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
-
                         } else {
                             respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
                                     + "\n您的留言我们已经收到，并在24小时内回复您。";
