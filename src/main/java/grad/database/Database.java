@@ -323,6 +323,7 @@ public class Database {
             Return_cal.setTime(Return_Date);
             Return_cal.add(Calendar.DATE, 14);
             String New_Return_Time = SDF.format(Return_cal.getTime());
+//            if (book_state.getBook_Statement_ID() <= 4)
             book_state.setBook_Return_Time(New_Return_Time);
             book_state.setBook_Statement("于" + New_Return_Time + "归还");
             book_state.setBook_Statement_ID(book_state.getBook_Statement_ID() + 1);

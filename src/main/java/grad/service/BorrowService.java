@@ -17,7 +17,7 @@ public class BorrowService {
 
     public static String Renew (int Borrow_Statement) {
         String Renew;
-        if (Borrow_Statement == 1) {
+        if (Borrow_Statement <= 4) {
             Renew = "是";
         } else {
             Renew = "否";
