@@ -269,6 +269,9 @@ public class CoreService {
                                 db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
                                 respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
 
+                            } else {
+                                respContent = getGreeting() + "，工作人员" + worker_info.getWorker_Name() + emoji(0x1F604)
+                                        + "\n您的留言我们已经收到，并在24小时内回复您。";
                             }
                         } else {
                             respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
