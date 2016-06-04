@@ -19,6 +19,7 @@ import static grad.tools.RetrieveDocumentByURL.Return_BookPicURL;
  */
 public class ArticleManager {
 
+    // 问候
     public static List<Article> SubscribeGreeting(String fromUserName) {
         List<Article> articleList = new ArrayList<>();
         Subscriber_Info subscriber_info = Database.getSubscriber_Info(fromUserName);
@@ -36,6 +37,7 @@ public class ArticleManager {
         return articleList;
     }
 
+    // 搜索书本
     public static List<Article> SearchBookDisplay(String Search_Book_Title) throws IOException {
 
         List<Article> articleList = new ArrayList<>();
@@ -84,6 +86,7 @@ public class ArticleManager {
         return articleList;
     }
 
+    // 加书
     public static List<Article> AddBookDisplay(Book_State new_book_state, int new_Book_ID) throws IOException {
 
         List<Article> articleList = new ArrayList<>();
@@ -121,6 +124,33 @@ public class ArticleManager {
         return articleList;
     }
 
+    // 删书
+    public static List<Article> DelBookDisplay(Book_State new_book_state, int del_book_id) throws IOException {
+
+        List<Article> articleList = new ArrayList<>();
+
+        Article articleBOOK = new Article();
+        articleBOOK.setTitle("待删书本编号: " + del_book_id + " 书名: 《" + new_book_state.getBook_Title() + "》");
+        articleBOOK.setPicUrl(Return_BookPicURL(new_book_state.getBook_ISBN()));
+        articleBOOK.setUrl("https://www.baidu.com/s?ie=UTF-8&wd=" + new_book_state.getBook_Title());
+        articleList.add(articleBOOK);
+
+        Article articleISBN = new Article();
+        articleISBN.setTitle("ISBN: " + new_book_state.getBook_ISBN());
+        articleList.add(articleISBN);
+
+        Article articleBOOKSTATEMENT = new Article();
+        articleBOOKSTATEMENT.setTitle("存书状态: " + Database.getLibrarInfo(new_book_state.getBook_inLibrary_id()).getLibrary_Name());
+        articleList.add(articleBOOKSTATEMENT);
+
+        Article articleINSTRUCTION = new Article();
+        articleINSTRUCTION.setTitle("是否确认删除：是Y，否N。");
+        articleList.add(articleINSTRUCTION);
+
+        return articleList;
+    }
+
+    // 读者证
     public static List<Article> MemberRecordDisplay(String fromUserName) throws IOException {
         List<Article> articleList = new ArrayList<>();
         Article articleBorrowRecord = new Article();
@@ -143,6 +173,7 @@ public class ArticleManager {
         return articleList;
     }
 
+    // 附近的图书馆
     public static List<Article> NearbyLibrary(String Location_X, String Location_Y) throws IOException {
         List<Article> articleList = new ArrayList<>();
         String region = BaiduMapAPI.testPost(Location_X, Location_Y).get("city");

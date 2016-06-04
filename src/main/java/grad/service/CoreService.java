@@ -228,6 +228,22 @@ public class CoreService {
 
                         break;
 
+                    case "delbook": // Y/N
+                        if (content.equals("Y") || content.equals("y") || content.equals("是")) {
+                            Book_State del_book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
+                            db.UpdateWorker_Coefficient(fromUserName, 0);
+                            db.Del(del_book_state);
+                            db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "delbook");
+                            respContent = del_book_state.getBook_id() + ".《" + del_book_state.getBook_Title() + "》已成功删除。";
+                        } else if (content.equals("N") || content.equals("n") || content.equals("否")) {
+                            Book_State del_book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
+                            db.UpdateWorker_Coefficient(fromUserName, 0);
+                            db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "delbook");
+                            respContent = "已经取消删除" +  del_book_state.getBook_id() + ".《" + del_book_state.getBook_Title() + "》。";
+                        }
+
+                        break;
+
                     case "supervisor":
                         if (content.startsWith("Deletemember") || content.startsWith("deletemember")){
                             Member_Info del_member_info = db.getMember_InfobyMember_ID(Integer.parseInt(keywords[1]));
@@ -246,6 +262,10 @@ public class CoreService {
                             int Worker_ID = Integer.parseInt(keywords[1]);
                             db.UpdateWorker_Duty(Worker_ID, keywords[2]);
                             respContent = "员工" + db.getWoker_Info(Worker_ID).getWorker_Name() + "更改为" + keywords[2] + "权限";
+                        } else if (content.equals("931014") /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
+                            db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
+                            respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
+
                         } else if (content.equals("Help") || content.equals("help") || content.equals("H") || content.equals("h")){
                             respContent = "使用帮助\n" +
                                     "删除读者：Deletemember 读者ID\n" +
@@ -257,19 +277,39 @@ public class CoreService {
 
                     default:
                         if (worker_info != null) {
-                            if ((content.equals("Addbook") || content.equals("addbook")) && worker_info.getWorker_Duty().equals("增书管理员")) {
-                                db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
-                                respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
-                            } else if (content.equals(String.valueOf(worker_info.getWorker_Coefficient())) && worker_info.getWorker_Duty().equals("还书管理员")) {
-                                db.UpdateBook_Return_TimebyWorker(worker_info.getWorker_Coefficient());
-                                Book_State book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
-                                respContent = db.getMember_InfobyMember_ID(book_state.getBook_Borrower_ID()).getMember_Name() + "所借的"
-                                        + book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》已经重置，再次扫描书本二维码即可完成还书。";
+                            if (worker_info.getWorker_Duty().equals("增书管理员")) {
+                                if (content.equals("Addbook") || content.equals("addbook")) {
+                                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
+                                    respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
+                                } else if (content.startsWith("Del") || content.startsWith("del")) {
+                                    int Del_Book_ID = Integer.parseInt(keywords[1]);
+                                    Book_State del_book_state = db.getBook_StatebyBook_id(Del_Book_ID);
+                                    if (del_book_state != null) {
+                                        db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "delbook");
+                                        db.UpdateWorker_Coefficient(fromUserName, Del_Book_ID);
+                                        articleList = DelBookDisplay(del_book_state, Del_Book_ID);
+
+                                        newsMessage.setArticleCount(articleList.size());
+                                        newsMessage.setArticles(articleList);
+                                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                                        return respMessage;
+                                    } else {
+                                        respContent = "您所输入的书本编号不存在，请再次确认。";
+                                    }
+                                }
+                            } else if (worker_info.getWorker_Duty().equals("还书管理员")) {
+                                if (content.equals(String.valueOf(worker_info.getWorker_Coefficient()))) {
+                                    db.UpdateBook_Return_TimebyWorker(worker_info.getWorker_Coefficient());
+                                    Book_State book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
+                                    respContent = db.getMember_InfobyMember_ID(book_state.getBook_Borrower_ID()).getMember_Name() + "所借的"
+                                            + book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》已经重置，再次扫描书本二维码即可完成还书。";
+                                }
                             } else if (content.equals("931014") /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
                                 db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
                                 respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
 
-                            } else {
+                            }  else {
                                 respContent = getGreeting() + "，工作人员" + worker_info.getWorker_Name() + emoji(0x1F604)
                                         + "\n您的留言我们已经收到，并在24小时内回复您。";
                             }

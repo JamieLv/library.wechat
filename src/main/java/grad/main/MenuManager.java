@@ -218,7 +218,7 @@ public class MenuManager {
         btn34.setKey(CommonButton.KEY_JOIN_US);
 
         ComplexButton mainBtn1 = new ComplexButton();
-        mainBtn1.setName(l == 0 ? "个人服务" : "User");
+        mainBtn1.setName(l == 0 ? "个人服务" : "Reader");
         mainBtn1.setSub_button(new Button[]{btn11, btn12, btn14, btn15});
 
         ComplexButton mainBtn2 = new ComplexButton();
@@ -295,7 +295,7 @@ public class MenuManager {
         btn34.setKey(CommonButton.KEY_JOIN_US);
 
         ComplexButton mainBtn1 = new ComplexButton();
-        mainBtn1.setName(l == 0 ? "个人服务" : "User");
+        mainBtn1.setName(l == 0 ? "个人服务" : "Reader");
         mainBtn1.setSub_button(new Button[]{btn11, btn12, btn14, btn15});
 
         ComplexButton mainBtn2 = new ComplexButton();
