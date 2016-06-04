@@ -277,34 +277,35 @@ public class CoreService {
 
                     default:
                         if (worker_info != null) {
-                            if (worker_info.getWorker_Duty().equals("增书管理员")) {
-                                if (content.equals("Addbook") || content.equals("addbook")) {
-                                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
-                                    respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
-                                } else if (content.startsWith("Del") || content.startsWith("del")) {
-                                    int Del_Book_ID = Integer.parseInt(keywords[1]);
-                                    Book_State del_book_state = db.getBook_StatebyBook_id(Del_Book_ID);
-                                    if (del_book_state != null) {
-                                        db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "delbook");
-                                        db.UpdateWorker_Coefficient(fromUserName, Del_Book_ID);
-                                        articleList = DelBookDisplay(del_book_state, Del_Book_ID);
+                            if ((content.equals("Addbook") || content.equals("addbook"))
+                                    && (worker_info.getWorker_Duty().equals("增书管理员"))) {
+                                db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "addbook");
+                                respContent = subscriber_info.getSubscriber_Function().equals("addbook") ? "增添书本功能关闭" : "增添书本功能开启，请先输入图书馆代号";
+                            } else if ((content.startsWith("Del") || content.startsWith("del"))
+                                    && (worker_info.getWorker_Duty().equals("增书管理员"))) {
+                                int Del_Book_ID = Integer.parseInt(keywords[1]);
+                                Book_State del_book_state = db.getBook_StatebyBook_id(Del_Book_ID);
+                                if (del_book_state != null) {
+                                    db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "delbook");
+                                    db.UpdateWorker_Coefficient(fromUserName, Del_Book_ID);
 
-                                        newsMessage.setArticleCount(articleList.size());
-                                        newsMessage.setArticles(articleList);
-                                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
+                                    articleList = DelBookDisplay(del_book_state, Del_Book_ID);
 
-                                        return respMessage;
-                                    } else {
-                                        respContent = "您所输入的书本编号不存在，请再次确认。";
-                                    }
+                                    newsMessage.setArticleCount(articleList.size());
+                                    newsMessage.setArticles(articleList);
+                                    respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+                                    return respMessage;
+                                } else {
+                                    respContent = "您所输入的书本编号不存在，请再次确认。";
                                 }
-                            } else if (worker_info.getWorker_Duty().equals("还书管理员")) {
-                                if (content.equals(String.valueOf(worker_info.getWorker_Coefficient()))) {
-                                    db.UpdateBook_Return_TimebyWorker(worker_info.getWorker_Coefficient());
-                                    Book_State book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
-                                    respContent = db.getMember_InfobyMember_ID(book_state.getBook_Borrower_ID()).getMember_Name() + "所借的"
-                                            + book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》已经重置，再次扫描书本二维码即可完成还书。";
-                                }
+                            } else if (content.equals(String.valueOf(worker_info.getWorker_Coefficient()))
+                                    && worker_info.getWorker_Duty().equals("还书管理员")) {
+                                db.UpdateBook_Return_TimebyWorker(worker_info.getWorker_Coefficient());
+                                Book_State book_state = db.getBook_StatebyBook_id(worker_info.getWorker_Coefficient());
+                                respContent = db.getMember_InfobyMember_ID(book_state.getBook_Borrower_ID()).getMember_Name() + "所借的"
+                                        + book_state.getBook_id() + ".《" + book_state.getBook_Title() + "》已经重置，再次扫描书本二维码即可完成还书。";
+
                             } else if (content.equals("931014") /** && worker_info.getWorker_Duty().equals("超级管理员")*/) {
                                 db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "supervisor");
                                 respContent = subscriber_info.getSubscriber_Function().equals("supervisor") ? "超级管理员模式关闭" : "超级管理员模式开启";
