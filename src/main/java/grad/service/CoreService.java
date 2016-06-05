@@ -407,9 +407,17 @@ public class CoreService {
                     if (eventKey.equals(CommonButton.KEY_REGISTER)){
                         int Subscriber_ID = subscriber_info.getSubscriber_ID();
                         db.UpdateSubscriber_Function(Subscriber_ID, "register");
-                        respContent = subscriber_info.getSubscriber_Function().equals("register") ?
-                                "注册模式已经退出，如要继续进行注册信息登记或验证码检验，请再次点击\"注册\"按钮，谢谢。"
-                                : "请输入\"姓名 性别 年龄 手机号\"注册，谢谢。";
+                        if (subscriber_info.getSubscriber_Function().equals("register")) {
+                            respContent = "注册模式已经退出，如要继续进行注册信息登记或验证码检验，请再次点击\"注册\"按钮，谢谢。";
+                        } else if (member_info != null && member_info.getMember_Verification() == false) {
+                            respContent = "请输入收到验证码以注册流程，谢谢。\n"
+                                    + "或者再次按照以下格式进行回复： \n"
+                                    + "姓名 性别 年龄 手机号\n"
+                                    + "60秒内将会收到有验证码的短信。\n"
+                                    + "到时请将验证码回复给微信平台，谢谢配合。";
+                        } else {
+                            respContent = "请输入\"姓名 性别 年龄 手机号\"注册，谢谢。";
+                        }
 
                     } else if (eventKey.equals(CommonButton.KEY_LOGIN)) {
                         int Subscriber_ID = subscriber_info.getSubscriber_ID();
@@ -435,7 +443,11 @@ public class CoreService {
                                 respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
                                 break;
                             case 3:
-                                respContent = "若要以读者身份登录，请回复Member或member进行登录。\n\n" +
+                                respContent = member_info.getMember_Verification() == true ?
+                                        "若要以读者身份登录，请回复Member或member进行登录。\n\n" +
+                                        "若要以员工身份登录，请回复Worker或worker进行登录。\n\n" +
+                                        "登录后10分钟内菜单功能将会开启。"
+                                        : "读者身份未完全开通，请点击\"注册\"按钮完成注册。\n\n" +
                                         "若要以员工身份登录，请回复Worker或worker进行登录。\n\n" +
                                         "登录后10分钟内菜单功能将会开启。";
                                 break;
