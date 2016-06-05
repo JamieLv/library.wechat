@@ -32,8 +32,8 @@ public class BorrowReminder {
 
         for (Book_State book_state: book_stateList) {
             if (Database.Borrower_RemindNeed(fromUserName) != 1){
-                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n            " + book_state.getBook_Title();
-                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n                    " + book_state.getBook_Return_Time();
+                Borrow_Book_Title += Borrow_Book_Title.equals("") ? book_state.getBook_Title() : "\n          " + book_state.getBook_Title();
+                Return_Book_Time += Return_Book_Time.equals("") ? book_state.getBook_Return_Time() : "\n                  " + book_state.getBook_Return_Time();
             }
         }
 
