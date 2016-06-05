@@ -190,9 +190,13 @@ public class CoreService {
                             TagManager.batchtagging(fromUserName, worker_info.getWorker_Duty());
                             respContent = worker_info.getWorker_Duty() + "【" + worker_info.getWorker_Name() + "】登录成功";
                         } else if (content.equals("Member") || content.equals("member")) {
-                            TagManager.batchtagging(fromUserName, "Member");
-                            MemberService.MemberTemplate(member_info);
-                            return "";
+                            if (member_info.getMember_Verification() == true) {
+                                TagManager.batchtagging(fromUserName, "Member");
+                                MemberService.MemberTemplate(member_info);
+                                return "";
+                            } else {
+                                Register(fromUserName, keywords);
+                            }
                         }
                         db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "login");
                         break;
@@ -429,6 +433,7 @@ public class CoreService {
                                 break;
                             case 1:
                                 if (member_info.getMember_Verification() == false) { // 用户已登记，手机验证未通过
+                                    db.UpdateSubscriber_Function(Subscriber_ID, "login");
                                     respContent = "尊敬的读者，您的手机号还未绑定，请点击\"注册\"按钮完成注册，谢谢配合。";
                                 } else { // 成功
                                     db.UpdateSubscriber_Function(Subscriber_ID, "login");
