@@ -123,7 +123,8 @@ public class CoreService {
 
         try {
             // 默认返回的文本消息内容
-            String respContent = "请求处理异常，请稍候尝试！";
+            String respContent = getGreeting() + "，尊敬的用户" + emoji(0x1F604)
+                    + "\n您的留言我们已经收到，并在24小时内回复您。";
 
             // 处理微信发来请求
             // xml请求解析
@@ -195,7 +196,11 @@ public class CoreService {
                                 MemberService.MemberTemplate(member_info);
                                 return "";
                             } else {
-                                Register(fromUserName, keywords);
+                                respContent = "请输入收到验证码以注册流程，谢谢。\n"
+                                        + "或者再次按照以下格式进行回复： \n"
+                                        + "姓名 性别 年龄 手机号\n"
+                                        + "60秒内将会收到有验证码的短信。\n"
+                                        + "到时请将验证码回复给微信平台，谢谢配合。";
                             }
                         }
                         db.UpdateSubscriber_Function(subscriber_info.getSubscriber_ID(), "login");
