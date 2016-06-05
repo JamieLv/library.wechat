@@ -149,10 +149,34 @@ public class Database {
         return result;
     }
 
-    /**
-     *
-     * 增
-     */
+    // 判断用户是否需要还书提醒
+    public static int Book_RemindNeed(Book_State book_state) throws ParseException {
+        int result;
+
+        String Return_Time = book_state.getBook_Return_Time();
+        SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
+        Date Return_Date = SDF.parse(Return_Time);
+        Calendar Return_cal = Calendar.getInstance();
+        Return_cal.setTime(Return_Date);
+        Calendar StartofRemind = (Calendar) Return_cal.clone();
+        StartofRemind.add(Calendar.DATE, -7);
+        Calendar EndofRemind = (Calendar) Return_cal.clone();
+        EndofRemind.add(Calendar.DATE, 7);
+
+        String Today = Database.getDate(0);
+        Date Today_Date = SDF.parse(Today);
+        Calendar Today_cal = Calendar.getInstance();
+        Today_cal.setTime(Today_Date);
+
+        result = Today_cal.compareTo(StartofRemind) * Today_cal.compareTo(EndofRemind);
+
+        return  result;
+    }
+
+        /**
+         *
+         * 增
+         */
 
     // 增加一条数据
     public static boolean Add(Object obj){
