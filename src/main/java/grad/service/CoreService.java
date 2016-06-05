@@ -255,9 +255,17 @@ public class CoreService {
                             db.Add(new_worker_info);
                             respContent = "员工\n" + keywords[1] + " " + keywords[2] + " " + Integer.parseInt(keywords[3]) + " " + keywords[4] + " " + keywords[5] + "\n添加成功";
                         } else if (content.startsWith("Deleteworker") || content.startsWith("deleteworker")){
-                            Worker_Info del_worker_info = db.getWoker_InfobyWorker_Name(keywords[1]);
+                            Worker_Info del_worker_info = db.getWoker_Info(Integer.parseInt(keywords[1]));
                             db.Del(del_worker_info);
                             respContent = "员工\n" + del_worker_info.getWorker_ID() + " " + del_worker_info.getWorker_Name() + " " + del_worker_info.getWorker_Duty() + "\n删除成功";
+                        } else if (content.startsWith("Worker") || content.startsWith("worker")) {
+                            Worker_Info q_worker_info = db.getWoker_Info(Integer.parseInt(keywords[1]));
+                            respContent = "员工编号：" + q_worker_info.getWorker_ID() +
+                                    "\n员工姓名：" + q_worker_info.getWorker_Name() +
+                                    "\n员工性别：" + q_worker_info.getWorker_Gender() +
+                                    "\n员工年龄：" + q_worker_info.getWorker_Age() +
+                                    "\n员工手机：" + q_worker_info.getWorker_Mobile() +
+                                    "\n员工职能：" + q_worker_info.getWorker_Duty();
                         } else if (content.startsWith("Duty") || content.startsWith("duty")) {
                             int Worker_ID = Integer.parseInt(keywords[1]);
                             db.UpdateWorker_Duty(Worker_ID, keywords[2]);
@@ -270,8 +278,9 @@ public class CoreService {
                             respContent = "使用帮助\n" +
                                     "删除读者：Deletemember 读者ID\n" +
                                     "添加职工：Addworker 职工姓名 职工性别 职工年龄 职工手机号 职工职能\n" +
+                                    "查询职工：Worker 职工编号\n" +
                                     "更改员工职能：Duty 职工编号 职工职能\n" +
-                                    "删除职工：Deleteworker 职工姓名";
+                                    "删除职工：Deleteworker 职工编号";
                         } else { respContent = "回复Help进行查询功能。"; }
                         break;
 
