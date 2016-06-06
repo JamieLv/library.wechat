@@ -61,9 +61,9 @@ public class Database {
         session.getTransaction().commit();
 
         for(Worker_Info worker_info: worker_infoList) {
-            if(worker_info.getWorker_fromUserName().equals(Worker_fromUserName)){
+            /* if(worker_info.getWorker_fromUserName().equals(Worker_fromUserName)){
                 exist = 2;
-            } else if(getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID){
+            } else */ if(getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID){
                 exist = 1;
             }
         }

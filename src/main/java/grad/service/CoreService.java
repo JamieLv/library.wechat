@@ -269,12 +269,16 @@ public class CoreService {
                             respContent = "员工\n" + del_worker_info.getWorker_ID() + " " + del_worker_info.getWorker_Name() + " " + del_worker_info.getWorker_Duty() + "\n删除成功";
                         } else if (content.startsWith("Worker") || content.startsWith("worker")) {
                             Worker_Info q_worker_info = db.getWoker_Info(Integer.parseInt(keywords[1]));
-                            respContent = "员工编号：" + q_worker_info.getWorker_ID() +
-                                    "\n员工姓名：" + q_worker_info.getWorker_Name() +
-                                    "\n员工性别：" + q_worker_info.getWorker_Gender() +
-                                    "\n员工年龄：" + q_worker_info.getWorker_Age() +
-                                    "\n员工手机：" + q_worker_info.getWorker_Mobile() +
-                                    "\n员工职能：" + q_worker_info.getWorker_Duty();
+                            if (q_worker_info != null) {
+                                respContent = "员工编号：" + q_worker_info.getWorker_ID() +
+                                        "\n员工姓名：" + q_worker_info.getWorker_Name() +
+                                        "\n员工性别：" + q_worker_info.getWorker_Gender() +
+                                        "\n员工年龄：" + q_worker_info.getWorker_Age() +
+                                        "\n员工手机：" + q_worker_info.getWorker_Mobile() +
+                                        "\n员工职能：" + q_worker_info.getWorker_Duty();
+                            } else {
+                                respContent = "员工不存在";
+                            }
                         } else if (content.startsWith("Duty") || content.startsWith("duty")) {
                             int Worker_ID = Integer.parseInt(keywords[1]);
                             db.UpdateWorker_Duty(Worker_ID, keywords[2]);
