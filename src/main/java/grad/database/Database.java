@@ -60,17 +60,16 @@ public class Database {
         List<Worker_Info> worker_infoList = query.list();
         session.getTransaction().commit();
 
-        if (getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID) {
-            exist = 1;
-        }
 
-//        for(Worker_Info worker_info: worker_infoList) {
-//            if(worker_info.getWorker_fromUserName().equals(Worker_fromUserName)){
-//                exist = 2;
-//            } else if(getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID){
-//                exist = 1;
-//            }
-//        }
+        for(Worker_Info worker_info: worker_infoList) {
+            if(worker_info.getWorker_fromUserName() == null) {
+                if(getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID){
+                    exist = 1;
+                }
+            } else if (worker_info.getWorker_fromUserName().equals(Worker_fromUserName)) {
+                exist = 2;
+            }
+        }
         return  exist;
     }
 
