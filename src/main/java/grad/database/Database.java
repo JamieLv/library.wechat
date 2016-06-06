@@ -60,13 +60,17 @@ public class Database {
         List<Worker_Info> worker_infoList = query.list();
         session.getTransaction().commit();
 
-        for(Worker_Info worker_info: worker_infoList) {
-            /* if(worker_info.getWorker_fromUserName().equals(Worker_fromUserName)){
-                exist = 2;
-            } else */ if(getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID){
-                exist = 1;
-            }
+        if (getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID) {
+            exist = 1;
         }
+
+//        for(Worker_Info worker_info: worker_infoList) {
+//            if(worker_info.getWorker_fromUserName().equals(Worker_fromUserName)){
+//                exist = 2;
+//            } else if(getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID() == ID){
+//                exist = 1;
+//            }
+//        }
         return  exist;
     }
 
@@ -240,7 +244,7 @@ public class Database {
 
     // 更新工作人员验证状态
     public static boolean UpdateWorker_Verification(String Worker_Name, String Worker_fromUserName){
-        int Worker_ID = getWoker_InfobyfromUserName(Worker_Name).getWorker_ID();
+        int Worker_ID = getWoker_InfobyWorker_Name(Worker_Name).getWorker_ID();
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Worker_Info worker_info = session.get(Worker_Info.class, Worker_ID);
